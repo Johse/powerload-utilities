@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDB.Translate.BCP", "Translate\BCP\IDB.Translate.BCP.csproj", "{23D47A26-E52B-42F5-BF88-AD4B19906A4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDB.Analyzer.AutoCAD", "Analyzer\AutoCAD\IDB.Analyzer.AutoCAD.csproj", "{AE824576-81E5-4ADC-A7EA-7700FE66F11B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDB.Analyzer.Common", "Analyzer\Common\IDB.Analyzer.Common.csproj", "{C865E2BB-D808-466D-BA55-77C304995D74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDB.Analyzer.Inventor", "Analyzer\Inventor\IDB.Analyzer.Inventor.csproj", "{87A25D16-D783-423C-89CE-6C501DDA0D70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDB.Load.Files", "Load\Files\IDB.Load.Files.csproj", "{A15586C0-99B1-4F60-AC0F-272D23938D2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDB.Discover.Vault", "Discover\Vault\IDB.Discover.Vault\IDB.Discover.Vault.csproj", "{1B68DD6D-CCA0-4AF1-BB2C-EDE21C07C6EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23D47A26-E52B-42F5-BF88-AD4B19906A4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23D47A26-E52B-42F5-BF88-AD4B19906A4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23D47A26-E52B-42F5-BF88-AD4B19906A4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23D47A26-E52B-42F5-BF88-AD4B19906A4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE824576-81E5-4ADC-A7EA-7700FE66F11B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE824576-81E5-4ADC-A7EA-7700FE66F11B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE824576-81E5-4ADC-A7EA-7700FE66F11B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE824576-81E5-4ADC-A7EA-7700FE66F11B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C865E2BB-D808-466D-BA55-77C304995D74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C865E2BB-D808-466D-BA55-77C304995D74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C865E2BB-D808-466D-BA55-77C304995D74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C865E2BB-D808-466D-BA55-77C304995D74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87A25D16-D783-423C-89CE-6C501DDA0D70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87A25D16-D783-423C-89CE-6C501DDA0D70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87A25D16-D783-423C-89CE-6C501DDA0D70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87A25D16-D783-423C-89CE-6C501DDA0D70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A15586C0-99B1-4F60-AC0F-272D23938D2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A15586C0-99B1-4F60-AC0F-272D23938D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A15586C0-99B1-4F60-AC0F-272D23938D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A15586C0-99B1-4F60-AC0F-272D23938D2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B68DD6D-CCA0-4AF1-BB2C-EDE21C07C6EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B68DD6D-CCA0-4AF1-BB2C-EDE21C07C6EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B68DD6D-CCA0-4AF1-BB2C-EDE21C07C6EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B68DD6D-CCA0-4AF1-BB2C-EDE21C07C6EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7B4925ED-3689-4928-A644-A3349FC41EC5}
+	EndGlobalSection
+EndGlobal

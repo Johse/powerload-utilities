@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="IDBTranslateBCP.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Server=(local)\AUTODESKVAULT;Database=Load;Trusted_Connection=True;</Value>
+    </Setting>
+    <Setting Name="CustomFilesOrderByFields" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CustomItemsOrderByFields" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="VaultVersion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2020</Value>
+    </Setting>
+    <Setting Name="ExportDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\TEMP\BCP Package Directory</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
