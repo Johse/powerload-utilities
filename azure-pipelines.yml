@@ -33,12 +33,17 @@ steps:
  
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    rootFolderOrFile: 'Release'
     includeRootFolder: true
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
  
+#- task: PublishBuildArtifacts@1
+#  inputs:
+#    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#    artifactName: 'Output'
+
 - task: GitHubRelease@1
   inputs:
     gitHubConnection: 'GitHub Bot connection'
