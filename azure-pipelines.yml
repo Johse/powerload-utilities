@@ -39,17 +39,7 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
  
-#- task: PublishBuildArtifacts@1
-#  inputs:
-#    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-#    artifactName: 'Output'
-
-- task: GitHubRelease@1
+- task: PublishBuildArtifacts@1
   inputs:
-    gitHubConnection: 'GitHub Bot connection'
-    repositoryName: 'coolOrangeLabs/powerload-utilities'
-    action: 'create'
-    target: '$(Build.SourceVersion)'
-    tagSource: 'gitTag'
-    changeLogCompareToRelease: 'lastFullRelease'
-    changeLogType: 'commitBased'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'Output'
