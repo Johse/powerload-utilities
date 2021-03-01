@@ -13,8 +13,8 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  buildMajor: '$(Major)'
-  buildMinor: '$(Minor)'
+  buildMajor: '1'
+  buildMinor: '1'
   buildRevision: '$(Revision)'
  
 steps:
