@@ -3,7 +3,7 @@
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/vsts/pipelines/apps/windows/dot-net
  
-name: $(BuildID)
+name: $(BuildId)
  
 pool:
   vmImage: 'VS2017-Win2016'
@@ -31,16 +31,20 @@ steps:
     configuration: '$(buildConfiguration)'
     msbuildArgs: '/property:Major=$(buildMajor);Minor=$(buildMinor);Build=$(Build.BuildNumber);Revision=$(buildRevision);RunWixToolsOutofProc=true'
  
-- task: CopyFiles@2
+- task: ArchiveFiles@2
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)'
-    contents: 'Installer\bin\$(buildConfiguration)\en-us\*.msi'
-    targetFolder: '$(Build.ArtifactStagingDirectory)'
-    cleanTargetFolder: true
-    overWrite: true
-    flattenFolders: true
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
  
-- task: PublishBuildArtifacts@1
+- task: GitHubRelease@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: 'Setups'
+    gitHubConnection: 'GitHub Bot connection'
+    repositoryName: 'coolOrangeLabs/powerload-utilities'
+    action: 'create'
+    target: '$(Build.SourceVersion)'
+    tagSource: 'gitTag'
+    changeLogCompareToRelease: 'lastFullRelease'
+    changeLogType: 'commitBased'
