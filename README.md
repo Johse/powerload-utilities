@@ -65,9 +65,68 @@ This section explains how to use and fill the Intermediate Database with the inf
  
  ![SQL Options](DLG_Options_PreventSavingChanges.gif)
  
+ 6. Refer to the Description of the coolOrange Intermediate Database to understand the database model.
+7. Enhance the Files, Folders, Items and/or CustomObjects table with additional UDP fields for transferring metadata to user defined properties (UDPs) in Vault.
+
+   * For each property (field) of the legacy system that you want to transfer to Vault an UDP-field in the object table must be added. The name of the UDP-field can be renamed.
+   
+   
+## IDB.Load.Files
+Utility to load files from Windows folders to the Intermediate Database (IDB)
+
+### Configuration
+
+In the configuration file ***DefaultBehaviors.xml*** the default behaviours can be set.
+![image](https://user-images.githubusercontent.com/62716091/81202972-a05dff00-8fc7-11ea-9a4e-c1ce65170e65.png)
+
+
+* ConnectionString: connect string to SQL server and database
+* DataPath: Folderpath that will be scanned. All names of subfolders and files will be transferred to the IDB.
+
+* Folders: Default settings for folder. The following fields in the IDB will be filled with the assigned value for all folders.
+	* Category
+	* CreateUser 
+
+* Files: Default settings for files. The following fields in the IDB will be filled with the assigned value for all files.
+	* Category
+	* RevisionDefinition
+	* LifeCycleState
+	* LifeCycleDefinition
+	* RevisionLabel
+	* Classification
+	* CreateUser
+	The elements must not be removed. To not fill the field just delete the value.
+ 
+E.g. < CreateUser >< /CreateUser >
+
+Please don`t rename XML files.
+
+### Usage
+ 
+Start the tool with double click the file IDB.Load.Files.exe.
+In the open dialog specify the ***Path*** and ***SQL Database Connection String*** to import files from the selected folder and sub-folders into the named database.
+
+* Save: The specified path and connect string are written back to file DefaultBehaviors.xml.
+* Refresh: Updating the path and connect string from the file DefaultBehaviors.xml.
+* Start: Start scan and import
+* Cancel: Stop the process. After clicking the button all records and unsaved data will be lost.
+* Reset: Initialize for next run
+* Scan records: File`s counter of entered folder path
+* Import records: Counter of already inserted files
+
+![image](https://user-images.githubusercontent.com/62716091/81194971-89b2aa80-8fbd-11ea-8374-c282ad0bbc2d.png)
+
+
+## Logging
+
+The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+There you find information about successful inserts and errors.
 
 ### DB Structure
 ![Database Schema](Images/DB_Schema.png)
+
+
+
 
 ## Product Documentation
 
