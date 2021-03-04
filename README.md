@@ -19,9 +19,26 @@ The powerLoad utilites are:
 * **IDB.Load.Files:** Utility to load files from a Windows folder to the Intermediate Database.
 * **IDB.Load.BCP:** Utility to load files and folders from a BCP-package to the Intermediate Database (IDB).
 * **IDB.Load.Vault:** Sample code to extract data from Vault and fill the Intermediate Database (IDB).
+* **IDB.Analyzer.Inventor:** Scans Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
+* **IDB.Analyzer.AutoCAD:** Scans AutoCAD DWGs files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
+* **IDB.Discover.Vault:** Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB)
 * **IDB.Translate.BCP:** Creates a valid BCP-package from the content of the Intermediate Database.
-* **IDB.Analyze.Inventor:** Scans Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
-* **IDB.Analyze.AutoCAD:** Scans AutoCAD DWGs files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
+
+## Additions
+For validating the BCP package that is created from the IDB there are additional tools:
+* **bcpViewer**, which is part of the bcpToolkit
+* **bcpValidator**, which can be found on https://github.com/coolOrangeLabs/bcpValidator
+
+## Prerequsites
+* Microsoft SQL Server 2014 or newer
+* Windows 10
+* AutoCAD and/or Inventor if the analyzer tools are needed
+
+## Installation
+Download the complete powerLoad package with the "Download ZIP" command from the "Code"-menu.
+![Download powerLoad ZIP package](Images/PL-Download.png)
+Extract the ZIP to a folder 'powerLoad' anywhere on your client machine.![PL-Download](https://user-images.githubusercontent.com/36193155/109958296-5d9fad00-7ce6-11eb-9aa7-ecbce8ebadbe.png)
+
 
 ## Description
 
