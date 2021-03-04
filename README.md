@@ -45,7 +45,25 @@ Extract the ZIP to a folder 'powerLoad' anywhere on your client machine.!
 ## Description
 
 The Intermediate Database (IDB) is a concept that can be used to fill a neutral database with data from Vault or any other PDM system or from Windows Explorer. This IDB can be transformed into a BCP format which can be imported into Vault Professional or Vault Workgroup.   
-This repository contains the IDB structure as well as a tool to convert the database to the Autodesk Vault BCP format. This format is finally used by Autodesk Vault DTU to mass import data into Vault.
+This repository contains the IDB structure as well as tools to load the IDB and to convert the database to the Autodesk Vault BCP format. This format is finally used by Autodesk Vault DTU to mass import data into Vault.
+
+## coolOrange powerLoad Intermediate Database
+The powerLoad Intermediate Database for the Vault import (IDB) is a SQL database template provided by coolOrange that standardizes and simplifies the transition from an existing data and file source to Vault.
+This section explains how to use and fill the Intermediate Database with the information from the legacy system.
+
+Setting up the Intermediate Database for Vault Import
+
+1. Open SQL Management Studio and login
+2. Open script Create_IntermediateDB.sql in SQL Management Studio
+3. Modify path for mdf and ldf files for your SQL installation
+    Sample:
+    Modify ***FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.AUTODESKVAULT\MSSQL\DATA\Load.mdf'***
+    to ***FILENAME = N'C:\Program Files\Microsoft SQL Server\<My SQL instance>\MSSQL\DATA\Load.mdf'***
+ 4. Create the coolOrange Intermediate Database with the sql script Create_IntermediateDB.sql. The default name of the database is "Load".
+ 5. Check and deactivate option *'Prevent saving changes that require table re-creation'* from the menu *"Tools > Options..."*. 
+ 
+ ![SQL Options](DLG_Options_PreventSavingChanges.gif)
+ 
 
 ## DB Structure
 ![Database Schema](Images/DB_Schema.png)
