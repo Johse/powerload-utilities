@@ -24,7 +24,7 @@ The powerLoad utilites are:
 * **IDB.Discover.Vault:** Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB)
 * **IDB.Translate.BCP:** Creates a valid BCP-package from the content of the Intermediate Database.
 
-## Additions
+# Additions
 For validating the BCP package that is created from the IDB there are additional tools:
 * **bcpViewer**, which is part of the bcpToolkit
 * **bcpValidator**, which can be found on https://github.com/coolOrangeLabs/bcpValidator
