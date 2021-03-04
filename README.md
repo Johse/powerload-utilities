@@ -36,9 +36,8 @@ For validating the BCP package that is created from the IDB there are additional
 
 ## Installation
 Download the complete powerLoad package with the "Download ZIP" command from the "Code"-menu.
-![Download powerLoad ZIP package](Images/PL-Dow![PL-Download](https://user-images.githubusercontent.com/36193155/109958680-c25b0780-7ce6-11eb-9c77-4be18e34f650.png)
-nload.png)
 
+![Download powerLoad ZIP package](Images/PL-Dow![PL-Download]
 Extract the ZIP to a folder 'powerLoad' anywhere on your client machine.!
 
 
