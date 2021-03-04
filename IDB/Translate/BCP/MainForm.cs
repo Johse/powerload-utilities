@@ -81,7 +81,7 @@ namespace IDB.Translate.BCP
             string sqlScript = "";
             try
             {
-                foreach (string line in System.IO.File.ReadLines(scriptPath + @"\Validate.IDB.txt"))
+                foreach (string line in System.IO.File.ReadLines(scriptPath + @"\Validate.IDB.sql"))
                 {
                     if (line.Contains("--Updating"))
                     {

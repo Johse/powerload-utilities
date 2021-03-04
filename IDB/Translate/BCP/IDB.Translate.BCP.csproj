@@ -112,7 +112,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="coolorange.ico" />
-    <Content Include="IDB.Validation\Validate.IDB.txt" />
+    <Content Include="Validate.IDB.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper">
