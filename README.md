@@ -69,7 +69,10 @@ This section explains how to use and fill the Intermediate Database with the inf
 7. Enhance the Files, Folders, Items and/or CustomObjects table with additional UDP fields for transferring metadata to user defined properties (UDPs) in Vault.
 
    * For each property (field) of the legacy system that you want to transfer to Vault an UDP-field in the object table must be added. The name of the UDP-field can be renamed.
-   
+ 
+### DB Structure
+![Database Schema](Images/DB_Schema.png)
+
    
 ## IDB.Load.Files
 Utility to load files from Windows folders to the Intermediate Database (IDB)
@@ -121,11 +124,6 @@ In the open dialog specify the ***Path*** and ***SQL Database Connection String*
 
 The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
-
-### DB Structure
-![Database Schema](Images/DB_Schema.png)
-
-
 
 
 ## Product Documentation
