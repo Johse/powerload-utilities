@@ -56,6 +56,7 @@ Setting up the Intermediate Database for Vault Import
 1. Open SQL Management Studio and login
 2. Open script Create_IntermediateDB.sql in SQL Management Studio
 3. Modify path for mdf and ldf files for your SQL installation
+
     Sample:
     Modify ***FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.AUTODESKVAULT\MSSQL\DATA\Load.mdf'***
     to ***FILENAME = N'C:\Program Files\Microsoft SQL Server\<My SQL instance>\MSSQL\DATA\Load.mdf'***
