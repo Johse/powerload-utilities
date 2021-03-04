@@ -12,6 +12,17 @@ THE SAMPLE CODE ON THIS REPOSITORY IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY K
 
 THE USAGE OF THIS SAMPLE IS AT YOUR OWN RISK AND **THERE IS NO SUPPORT** RELATED TO IT.
 
+## Overview
+The powerLoad utilities are a set of utilities for loading the Autodesk Vault Workgroup or Professional which are based on the bcpToolkit.
+The powerLoad utilites are:
+* **powerLoad Intermediate Database (IDB):** SQL database for transforming the data to fit to the target Vault
+* **IDB.Load.Files:** Utility to load files from a Windows folder to the Intermediate Database.
+* **IDB.Load.BCP:** Utility to load files and folders from a BCP-package to the Intermediate Database (IDB).
+* **IDB.Load.Vault:** Sample code to extract data from Vault and fill the Intermediate Database (IDB).
+* **IDB.Translate.BCP:** Creates a valid BCP-package from the content of the Intermediate Database.
+* **IDB.Analyze.Inventor:** Scans Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
+* **IDB.Analyze.AutoCAD:** Scans AutoCAD DWGs files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
+
 ## Description
 
 The Intermediate Database (IDB) is a concept that can be used to fill a neutral database with data from Vault or any other PDM system or from Windows Explorer. This IDB can be transformed into a BCP format which can be imported into Vault Professional or Vault Workgroup.   
