@@ -24,7 +24,7 @@ The powerLoad utilites are:
 * **IDB.Discover.Vault:** Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB)
 * **IDB.Translate.BCP:** Creates a valid BCP-package from the content of the Intermediate Database.
 
-# Additions
+### Additions
 For validating the BCP package that is created from the IDB there are additional tools:
 * **bcpViewer**, which is part of the bcpToolkit
 * **bcpValidator**, which can be found on https://github.com/coolOrangeLabs/bcpValidator
@@ -51,7 +51,7 @@ This repository contains the IDB structure as well as tools to load the IDB and 
 The powerLoad Intermediate Database for the Vault import (IDB) is a SQL database template provided by coolOrange that standardizes and simplifies the transition from an existing data and file source to Vault.
 This section explains how to use and fill the Intermediate Database with the information from the legacy system.
 
-Setting up the Intermediate Database for Vault Import
+### Setting up the Intermediate Database for Vault Import
 
 1. Open SQL Management Studio and login
 2. Open script Create_IntermediateDB.sql in SQL Management Studio
@@ -66,7 +66,7 @@ Setting up the Intermediate Database for Vault Import
  ![SQL Options](DLG_Options_PreventSavingChanges.gif)
  
 
-## DB Structure
+### DB Structure
 ![Database Schema](Images/DB_Schema.png)
 
 ## Product Documentation
