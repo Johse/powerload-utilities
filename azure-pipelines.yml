@@ -36,7 +36,7 @@ steps:
     rootFolderOrFile: 'Release'
     includeRootFolder: false
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(buildMajor).$(buildMinor).$(Build.BuildNumber).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/powerLoad_v$(buildMajor).$(buildMinor).$(Build.BuildNumber).zip'
     replaceExistingArchive: true
  
 - task: PublishBuildArtifacts@1
