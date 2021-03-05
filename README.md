@@ -37,7 +37,7 @@ For validating the BCP package that is created from the IDB there are additional
 ## Installation
 Download the complete powerLoad package with the "Download ZIP" command from the "Code"-menu.
 
-![Download powerLoad ZIP package](Images/PL-Download)
+![Download powerLoad ZIP package](Images/PL-Download.png)
 
 Extract the ZIP to a folder 'powerLoad' anywhere on your client machine.!
 
@@ -63,7 +63,7 @@ This section explains how to use and fill the Intermediate Database with the inf
  4. Create the coolOrange Intermediate Database with the sql script Create_IntermediateDB.sql. The default name of the database is "Load".
  5. Check and deactivate option *'Prevent saving changes that require table re-creation'* from the menu *"Tools > Options..."*. 
  
- ![SQL Options](DLG_Options_PreventSavingChanges.gif)
+ ![SQL Options](Images/DLG_Options_PreventSavingChanges.gif)
  
  6. Refer to the Description of the coolOrange Intermediate Database to understand the database model.
 7. Enhance the Files, Folders, Items and/or CustomObjects table with additional UDP fields for transferring metadata to user defined properties (UDPs) in Vault.
