@@ -78,12 +78,11 @@ This section explains how to use and fill the Intermediate Database with the inf
 Utility to load files from Windows folders to the Intermediate Database (IDB)
 
 ### Configuration
-
 In the configuration file ***DefaultBehaviors.xml*** the default behaviours can be set.
 ![image](https://user-images.githubusercontent.com/62716091/81202972-a05dff00-8fc7-11ea-9a4e-c1ce65170e65.png)
 
 
-* ConnectionString: connect string to SQL server and database
+* ConnectionString: Connect string to SQL server and database
 * DataPath: Folderpath that will be scanned. All names of subfolders and files will be transferred to the IDB.
 
 * Folders: Default settings for folder. The following fields in the IDB will be filled with the assigned value for all folders.
@@ -105,7 +104,6 @@ E.g. < CreateUser >< /CreateUser >
 Please don`t rename XML files.
 
 ### Usage
- 
 Start the tool with double click the file IDB.Load.Files.exe.
 In the open dialog specify the ***Path*** and ***SQL Database Connection String*** to import files from the selected folder and sub-folders into the named database.
 
@@ -120,11 +118,39 @@ In the open dialog specify the ***Path*** and ***SQL Database Connection String*
 ![image](https://user-images.githubusercontent.com/62716091/81194971-89b2aa80-8fbd-11ea-8374-c282ad0bbc2d.png)
 
 
-## Logging
-
+### Logging
 The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
 
+## IDB.Load.BCP
+(Description is in preparation)
+
+## IDB.Load.Vault
+Sample code to extract data from Vault and fill the Intermediate Database (IDB). The example uses an Excel table to identify the files to be read out.
+
+
+## IDB.Analyzer.Inventor
+Utility to scan Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
+
+### Prerequsite
+This tool uses Inventor Apprentice. So at least Inventor View must be installed on the machine where this tool is used.
+
+### Configuration
+In the configuration file ***IDB.Analyzer.Inventor.exe.config*** the connection to the SQL database must be set.
+* At the setting ***name="ConnectionString"*** the connect string to SQL server and database must be set. Use the login information, that you use when you login with the Microsoft SQL Server Management Studio.
+* At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The deflaut is ***C:\temp\IDBAnalyze\InventorData***.
+
+Don`t rename configuration files.
+
+### Usage
+Start the tool with double click the file IDB.Analyzer.Inventor.exe. A Windows console will start and the tools scans the Inventor files that are listed in the IDB in the field 'LocalFullFileName'.
+The IDB.Analyzer.Inventor scans:
+* File not exist
+* File invalid (File cannot be opened)
+* Missing references / Contains missing references
+
+### Logging
+The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 
 ## Product Documentation
 
