@@ -190,7 +190,7 @@ Therefor all information that should be transferred to Vault must be filled corr
 ### Usage
 Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens where the needed settings are set and commands are executed:
 
-
+![IDB.Transfer.BCP-dialog](Images/pL-DLG-IDBTranslateBCP.png)
 
 * SQL Database ConnectionString: Connect string to SQL server and database
 * Vault Version: Select version of Vault in wehich will be imported. For Vault 2021 select '2020'.
