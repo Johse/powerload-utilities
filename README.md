@@ -34,9 +34,7 @@ For validating the BCP package that is created from the IDB there are additional
 * AutoCAD and/or Inventor if the analyzer tools are needed
 
 ## Installation
-Download the complete powerLoad package with the "Download ZIP" command from the "Code"-menu.
-
-![Download powerLoad ZIP package](Images/PL-Download.png)
+Download the ZIP powerLoad_v\<version number\>.zip from the Assets section from https://github.com/coolOrangeLabs/powerload-utilities/releases/latest.
 
 Extract the ZIP to a folder 'powerLoad' anywhere on your client machine.
 
