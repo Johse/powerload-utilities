@@ -10,7 +10,7 @@
     </layout>
   </appender>
   <appender name="rollingFileIDBAnalyzeInventor" type="log4net.Appender.RollingFileAppender,log4net">
-    <file type="log4net.Util.PatternString" value="C:\Temp\IDBAnalyze\IDBAnalyzeInventor.log" />
+    <file type="log4net.Util.PatternString" value="${LOCALAPPDATA}\coolOrange\powerLoad\IDB.Analyzer.Inventor.log" />
     <param name="AppendToFile" value="false" />
     <param name="RollingStyle" value="Size" />
     <param name="MaximumFileSize" value="20mb" />
