@@ -103,7 +103,7 @@ In the configuration file ***DefaultBehaviors.xml*** the default behaviours can 
  
 E.g. < CreateUser >< /CreateUser >
 
-Please don`t rename XML files.
+Please do not rename XML files.
 
 ### Usage
 Start the tool with double click the file IDB.Load.Files.exe.
@@ -143,7 +143,7 @@ In the configuration file ***IDB.Analyzer.Inventor.exe.config*** the connection 
 * At the setting ***name="ConnectionString"*** the connect string to SQL server and database must be set. Use the login information, that you use when you login with the Microsoft SQL Server Management Studio.
 * At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The default is *C:\temp\IDBAnalyze\InventorData*.
 
-Don`t rename configuration files!
+Do not rename configuration files!
 
 ### Usage
 Start the tool with double click the file IDB.Analyzer.Inventor.exe. A Windows console will start and the tool scans the Inventor files that are listed in the IDB in the field 'LocalFullFileName'.
@@ -171,7 +171,7 @@ In the configuration file ***IDB.Analyzer.AutoCAD.dll.config*** the connection t
 * At the setting ***name="ConnectionString"*** the connect string to SQL server and database must be set. Use the login information, that you use when you login with the Microsoft SQL Server Management Studio.
 * At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The default is *C:\temp\IDBAnalyze\AutoCADData*.
 
-Don`t rename configuration files!
+Do not rename configuration files!
 
 ### Usage
 Open the file IDB.Analyzer.AutoCAD.ps1 with Windows PowerShell ISE and run the script. A Windows console will start and the tool scans the AutoCAD files that are listed in the IDB in the field 'LocalFullFileName'.
@@ -190,7 +190,7 @@ Therefor all information that should be transferred to Vault must be filled corr
 ### Usage
 Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens where the needed settings are set and commands are executed:
 
-![IDB.Transfer.BCP-dialog](Images/pL-DLG-IDBTranslateBCP.png)
+
 
 * SQL Database ConnectionString: Connect string to SQL server and database
 * Vault Version: Select version of Vault in wehich will be imported. For Vault 2021 select '2020'.
