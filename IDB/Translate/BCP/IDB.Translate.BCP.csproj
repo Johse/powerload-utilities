@@ -107,14 +107,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Database\CreateDatabase.sql">
-      <Link>SQL\CreateDatabase.sql</Link>
+    <Content Include="..\..\Database\Create.IDB.sql">
+      <Link>SQL\Create.IDB.sql</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Database\Validate.IDB.sql">
+      <Link>SQL\Validate.IDB.sql</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="coolorange.ico" />
-    <Content Include="Validate.IDB.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper">

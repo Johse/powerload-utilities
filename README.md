@@ -54,14 +54,14 @@ This section explains how to use and fill the Intermediate Database with the inf
 ### Setting up the Intermediate Database for Vault Import
 
 1. Open SQL Management Studio and login
-2. Open script Create_IntermediateDB.sql in SQL Management Studio
+2. Open script 'Create.IDB.sql' located in the 'SQL' directory in SQL Management Studio
 3. Modify path for mdf and ldf files for your SQL installation
 
     Sample:
     
     Modify `FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.AUTODESKVAULT\MSSQL\DATA\Load.mdf'`
     to `FILENAME = N'C:\Program Files\Microsoft SQL Server\<My SQL instance>\MSSQL\DATA\Load.mdf'`
- 4. Create the coolOrange Intermediate Database with the sql script Create_IntermediateDB.sql. The default name of the database is "Load".
+ 4. Create the powerLoad Intermediate Database by running the script. The default name of the database is "Load".
  5. Check and deactivate option *'Prevent saving changes that require table re-creation'* from the menu *"Tools > Options..."*. 
  
  ![SQL Options](Images/DLG_Options_PreventSavingChanges.gif)

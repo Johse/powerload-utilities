@@ -77,7 +77,7 @@ namespace IDB.Translate.BCP
         private void btnValidate_Click(object sender, EventArgs e)
         {
             IDBValidator validator = new IDBValidator();
-            string scriptPath = System.IO.Directory.GetCurrentDirectory();
+            string scriptPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "SQL");
             string sqlScript = "";
             try
             {
