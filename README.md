@@ -39,7 +39,7 @@ Download the complete powerLoad package with the "Download ZIP" command from the
 
 ![Download powerLoad ZIP package](Images/PL-Download.png)
 
-Extract the ZIP to a folder 'powerLoad' anywhere on your client machine.!
+Extract the ZIP to a folder 'powerLoad' anywhere on your client machine.
 
 
 ## Description
@@ -60,13 +60,14 @@ This section explains how to use and fill the Intermediate Database with the inf
     Sample:
     
     Modify `FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.AUTODESKVAULT\MSSQL\DATA\Load.mdf'`
+    
     to `FILENAME = N'C:\Program Files\Microsoft SQL Server\<My SQL instance>\MSSQL\DATA\Load.mdf'`
  4. Create the powerLoad Intermediate Database by running the script. The default name of the database is "Load".
  5. Check and deactivate option *'Prevent saving changes that require table re-creation'* from the menu *"Tools > Options..."*. 
  
  ![SQL Options](Images/DLG_Options_PreventSavingChanges.gif)
  
- 6. Refer to the Description of the coolOrange Intermediate Database to understand the database model.
+ 6. Refer to the Description of the **coolOrange Intermediate Database** to understand the database model.
 7. Enhance the Files, Folders, Items and/or CustomObjects table with additional UDP fields for transferring metadata to user defined properties (UDPs) in Vault.
 
    * For each property (field) of the legacy system that you want to transfer to Vault an UDP-field in the object table must be added. The name of the UDP-field can be renamed.
@@ -124,7 +125,8 @@ The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrang
 There you find information about successful inserts and errors.
 
 ## IDB.Load.BCP
-(Description is in preparation)
+Utility to load files and folders from a BCP-package to the Intermediate Database (IDB).
+This tool is under construction. Until the new verion is available use the IDB.Load.BCP from here: https://github.com/coolOrangeLabs/idb-load-bcp
 
 ## IDB.Load.Vault
 Sample code to extract data from Vault and fill the Intermediate Database (IDB). The example uses an Excel table to identify the files to be read out.
@@ -139,7 +141,7 @@ This tool uses Inventor Apprentice. So at least Inventor View must be installed 
 ### Configuration
 In the configuration file ***IDB.Analyzer.Inventor.exe.config*** the connection to the SQL database must be set.
 * At the setting ***name="ConnectionString"*** the connect string to SQL server and database must be set. Use the login information, that you use when you login with the Microsoft SQL Server Management Studio.
-* At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The default is ***C:\temp\IDBAnalyze\InventorData***.
+* At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The default is *C:\temp\IDBAnalyze\InventorData*.
 
 Don`t rename configuration files!
 
@@ -154,6 +156,49 @@ The IDB.Analyzer.Inventor scans:
 
 ### Logging
 The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+
+## IDB.Analyzer.AutoCAD
+Utility to scan AutoCAD files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
+
+### Prerequsite
+This tool uses AutoCAD Core Console. So at least AutoCAD Vanilla must be installed on the machine where this tool is used.
+
+### Configuration
+The folder where the tool is installed, must be configured in the **Trusted Locations** of the AutoCAD Options:
+![AutoCAD Trusted Locations](Images/pL-TrustedLocations_ACAD.png)
+
+In the configuration file ***IDB.Analyzer.AutoCAD.dll.config*** the connection to the SQL database must be set.
+* At the setting ***name="ConnectionString"*** the connect string to SQL server and database must be set. Use the login information, that you use when you login with the Microsoft SQL Server Management Studio.
+* At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The default is *C:\temp\IDBAnalyze\AutoCADData*.
+
+Don`t rename configuration files!
+
+### Usage
+Open the file IDB.Analyzer.AutoCAD.ps1 with Windows PowerShell ISE and run the script. A Windows console will start and the tool scans the AutoCAD files that are listed in the IDB in the field 'LocalFullFileName'.
+The IDB.Analyzer.AutoCAD scans:
+* File not exist
+* File invalid (File cannot be opened)
+* Missing references (Xrefs) / Contains missing references
+
+### Logging
+The default location for the log file IDB.Analyzer.AutoCAD.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+
+## IDB.Translate.BCP
+Creates a valid BCP-package from the content of the Intermediate Database.
+Therefor all information that should be transferred to Vault must be filled correctly in the according tables of the IDB.
+
+### Usage
+Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens where the needed settings are set and commands are executed:
+
+![IDB.Transfer.BCP-dialog](Images/pL-DLG-IDBTranslateBCP.png)
+
+* SQL Database ConnectionString: Connect string to SQL server and database
+* Vault Version: Select version of Vault in wehich will be imported. For Vault 2021 select '2020'.
+* BCP Export Directory: Folder in which the BCP package will be exported.
+* Validate Database: Runs the SQL script of file Validate.IDB.txt. 
+* Create BCP Package: Exports the data from the IDB into a BCP package in the specified folder.
+
+### Validation
 
 ## Product Documentation
 
