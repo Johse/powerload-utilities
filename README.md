@@ -58,8 +58,9 @@ This section explains how to use and fill the Intermediate Database with the inf
 3. Modify path for mdf and ldf files for your SQL installation
 
     Sample:
-    Modify ***FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.AUTODESKVAULT\MSSQL\DATA\Load.mdf'***
-    to ***FILENAME = N'C:\Program Files\Microsoft SQL Server\<My SQL instance>\MSSQL\DATA\Load.mdf'***
+    
+    Modify `FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.AUTODESKVAULT\MSSQL\DATA\Load.mdf'`
+    to `FILENAME = N'C:\Program Files\Microsoft SQL Server\<My SQL instance>\MSSQL\DATA\Load.mdf'`
  4. Create the coolOrange Intermediate Database with the sql script Create_IntermediateDB.sql. The default name of the database is "Load".
  5. Check and deactivate option *'Prevent saving changes that require table re-creation'* from the menu *"Tools > Options..."*. 
  
@@ -138,16 +139,18 @@ This tool uses Inventor Apprentice. So at least Inventor View must be installed 
 ### Configuration
 In the configuration file ***IDB.Analyzer.Inventor.exe.config*** the connection to the SQL database must be set.
 * At the setting ***name="ConnectionString"*** the connect string to SQL server and database must be set. Use the login information, that you use when you login with the Microsoft SQL Server Management Studio.
-* At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The deflaut is ***C:\temp\IDBAnalyze\InventorData***.
+* At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The default is ***C:\temp\IDBAnalyze\InventorData***.
 
-Don`t rename configuration files.
+Don`t rename configuration files!
 
 ### Usage
-Start the tool with double click the file IDB.Analyzer.Inventor.exe. A Windows console will start and the tools scans the Inventor files that are listed in the IDB in the field 'LocalFullFileName'.
+Start the tool with double click the file IDB.Analyzer.Inventor.exe. A Windows console will start and the tool scans the Inventor files that are listed in the IDB in the field 'LocalFullFileName'.
 The IDB.Analyzer.Inventor scans:
 * File not exist
 * File invalid (File cannot be opened)
 * Missing references / Contains missing references
+* Missing OLE reference / Contains missing OLE references
+* Duplicates: Identical file names in different folders
 
 ### Logging
 The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
