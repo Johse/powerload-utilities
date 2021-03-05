@@ -5,12 +5,14 @@ namespace IDB.Load.Files
 {
     internal class XmlConfiguration
     {
+        private const string XmlFile = "IDB.Load.Files.Default.Behaviors.xml";
+
         private static XDocument GetXmlDocument()
         {
             var document = new XDocument();
             try
             {
-                document = XDocument.Load("DefaultBehaviors.xml");
+                document = XDocument.Load(XmlFile);
             }
             catch
             {
@@ -40,7 +42,7 @@ namespace IDB.Load.Files
 
             mainElement.RemoveAttributes();
             mainElement.SetValue(value);
-            document.Save("DefaultBehaviors.xml");
+            document.Save(XmlFile);
             Logger.Log.Info(":Value has been save:" + value);
         }
     }

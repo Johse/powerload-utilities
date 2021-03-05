@@ -99,7 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="coolorange.ico" />
-    <Content Include="DefaultBehaviors.xml">
+    <Content Include="IDB.Load.Files.Default.Behaviors.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
