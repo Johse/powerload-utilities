@@ -3,16 +3,19 @@
 	<xsl:output method="text" indent="no"/>	
 	<xsl:param name="documentName"></xsl:param>
 	<xsl:variable name="delimiter" select="';'"/>
-	<xsl:variable name="test" select="document($documentName)/list/UDP"/>
+	<xsl:variable name="list" select="document($documentName)/FilePropertyDefinition/UDP"/>
+	<xsl:variable name="lowercase">abcdefghijklmnopqrstuvwxyz</xsl:variable>
+	<xsl:variable name="uppercase">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
 	<xsl:template match="/">
 		<xsl:text>FileId;IterationId;LocalFullFileName;FileName;Category;Classification;RevisionLabel;RevisionDefinition;LifeCycleState;LifeCycleDefinition;Path</xsl:text>		
-		<xsl:for-each select="$test">
+		<xsl:for-each select="$list">
 			<xsl:value-of select="$delimiter" />
 			<xsl:value-of select="." />
-		</xsl:for-each>		
+		</xsl:for-each>
 		<xsl:text>&#10;</xsl:text>
 		<xsl:apply-templates/>
 	</xsl:template>
+	
 	<xsl:template match="h:File">
 		<xsl:apply-templates></xsl:apply-templates>
 	</xsl:template>
@@ -24,24 +27,31 @@
 	<xsl:template match="h:Folder/h:UDP"/>
 	<xsl:template match="h:Iteration">
 		<xsl:value-of select="concat($delimiter,substring(@Id,2),$delimiter,@LocalPath, $delimiter, ancestor::h:File/@Name, $delimiter, ancestor::h:File/@Category, $delimiter, ancestor::h:File/@Classification, $delimiter, ancestor::h:Revision/@Label, $delimiter, ancestor::h:Revision/@Definition, $delimiter, h:State/@Name, $delimiter, h:State/@Definition)"/>
-		<xsl:text>;$</xsl:text>
+		<xsl:value-of select="$delimiter" />
+		<xsl:text>$</xsl:text>
 		<xsl:apply-templates select="ancestor-or-self::h:Folder/@Name"/>
-		<xsl:text>;</xsl:text>
-		<xsl:variable name="fileudps" select="."/>
-		<xsl:for-each select="$test">
+		<xsl:value-of select="$delimiter" />
+		<xsl:variable name="file" select="."/>
+		<xsl:for-each select="$list">
 			<xsl:variable name="udpName" select="."/>
-			<xsl:for-each select="$fileudps/h:UDP">
+			<xsl:variable name="datatype" select="@DataType"/>
+			<xsl:for-each select="$file/h:UDP">
 				<xsl:if test="concat('UDP_',@Name) = $udpName">
-					<xsl:value-of select="normalize-space(.)"/>            
+					<xsl:choose>
+						<xsl:when test="($datatype='bit') and ((translate(.,$uppercase,$lowercase)='true'))">1</xsl:when>
+						<xsl:when test="($datatype='bit') and ((translate(.,$uppercase,$lowercase)='false'))">0</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select=" normalize-space(.)"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:if>
 			</xsl:for-each>
-			<xsl:text>;</xsl:text>
+			<xsl:value-of select="$delimiter" />
 		</xsl:for-each>
 		<xsl:text>&#10;</xsl:text>
 	</xsl:template>
 	<xsl:template match="h:Folder/@Name">
-		<xsl:if test="position() > 1">/</xsl:if>
-		<xsl:text>/</xsl:text>
+		<xsl:if test="position() > 0">/</xsl:if>
 		<xsl:value-of select="."/>
 	</xsl:template>
 </xsl:stylesheet>

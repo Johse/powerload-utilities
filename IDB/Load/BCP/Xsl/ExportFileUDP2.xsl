@@ -19,7 +19,7 @@
 		<xsl:apply-templates select="h:Assignment[@Class = 'File']" mode="numeric"></xsl:apply-templates>
 	</xsl:template>
 	<xsl:template match="h:PropertyDefinition[@Type='Bool']">
-		<xsl:apply-templates select="h:Assignment[@Class = 'File']"></xsl:apply-templates>
+		<xsl:apply-templates select="h:Assignment[@Class = 'File']" mode="bool"></xsl:apply-templates>
 	</xsl:template>
 	<xsl:template match="h:Assignment[@Class = 'File']">
 		<UDP DataType="nvarchar(MAX)">
@@ -34,7 +34,13 @@
 		</UDP>
 	</xsl:template>
 	<xsl:template match="h:Assignment[@Class = 'File']" mode="numeric">
-		<UDP DataType="int">
+		<UDP DataType="Decimal(100,20)">
+			<xsl:text>UDP_</xsl:text>
+			<xsl:value-of select="../@Name"/>
+		</UDP>
+	</xsl:template>
+	<xsl:template match="h:Assignment[@Class = 'File']" mode="bool">
+		<UDP DataType="bit">
 			<xsl:text>UDP_</xsl:text>
 			<xsl:value-of select="../@Name"/>
 		</UDP>

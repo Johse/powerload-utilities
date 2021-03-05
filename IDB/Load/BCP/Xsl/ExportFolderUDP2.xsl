@@ -5,9 +5,9 @@
 		<xsl:apply-templates/>
 	</xsl:template>
 	<xsl:template match="h:Behaviors">
-		<FilePropertyDefinition>
-			<xsl:apply-templates/>
-		</FilePropertyDefinition>
+		<FolderPropertyDefinition>
+		<xsl:apply-templates/>
+		</FolderPropertyDefinition>
 	</xsl:template>
 	<xsl:template match="h:PropertyDefinition[not(@Type)]">
 		<xsl:apply-templates select="h:Assignment[@Class = 'Folder']"></xsl:apply-templates>
@@ -19,7 +19,7 @@
 		<xsl:apply-templates select="h:Assignment[@Class = 'Folder']" mode="numeric"></xsl:apply-templates>
 	</xsl:template>
 	<xsl:template match="h:PropertyDefinition[@Type='Bool']">
-		<xsl:apply-templates select="h:Assignment[@Class = 'Folder']"></xsl:apply-templates>
+		<xsl:apply-templates select="h:Assignment[@Class = 'Folder']"  mode="bool"></xsl:apply-templates>
 	</xsl:template>
 	<xsl:template match="h:Assignment[@Class = 'Folder']">
 		<UDP DataType="nvarchar(MAX)">
@@ -34,7 +34,13 @@
 		</UDP>
 	</xsl:template>
 	<xsl:template match="h:Assignment[@Class = 'Folder']" mode="numeric">
-		<UDP DataType="int">
+		<UDP DataType="Decimal(100,20)">
+			<xsl:text>UDP_</xsl:text>
+			<xsl:value-of select="../@Name"/>
+		</UDP>
+	</xsl:template>
+	<xsl:template match="h:Assignment[@Class = 'Folder']" mode="bool">
+		<UDP DataType="bit">
 			<xsl:text>UDP_</xsl:text>
 			<xsl:value-of select="../@Name"/>
 		</UDP>
