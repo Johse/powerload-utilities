@@ -21,7 +21,6 @@ The powerLoad utilites are:
 * **IDB.Load.Vault:** Sample code to extract data from Vault and fill the Intermediate Database (IDB).
 * **IDB.Analyzer.Inventor:** Scans Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
 * **IDB.Analyzer.AutoCAD:** Scans AutoCAD DWGs files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
-* **IDB.Discover.Vault:** Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB)
 * **IDB.Translate.BCP:** Creates a valid BCP-package from the content of the Intermediate Database.
 
 ### Additions
@@ -59,8 +58,7 @@ This section explains how to use and fill the Intermediate Database with the inf
 
     Sample:
     
-    Modify `FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.AUTODESKVAULT\MSSQL\DATA\Load.mdf'`
-    
+    Modify `FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.AUTODESKVAULT\MSSQL\DATA\Load.mdf'`    
     to `FILENAME = N'C:\Program Files\Microsoft SQL Server\<My SQL instance>\MSSQL\DATA\Load.mdf'`
  4. Create the coolOrange Intermediate Database with the sql script Create_IntermediateDB.sql. The default name of the database is "Load".
  5. Check and deactivate option *'Prevent saving changes that require table re-creation'* from the menu *"Tools > Options..."*. 
@@ -84,9 +82,8 @@ In the configuration file ***DefaultBehaviors.xml*** the default behaviours can 
 ![image](https://user-images.githubusercontent.com/62716091/81202972-a05dff00-8fc7-11ea-9a4e-c1ce65170e65.png)
 
 
-* ConnectionString: Connect string to SQL server and database
+* ConnectionString: Connect string to SQL server and database  
 * DataPath: Folderpath that will be scanned. All names of subfolders and files will be transferred to the IDB.
-
 * Folders: Default settings for folder. The following fields in the IDB will be filled with the assigned value for all folders.
 	* Category
 	* CreateUser 
@@ -119,7 +116,6 @@ In the open dialog specify the ***Path*** and ***SQL Database Connection String*
 
 ![image](https://user-images.githubusercontent.com/62716091/81194971-89b2aa80-8fbd-11ea-8374-c282ad0bbc2d.png)
 
-
 ### Logging
 The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
@@ -130,7 +126,6 @@ This tool is under construction. Until the new verion is available use the IDB.L
 
 ## IDB.Load.Vault
 Sample code to extract data from Vault and fill the Intermediate Database (IDB). The example uses an Excel table to identify the files to be read out.
-
 
 ## IDB.Analyzer.Inventor
 Utility to scan Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
@@ -199,6 +194,11 @@ Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens 
 * Create BCP Package: Exports the data from the IDB into a BCP package in the specified folder.
 
 ### Validation
+With the command *Validate Database* you can run a SQL script for validating the data in the Intermediate Database. The script that is executed in in the file Validate.IDB.sql.
+In this way you can add own validations to that script file and test them in the SQL Management Studio before. 
+In the script 2 tables are created in the IDB:
+* Validation_Status: Is set to 'Error' on the file, folder or file-file-relation when an error is found in the validations script for the file, folder or file-file-relation
+* Validation_Comment: Reason or description for the error
 
 ## Product Documentation
 
@@ -206,3 +206,5 @@ Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens 
 
 ## Author
 coolOrange s.r.l.
+
+![coolOrange](https://i.ibb.co/NmnmjDT/Logo-CO-Full-colore-RGB-short-Payoff.png)
