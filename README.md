@@ -187,18 +187,18 @@ Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens 
 
 ![IDB.Transfer.BCP-dialog](Images/pL-DLG-IDBTranslateBCP.png)
 
-* SQL Database ConnectionString: Connect string to SQL server and database
-* Vault Version: Select version of Vault in wehich will be imported. For Vault 2021 select '2020'.
-* BCP Export Directory: Folder in which the BCP package will be exported.
-* Validate Database: Runs the SQL script of file Validate.IDB.txt. 
-* Create BCP Package: Exports the data from the IDB into a BCP package in the specified folder.
+* **SQL Database ConnectionString**: Connect string to SQL server and database
+* **Vault Version**: Select version of Vault in wehich will be imported. For Vault 2021 select '2020'.
+* **BCP Export Directory**: Folder in which the BCP package will be exported.
+* **Validate Database**: Runs the SQL script of file Validate.IDB.txt. 
+* **Create BCP Package**: Exports the data from the IDB into a BCP package in the specified folder.
 
 ### Validation
 With the command *Validate Database* you can run a SQL script for validating the data in the Intermediate Database. The script that is executed in in the file Validate.IDB.sql.
 In this way you can add own validations to that script file and test them in the SQL Management Studio before. 
 In the script 2 tables are created in the IDB:
-* Validation_Status: Is set to 'Error' on the file, folder or file-file-relation when an error is found in the validations script for the file, folder or file-file-relation
-* Validation_Comment: Reason or description for the error
+* **Validation_Status**: Is set to 'Error' on the file, folder or file-file-relation when an error is found in the validations script for the file, folder or file-file-relation
+* **Validation_Comment**: Reason or description for the error
 
 ## Product Documentation
 
