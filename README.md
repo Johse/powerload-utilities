@@ -39,7 +39,7 @@ Download the complete powerLoad package with the "Download ZIP" command from the
 
 ![Download powerLoad ZIP package](Images/PL-Download.png)
 
-Extract the ZIP to a folder 'powerLoad' anywhere on your client machine.!
+Extract the ZIP to a folder 'powerLoad' anywhere on your client machine.
 
 
 ## Description
@@ -67,7 +67,7 @@ This section explains how to use and fill the Intermediate Database with the inf
  
  ![SQL Options](Images/DLG_Options_PreventSavingChanges.gif)
  
- 6. Refer to the Description of the coolOrange Intermediate Database to understand the database model.
+ 6. Refer to the Description of the **coolOrange Intermediate Database** to understand the database model.
 7. Enhance the Files, Folders, Items and/or CustomObjects table with additional UDP fields for transferring metadata to user defined properties (UDPs) in Vault.
 
    * For each property (field) of the legacy system that you want to transfer to Vault an UDP-field in the object table must be added. The name of the UDP-field can be renamed.
