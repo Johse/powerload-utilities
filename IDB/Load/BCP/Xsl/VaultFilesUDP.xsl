@@ -3,7 +3,7 @@
 	<xsl:output method="text" indent="no"/>	
 	<xsl:param name="documentName"></xsl:param>
 	<xsl:variable name="delimiter" select="';'"/>
-	<xsl:variable name="list" select="document($documentName)/FilePropertyDefinition/UDP"/>
+	<xsl:variable name="list" select="document($documentName)/list/UDP"/>
 	<xsl:variable name="lowercase">abcdefghijklmnopqrstuvwxyz</xsl:variable>
 	<xsl:variable name="uppercase">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
 	<xsl:template match="/">
@@ -30,13 +30,13 @@
 		<xsl:value-of select="$delimiter" />
 		<xsl:text>$</xsl:text>
 		<xsl:apply-templates select="ancestor-or-self::h:Folder/@Name"/>
-		<xsl:value-of select="$delimiter" />
 		<xsl:variable name="file" select="."/>
 		<xsl:for-each select="$list">
 			<xsl:variable name="udpName" select="."/>
 			<xsl:variable name="datatype" select="@DataType"/>
 			<xsl:for-each select="$file/h:UDP">
-				<xsl:if test="concat('UDP_',@Name) = $udpName">
+				<xsl:variable name="Name" select="translate(@Name, ' ','_')"/>
+				<xsl:if test="concat('UDP_',$Name) = $udpName">
 					<xsl:choose>
 						<xsl:when test="($datatype='bit') and ((translate(.,$uppercase,$lowercase)='true'))">1</xsl:when>
 						<xsl:when test="($datatype='bit') and ((translate(.,$uppercase,$lowercase)='false'))">0</xsl:when>
@@ -46,7 +46,6 @@
 					</xsl:choose>
 				</xsl:if>
 			</xsl:for-each>
-			<xsl:value-of select="$delimiter" />
 		</xsl:for-each>
 		<xsl:text>&#10;</xsl:text>
 	</xsl:template>

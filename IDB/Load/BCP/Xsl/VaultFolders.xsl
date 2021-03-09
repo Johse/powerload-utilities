@@ -4,7 +4,7 @@
   <xsl:output method="text" indent="no"/>
 	<xsl:param name="documentName"></xsl:param>
 	<xsl:variable name="delimiter" select="';'"/>
-	<xsl:variable name="list" select="document($documentName)/FolderPropertyDefinition/UDP"/>
+	<xsl:variable name="list" select="document($documentName)/list/UDP"/>
 	<xsl:variable name="lowercase">abcdefghijklmnopqrstuvwxyz</xsl:variable>
 	<xsl:variable name="uppercase">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
   <xsl:template match="/">
@@ -30,23 +30,23 @@
 		</xsl:otherwise>
 	</xsl:choose>
 	<xsl:value-of select="concat($delimiter,$delimiter,$delimiter, @Category, $delimiter, h:Created/@User, $delimiter, h:Created/@Date)"/>
-	<xsl:value-of select="$delimiter" />
-		<xsl:for-each select="$list">
-			<xsl:variable name="udpName" select="."/>
-			<xsl:variable name="datatype" select="@DataType"/>
-			<xsl:for-each select="$curr/h:UDP">
-				<xsl:if test="concat('UDP_',@Name) = $udpName">
-					<xsl:choose>
-						<xsl:when test="($datatype='bit') and ((translate(.,$uppercase,$lowercase)='true'))">1</xsl:when>
-						<xsl:when test="($datatype='bit') and ((translate(.,$uppercase,$lowercase)='false'))">0</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="normalize-space(.)"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:if>
-			</xsl:for-each>
-			<xsl:value-of select="$delimiter" />
+	<xsl:for-each select="$list">		
+		<xsl:variable name="udpName" select="."/>
+		<xsl:variable name="datatype" select="@DataType"/>
+		<xsl:value-of select="$delimiter" />
+		<xsl:for-each select="$curr/h:UDP">
+			<xsl:variable name="Name" select="translate(@Name, ' ','_')"/>
+			<xsl:if test="concat('UDP_',$Name) = $udpName">
+				<xsl:choose>
+					<xsl:when test="($datatype='bit') and ((translate(.,$uppercase,$lowercase)='true'))">1</xsl:when>
+					<xsl:when test="($datatype='bit') and ((translate(.,$uppercase,$lowercase)='false'))">0</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="normalize-space(.)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
 		</xsl:for-each>
+	</xsl:for-each>
       <xsl:text>&#10;</xsl:text>
   </xsl:template>
     

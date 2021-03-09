@@ -160,8 +160,29 @@ function Create-FolderTable{
     }
 }
 
+
+function Remove-ColumnsFromTable{
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$Table,
+        [Parameter(Mandatory=$true)]
+        [string[]]$ColumnNames
+    )
+    foreach ($ColumnName in $ColumnNames){
+        $CommandText = "IF COL_LENGTH('$Table', '$ColumnName') IS NOT NULL
+        Begin
+	        alter table dbo.Folders Drop column $($ColumnName)
+        End"
+
+        Run-SqlCommand -SqlQuery $CommandText
+    }
+    
+
+}
 function Add-ColumnsToTable{
     param(
+        [Parameter(Mandatory=$true)]
+        [string]$Table,
         [Parameter(Mandatory=$true)]
         [string]$xmlpath
     )
@@ -170,14 +191,39 @@ function Add-ColumnsToTable{
     foreach ($udp in $xml.list.UDP){
         $udps += "$($udp.'#text') $($udp.DataType)"
     }
-    $udplist = $udps -join ' null,'
-    $CommandText = "Alter table dbo.Folders1
-                    Add $($udplist)"
+    if ($udps.Count -gt 0)
+    {
+        $udplist = $udps -join ' null,'
+        $CommandText = "Alter table dbo.$($Table)
+                    Add $($udplist) null;"
 
-    Run-SqlCommand -SqlQuery $CommandText
-
+        Run-SqlCommand -SqlQuery $CommandText
+    }
 }
 
+
+function Load-FolderCsvToSql{
+    param(       
+        [Parameter(Mandatory=$true)]
+        [string]$FolderUdpXmlPath,
+        [Parameter(Mandatory=$true)]
+        [string]$VaultFoldersCsvPath,
+        [Parameter(Mandatory=$true)]
+        [string]$Server,
+        [Parameter(Mandatory=$true)]
+        [string]$Database
+    )
+    Open-SqlConnection -Server $Server -Database $Database
+    $job = [Job]::new($VaultFoldersCsvPath, $null)
+    $columnNames = @("UDP_Title", "UDP_Description")
+    $removeColumns = [RemoveColumns]::new("Folders",$columnNames)
+    $job.AddStage($removeColumns)
+    $AddColumns = [AddColumns]::new("Folders",$FolderUdpXmlPath)
+    $job.AddStage($AddColumns)
+    $LoadCsvToSqlTable = [LoadCsvToSqlTable]::new("Folders",$VaultFoldersCsvPath)
+    $job.AddStage($LoadCsvToSqlTable)
+    return $job.Invoke()
+}
 
 function New-Transform{
     param(
@@ -301,6 +347,77 @@ class CsvTransform : Stage {
         $XSLTCompiledTransform.Transform($j.Source,$xslarguments, $sw)
         $sw.Close()
 
+        $J.LogEntry("[in {0:N2}s]" -f $this.GetElapsed().TotalSeconds)
+    }
+}
+
+class RemoveColumns: Stage{
+    [string[]] $Columns
+    [string] $Table
+    RemoveColumns ($Table, $Columns) : base('Remove Columns from table') {
+        $this.Columns = $Columns
+        $this.Table = $Table    
+    }
+
+    Invoke([job]$J) {
+
+        $J.LogHeader($this.GetHeader())
+        
+        foreach ($ColumnName in $this.Columns){
+            $CommandText = "IF COL_LENGTH('dbo.$($this.Table)', '$ColumnName') IS NOT NULL
+            Begin
+	            alter table dbo.Folders Drop column $($ColumnName)
+            End"
+
+            Run-SqlCommand -SqlQuery $CommandText
+        }
+        $J.LogEntry("[in {0:N2}s]" -f $this.GetElapsed().TotalSeconds)
+    }
+}
+
+class AddColumns: Stage{
+    [string[]] $XmlPath
+    [string] $Table
+    AddColumns ($Table, $xmlpath) : base('Add Columns to table') {
+        $this.XmlPath = $xmlpath
+        $this.Table = $Table    
+    }
+
+    Invoke([job]$J) {
+
+        $J.LogHeader($this.GetHeader())
+        [xml]$xml = Get-Content $this.XmlPath
+        $udps = @()
+        foreach ($udp in $xml.list.UDP){
+            $udps += "$($udp.'#text') $($udp.DataType)"
+        }        
+        if ($udps.Count -gt 0)
+        {
+            $udplist = $udps -join ' null,'
+            $CommandText = "Alter table dbo.$($this.Table)
+                        Add $($udplist) null;"
+
+            Run-SqlCommand -SqlQuery $CommandText
+        }
+        $J.LogEntry("[in {0:N2}s]" -f $this.GetElapsed().TotalSeconds)
+    }
+}
+
+class LoadCsvToSqlTable: Stage{
+    [string[]] $CsvPath
+    [string] $Table
+    LoadCsvToSqlTable ($Table, $CsvPath) : base('Add Columns to table') {
+        $this.CsvPath = $CsvPath
+        $this.Table = $Table    
+    }
+
+    Invoke([job]$J) {
+
+        $J.LogHeader($this.GetHeader())
+
+        $CommandText = "BULK INSERT dbo.$($this.Table) FROM '$($this.CsvPath)' WITH (DATAFILETYPE = 'char', FIRSTROW=2, FIELDTERMINATOR =';', ROWTERMINATOR = '0x0a');"
+        
+        Run-SqlCommand -SqlQuery $CommandText
         $J.LogEntry("[in {0:N2}s]" -f $this.GetElapsed().TotalSeconds)
     }
 }
