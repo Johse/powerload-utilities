@@ -21,7 +21,6 @@ The powerLoad utilites are:
 * **IDB.Load.Vault:** Sample code to extract data from Vault and fill the Intermediate Database (IDB).
 * **IDB.Analyzer.Inventor:** Scans Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
 * **IDB.Analyzer.AutoCAD:** Scans AutoCAD DWGs files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
-* **IDB.Discover.Vault:** Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB)
 * **IDB.Translate.BCP:** Creates a valid BCP-package from the content of the Intermediate Database.
 
 ### Additions
@@ -35,9 +34,7 @@ For validating the BCP package that is created from the IDB there are additional
 * AutoCAD and/or Inventor if the analyzer tools are needed
 
 ## Installation
-Download the complete powerLoad package with the "Download ZIP" command from the "Code"-menu.
-
-![Download powerLoad ZIP package](Images/PL-Download.png)
+Download the ZIP powerLoad_v\<version number\>.zip from the Assets section from https://github.com/coolOrangeLabs/powerload-utilities/releases/latest.
 
 Extract the ZIP to a folder 'powerLoad' anywhere on your client machine.
 
@@ -59,8 +56,7 @@ This section explains how to use and fill the Intermediate Database with the inf
 
     Sample:
     
-    Modify `FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.AUTODESKVAULT\MSSQL\DATA\Load.mdf'`
-    
+    Modify `FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.AUTODESKVAULT\MSSQL\DATA\Load.mdf'`    
     to `FILENAME = N'C:\Program Files\Microsoft SQL Server\<My SQL instance>\MSSQL\DATA\Load.mdf'`
  4. Create the powerLoad Intermediate Database by running the script. The default name of the database is "Load".
  5. Check and deactivate option *'Prevent saving changes that require table re-creation'* from the menu *"Tools > Options..."*. 
@@ -84,9 +80,8 @@ In the configuration file ***DefaultBehaviors.xml*** the default behaviours can 
 ![image](https://user-images.githubusercontent.com/62716091/81202972-a05dff00-8fc7-11ea-9a4e-c1ce65170e65.png)
 
 
-* ConnectionString: Connect string to SQL server and database
+* ConnectionString: Connect string to SQL server and database  
 * DataPath: Folderpath that will be scanned. All names of subfolders and files will be transferred to the IDB.
-
 * Folders: Default settings for folder. The following fields in the IDB will be filled with the assigned value for all folders.
 	* Category
 	* CreateUser 
@@ -103,7 +98,7 @@ In the configuration file ***DefaultBehaviors.xml*** the default behaviours can 
  
 E.g. < CreateUser >< /CreateUser >
 
-Please don`t rename XML files.
+Please do not rename XML files.
 
 ### Usage
 Start the tool with double click the file IDB.Load.Files.exe.
@@ -119,7 +114,6 @@ In the open dialog specify the ***Path*** and ***SQL Database Connection String*
 
 ![image](https://user-images.githubusercontent.com/62716091/81194971-89b2aa80-8fbd-11ea-8374-c282ad0bbc2d.png)
 
-
 ### Logging
 The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
@@ -130,7 +124,6 @@ This tool is under construction. Until the new verion is available use the IDB.L
 
 ## IDB.Load.Vault
 Sample code to extract data from Vault and fill the Intermediate Database (IDB). The example uses an Excel table to identify the files to be read out.
-
 
 ## IDB.Analyzer.Inventor
 Utility to scan Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
@@ -143,7 +136,7 @@ In the configuration file ***IDB.Analyzer.Inventor.exe.config*** the connection 
 * At the setting ***name="ConnectionString"*** the connect string to SQL server and database must be set. Use the login information, that you use when you login with the Microsoft SQL Server Management Studio.
 * At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The default is *C:\temp\IDBAnalyze\InventorData*.
 
-Don`t rename configuration files!
+Do not rename configuration files!
 
 ### Usage
 Start the tool with double click the file IDB.Analyzer.Inventor.exe. A Windows console will start and the tool scans the Inventor files that are listed in the IDB in the field 'LocalFullFileName'.
@@ -171,7 +164,7 @@ In the configuration file ***IDB.Analyzer.AutoCAD.dll.config*** the connection t
 * At the setting ***name="ConnectionString"*** the connect string to SQL server and database must be set. Use the login information, that you use when you login with the Microsoft SQL Server Management Studio.
 * At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The default is *C:\temp\IDBAnalyze\AutoCADData*.
 
-Don`t rename configuration files!
+Do not rename configuration files!
 
 ### Usage
 Open the file IDB.Analyzer.AutoCAD.ps1 with Windows PowerShell ISE and run the script. A Windows console will start and the tool scans the AutoCAD files that are listed in the IDB in the field 'LocalFullFileName'.
@@ -192,13 +185,18 @@ Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens 
 
 ![IDB.Transfer.BCP-dialog](Images/pL-DLG-IDBTranslateBCP.png)
 
-* SQL Database ConnectionString: Connect string to SQL server and database
-* Vault Version: Select version of Vault in wehich will be imported. For Vault 2021 select '2020'.
-* BCP Export Directory: Folder in which the BCP package will be exported.
-* Validate Database: Runs the SQL script of file Validate.IDB.txt. 
-* Create BCP Package: Exports the data from the IDB into a BCP package in the specified folder.
+* **SQL Database ConnectionString**: Connect string to SQL server and database
+* **Vault Version**: Select version of Vault in wehich will be imported. For Vault 2021 select '2020'.
+* **BCP Export Directory**: Folder in which the BCP package will be exported.
+* **Validate Database**: Runs the SQL script of file Validate.IDB.txt. 
+* **Create BCP Package**: Exports the data from the IDB into a BCP package in the specified folder.
 
 ### Validation
+With the command *Validate Database* you can run a SQL script for validating the data in the Intermediate Database. The script that is executed in in the file Validate.IDB.sql.
+In this way you can add own validations to that script file and test them in the SQL Management Studio before. 
+In the script 2 tables are created in the IDB:
+* **Validation_Status**: Is set to 'Error' on the file, folder or file-file-relation when an error is found in the validations script for the file, folder or file-file-relation
+* **Validation_Comment**: Reason or description for the error
 
 ## Product Documentation
 
@@ -206,3 +204,5 @@ Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens 
 
 ## Author
 coolOrange s.r.l.
+
+![coolOrange](https://i.ibb.co/NmnmjDT/Logo-CO-Full-colore-RGB-short-Payoff.png)
