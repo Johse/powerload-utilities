@@ -6,6 +6,8 @@
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.   #
 #==============================================================================#
 
+Open-VaultConnection -Server "localhost" -Vault "Vault" -User "Administrator" -Password ""
+
 $csvFile = "C:\Temp\YourCsvData.csv"
 $delimiter = ";"
 $csv = Import-Csv -Path $csvFile -Delimiter $delimiter
