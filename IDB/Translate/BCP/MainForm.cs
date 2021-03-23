@@ -428,11 +428,9 @@ namespace IDB.Translate.BCP
 
                     var folderObject = bcpService.FileService.SearchFolderByPath(vaultFullFolderPath);
                     if (folderObject == null)
-                    {
                         folderObject = bcpService.FileService.AddFolder(vaultFullFolderPath);
-                        folderObject.SetLibrary(folder.IsLibrary);
-                    }
 
+                    folderObject.SetLibrary(folder.IsLibrary);
                     folderObject.Category = folder.Category;
                     foreach (var udp in folder.UserDefinedProperties)
                     {
