@@ -36,7 +36,7 @@ For validating the BCP package that is created from the IDB there are additional
 ## Installation
 Download the ZIP powerLoad_v\<version number\>.zip from the Assets section from https://github.com/coolOrangeLabs/powerload-utilities/releases/latest.
 
-Extract the ZIP to a folder 'powerLoad' e.g. "C:\coolOrange\powerLoad" on the machine, where the bcpToolkit is intalled.
+Extract the ZIP to a folder 'powerLoad' e.g. '*C:\coolOrange\powerLoad*' on the machine, where the bcpToolkit is installed.
 
 
 ## Description
