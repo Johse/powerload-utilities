@@ -36,7 +36,7 @@ For validating the BCP package that is created from the IDB there are additional
 ## Installation
 Download the ZIP powerLoad_v\<version number\>.zip from the Assets section from https://github.com/coolOrangeLabs/powerload-utilities/releases/latest.
 
-Extract the ZIP to a folder 'powerLoad' anywhere on your client machine.
+Extract the ZIP to a folder 'powerLoad' e.g. "C:\coolOrange\powerLoad" on the machine, where the bcpToolkit is intalled.
 
 
 ## Description
@@ -179,6 +179,9 @@ The default location for the log file IDB.Analyzer.AutoCAD.log is '*C:\Users\coo
 ## IDB.Translate.BCP
 Creates a valid BCP-package from the content of the Intermediate Database.
 Therefor all information that should be transferred to Vault must be filled correctly in the according tables of the IDB.
+
+### Prerequsite
+This utility uses the bcpDevkit to create the BCP-package. Therefor it must be installed on the same machine, where the bcpToolkit is installed and licenced.
 
 ### Usage
 Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens where the needed settings are set and commands are executed:
