@@ -186,19 +186,14 @@ This utility uses the bcpDevkit to create the BCP-package. Therefore it must be 
 ### Configuration
 The default ordering of the files is 'FileName, RevsionsLabel, Version', which means that files are ordered by the value of the RevisionLable, and if there are identical values the next ordering is by Version.
 The default ordering can be overwritten in the config file IDB.Translate.BCP.exe.config with the attribute "CustomFilesOrderByFields".
-For example, if the ordering should be by the Version only set:
-`...
-    <applicationSettings>
-      <IDB.Translate.BCP.Properties.Settings>
-        <setting name="CustomFilesOrderByFields" serializeAs="String">
-          <value>''FileName, Version**</value>
-        </setting>
-...`
+For example, if the files should be ordered by the Version only, set:
+
+![IDB.Translate.BCP-order files](Images/pL-IDB.Translate.BCP-orderFiles.png)
 
 ### Usage
 Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens where the needed settings are set and commands are executed:
 
-![IDB.Transfer.BCP-dialog](Images/pL-DLG-IDBTranslateBCP.png)
+![IDB.Translate.BCP-dialog](Images/pL-DLG-IDBTranslateBCP.png)
 
 * **SQL Database ConnectionString**: Connect string to SQL server and database
 * **Vault Version**: Select version of Vault in wehich will be imported. For Vault 2021 select '2020'.
