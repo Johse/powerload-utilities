@@ -51,7 +51,7 @@ This section explains how to use and fill the Intermediate Database with the inf
 ### Setting up the Intermediate Database for Vault Import
 
 1. Open SQL Management Studio and login
-2. Open script 'Create.IDB.sql' located in the 'SQL' directory in SQL Management Studio
+2. Open script '*Create.IDB.sql*', located in the '*SQL*' sub-directory, in SQL Management Studio
 3. Modify path for mdf and ldf files for your SQL installation
 
     Sample:
@@ -185,7 +185,7 @@ This utility uses the bcpDevkit to create the BCP-package. Therefore it must be 
 
 ### Configuration
 The default ordering of the files is 'FileName, RevsionsLabel, Version', which means that files are ordered by the value of the RevisionLable, and if there are identical values the next ordering is by Version.
-The default ordering can be overwritten in the config file IDB.Translate.BCP.exe.config with the attribute "CustomFilesOrderByFields".
+The default ordering can be overwritten in the config file ***IDB.Translate.BCP.exe.config*** with the attribute "*CustomFilesOrderByFields*".
 For example, if the files should be ordered by the Version only, set:
 
 ![IDB.Translate.BCP-order files](Images/pL-IDB.Translate.BCP-orderFiles.png)
