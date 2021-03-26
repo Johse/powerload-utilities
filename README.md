@@ -13,7 +13,7 @@ THE SAMPLE CODE ON THIS REPOSITORY IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY K
 THE USAGE OF THIS SAMPLE IS AT YOUR OWN RISK AND **THERE IS NO SUPPORT** RELATED TO IT.
 
 ## Overview
-The powerLoad utilities are a set of utilities for loading the Autodesk Vault Workgroup or Professional which are based on the bcpToolkit.
+The powerLoad utilities are a set of utilities - based on the bcpToolkit - for loading the Autodesk Vault Workgroup or Professional.
 The powerLoad utilites are:
 * **powerLoad Intermediate Database (IDB):** SQL database for transforming the data to fit to the target Vault
 * **IDB.Load.Files:** Utility to load files from a Windows folder to the Intermediate Database.
@@ -21,7 +21,7 @@ The powerLoad utilites are:
 * **IDB.Load.Vault:** Sample code to extract data from Vault and fill the Intermediate Database (IDB).
 * **IDB.Analyzer.Inventor:** Scans Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
 * **IDB.Analyzer.AutoCAD:** Scans AutoCAD DWGs files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
-* **IDB.Translate.BCP:** Creates a valid BCP-package from the content of the Intermediate Database.
+* **IDB.Translate.BCP:** Creates a BCP-package from the content of the Intermediate Database.
 
 ### Additions
 For validating the BCP package that is created from the IDB there are additional tools:
@@ -31,7 +31,7 @@ For validating the BCP package that is created from the IDB there are additional
 ## Prerequsites
 * Microsoft SQL Server 2014 or newer
 * Windows 10
-* AutoCAD and/or Inventor if the analyzer tools are needed
+* AutoCAD and/or Inventor if the analyzer utilities are needed
 
 ## Installation
 Download the ZIP powerLoad_v\<version number\>.zip from the Assets section from https://github.com/coolOrangeLabs/powerload-utilities/releases/latest.
@@ -42,10 +42,10 @@ Extract the ZIP to a folder 'powerLoad' e.g. '*C:\coolOrange\powerLoad*' on the 
 ## Description
 
 The Intermediate Database (IDB) is a concept that can be used to fill a neutral database with data from Vault or any other PDM system or from Windows Explorer. This IDB can be transformed into a BCP format which can be imported into Vault Professional or Vault Workgroup.   
-This repository contains the IDB structure as well as tools to load the IDB and to convert the database to the Autodesk Vault BCP format. This format is finally used by Autodesk Vault DTU to mass import data into Vault.
+This repository contains the IDB structure as well as tools to load the IDB and to convert the database to the Autodesk Vault BCP format. This format is finally used by Autodesk Vault Data Transfer Utility (DTU) to mass import data into Vault.
 
 ## coolOrange powerLoad Intermediate Database
-The powerLoad Intermediate Database for the Vault import (IDB) is a SQL database template provided by coolOrange that standardizes and simplifies the transition from an existing data and file source to Vault.
+The powerLoad Intermediate Database (IDB) is a SQL database template provided by coolOrange that standardizes and simplifies the transition from an existing data and file source to Vault.
 This section explains how to use and fill the Intermediate Database with the information from the legacy system.
 
 ### Setting up the Intermediate Database for Vault Import
@@ -63,8 +63,8 @@ This section explains how to use and fill the Intermediate Database with the inf
  
  ![SQL Options](Images/DLG_Options_PreventSavingChanges.gif)
  
- 6. Refer to the Description of the **coolOrange Intermediate Database** to understand the database model.
-7. Enhance the Files, Folders, Items and/or CustomObjects table with additional UDP fields for transferring metadata to user defined properties (UDPs) in Vault.
+ 6. Refer to the Description of the [**coolOrange Intermediate Database**](https://coolorange.sharepoint.com/:w:/s/PartnerPortal/Eacw4RDePzlDvi9KktsP_EUBcQGyTPBEe1EyJ6MsXv0zTg?e=RXI7tG) to understand the database model.
+ 7. Enhance the Files, Folders, Items and/or CustomObjects table with additional UDP fields for transferring metadata to user defined properties (UDPs) in Vault.
 
    * For each property (field) of the legacy system that you want to transfer to Vault an UDP-field in the object table must be added. The name of the UDP-field can be renamed.
  
@@ -82,7 +82,7 @@ In the configuration file ***DefaultBehaviors.xml*** the default behaviours can 
 
 * ConnectionString: Connect string to SQL server and database  
 * DataPath: Folderpath that will be scanned. All names of subfolders and files will be transferred to the IDB.
-* Folders: Default settings for folder. The following fields in the IDB will be filled with the assigned value for all folders.
+* Folders: Default settings for folders. The following fields in the IDB will be filled with the assigned value for all folders.
 	* Category
 	* CreateUser 
 
@@ -94,8 +94,8 @@ In the configuration file ***DefaultBehaviors.xml*** the default behaviours can 
 	* RevisionLabel
 	* Classification
 	* CreateUser
-	The elements must not be removed. To not fill the field just delete the value.
- 
+	
+	The elements must not be removed. To not fill the field just delete the value. 
 E.g. < CreateUser >< /CreateUser >
 
 Please do not rename XML files.
@@ -120,7 +120,7 @@ There you find information about successful inserts and errors.
 
 ## IDB.Load.BCP
 Utility to load files and folders from a BCP-package to the Intermediate Database (IDB).
-This tool is under construction. Until the new verion is available use the IDB.Load.BCP from here: https://github.com/coolOrangeLabs/idb-load-bcp
+This tool is under construction. Until the new version is available use the IDB.Load.BCP from here: https://github.com/coolOrangeLabs/idb-load-bcp
 
 ## IDB.Load.Vault
 Sample code to extract data from Vault and fill the Intermediate Database (IDB). The example uses an Excel table to identify the files to be read out.
@@ -129,7 +129,7 @@ Sample code to extract data from Vault and fill the Intermediate Database (IDB).
 Utility to scan Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
 
 ### Prerequsite
-This tool uses Inventor Apprentice. So at least Inventor View must be installed on the machine where this tool is used.
+This tool uses Inventor Apprentice. At least Inventor View must be installed on the machine where this tool is used.
 
 ### Configuration
 In the configuration file ***IDB.Analyzer.Inventor.exe.config*** the connection to the SQL database must be set.
@@ -178,10 +178,22 @@ The default location for the log file IDB.Analyzer.AutoCAD.log is '*C:\Users\coo
 
 ## IDB.Translate.BCP
 Creates a valid BCP-package from the content of the Intermediate Database.
-Therefor all information that should be transferred to Vault must be filled correctly in the according tables of the IDB.
+Therefore all information that should be transferred to Vault must be filled correctly in the according tables of the IDB.
 
 ### Prerequsite
-This utility uses the bcpDevkit to create the BCP-package. Therefor it must be installed on the same machine, where the bcpToolkit is installed and licenced.
+This utility uses the bcpDevkit to create the BCP-package. Therefore it must be installed on the same machine, where the bcpToolkit is installed and licenced.
+
+### Configuration
+The default ordering of the files is 'FileName, RevsionsLabel, Version', which means that files are ordered by the value of the RevisionLable, and if there are identical values the next ordering is by Version.
+The default ordering can be overwritten in the config file IDB.Translate.BCP.exe.config with the attribute "CustomFilesOrderByFields".
+For example, if the ordering should be by the Version only set:
+`...
+    <applicationSettings>
+      <IDB.Translate.BCP.Properties.Settings>
+        <setting name="CustomFilesOrderByFields" serializeAs="String">
+          <value>''FileName, Version**</value>
+        </setting>
+...`
 
 ### Usage
 Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens where the needed settings are set and commands are executed:
@@ -191,7 +203,7 @@ Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens 
 * **SQL Database ConnectionString**: Connect string to SQL server and database
 * **Vault Version**: Select version of Vault in wehich will be imported. For Vault 2021 select '2020'.
 * **BCP Export Directory**: Folder in which the BCP package will be exported.
-* **Validate Database**: Runs the SQL script of file Validate.IDB.txt. 
+* **Validate Database**: Runs the SQL script of file Validate.IDB.sql, located in the sub-folder *SQL*. 
 * **Create BCP Package**: Exports the data from the IDB into a BCP package in the specified folder.
 
 ### Validation
