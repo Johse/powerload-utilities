@@ -806,6 +806,14 @@ namespace IDB.Translate.BCP
             try
             {
                 SetProgress("Progress Total: Writing BCP files", progressTotalText, 80, progressTotal);
+
+                // see if we want to disable configurations export
+                if (DisableConfigurationExportCheckBox.Checked)
+                {
+                    // turn off the export
+                    bcpService.Settings.DisableConfigurationExport();
+                }
+
                 bcpService.Flush();
                 if (UnitsHelper.Instance.HasCustomUnitDefinitions())
                     UnitsHelper.Instance.OverrideCustomUnitDefinitionsFile(txtExportDirectory.Text);
