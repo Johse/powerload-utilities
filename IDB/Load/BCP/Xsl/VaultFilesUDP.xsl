@@ -7,7 +7,7 @@
 	<xsl:variable name="lowercase">abcdefghijklmnopqrstuvwxyz</xsl:variable>
 	<xsl:variable name="uppercase">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
 	<xsl:template match="/">
-		<xsl:text>FileId;IterationId;LocalFullFileName;FileName;Category;Classification;RevisionLabel;RevisionDefinition;LifeCycleState;LifeCycleDefinition;Path</xsl:text>		
+		<xsl:text>LocalFullFileName;FileID;FolderID;FileName;Category;Classification;RevisionLabel;RevisionDefinition;Version;LifecycleState;LifecycleDefinition;Comment;CreateUser;CreateDate;IterationID;Path</xsl:text>		
 		<xsl:for-each select="$list">
 			<xsl:value-of select="$delimiter" />
 			<xsl:value-of select="." />
@@ -26,12 +26,17 @@
 	<xsl:template match="text()"/>	
 	<xsl:template match="h:Folder/h:UDP"/>
 	<xsl:template match="h:Iteration">
-		<xsl:value-of select="concat($delimiter,substring(@Id,2),$delimiter,@LocalPath, $delimiter, ancestor::h:File/@Name, $delimiter, ancestor::h:File/@Category, $delimiter, ancestor::h:File/@Classification, $delimiter, ancestor::h:Revision/@Label, $delimiter, ancestor::h:Revision/@Definition, $delimiter, h:State/@Name, $delimiter, h:State/@Definition)"/>
+		<xsl:variable name="col" select="."/>
+		<xsl:value-of select="concat(@LocalPath,$delimiter,$delimiter,0,$delimiter,ancestor::h:File/@Name, $delimiter, ancestor::h:File/@Category, $delimiter, ancestor::h:File/@Classification, $delimiter, ancestor::h:Revision/@Label, $delimiter, ancestor::h:Revision/@Definition, $delimiter)"/>
+		<xsl:number/>
+		<xsl:value-of select="$delimiter" />
+		<xsl:value-of select="concat(h:State/@Name, $delimiter, h:State/@Definition, $delimiter, @Comment, $delimiter, h:Created/@User, $delimiter, h:Created/@Date, $delimiter, substring(@Id,2))"/>
 		<xsl:value-of select="$delimiter" />
 		<xsl:text>$</xsl:text>
 		<xsl:apply-templates select="ancestor-or-self::h:Folder/@Name"/>
 		<xsl:variable name="file" select="."/>
 		<xsl:for-each select="$list">
+			<xsl:value-of select="$delimiter" />
 			<xsl:variable name="udpName" select="."/>
 			<xsl:variable name="datatype" select="@DataType"/>
 			<xsl:for-each select="$file/h:UDP">

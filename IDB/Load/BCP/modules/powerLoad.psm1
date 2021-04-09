@@ -201,8 +201,55 @@ function Add-ColumnsToTable{
     }
 }
 
+function Import-FileFileRelationsCsvToSql{
+    param(       
+        [Parameter(Mandatory=$true)]
+        [string]$FileFileRelationsCsvPath,
+        [Parameter(Mandatory=$true)]
+        [string]$Server,
+        [Parameter(Mandatory=$true)] 
+        [string]$Database
+    )
+    Open-SqlConnection -Server $Server -Database $Database
+    $job = [Job]::new($FileFileRelationsCsvPath, $null)
+    $CopyTable = [CopyTable]::new("FileFileRelations", "FileFileRelationsTemp")
+    $job.AddStage($CopyTable)    
+    $LoadCsvToSqlTable = [LoadCsvToSqlTable]::new("FileFileRelationsTemp",$FileFileRelationsCsvPath)
+    $job.AddStage($LoadCsvToSqlTable)
+    #$JoinOnFilesFolderTable = [JoinOnFilesFolderTable]::New("Files_Temp","Folders")
+    #$job.AddStage($JoinOnFilesFolderTable)
+    return $job.Invoke()
+}
 
-function Load-FolderCsvToSql{
+function Import-FilesCsvToSql{
+    param(       
+        [Parameter(Mandatory=$true)]
+        [string]$FileUdpXmlPath,
+        [Parameter(Mandatory=$true)]
+        [string]$VaultFilesCsvPath,
+        [Parameter(Mandatory=$true)]
+        [string]$Server,
+        [Parameter(Mandatory=$true)] 
+        [string]$Database
+    )
+    Open-SqlConnection -Server $Server -Database $Database
+    $job = [Job]::new($VaultFilesCsvPath, $null)
+    $CreateTable = [CreateTable]::new()
+    $job.AddStage($CreateTable)
+    #$columnNames = @("UDP_Title", "UDP_Description", "UDP_PartNumber")
+    #$removeColumns = [RemoveColumns]::new("Files_Temp",$columnNames)
+    #$job.AddStage($removeColumns)
+    $AddColumns = [AddColumns]::new("FilesTemp",$FileUdpXmlPath)
+    $job.AddStage($AddColumns)
+    $LoadCsvToSqlTable = [LoadCsvToSqlTable]::new("FilesTemp",$VaultFilesCsvPath)
+    $job.AddStage($LoadCsvToSqlTable)
+    $JoinOnFilesFolderTable = [JoinOnFilesFolderTable]::New("FilesTemp","Folders")
+    $job.AddStage($JoinOnFilesFolderTable)
+    return $job.Invoke()
+}
+
+
+function Import-FolderCsvToSql{
     param(       
         [Parameter(Mandatory=$true)]
         [string]$FolderUdpXmlPath,
@@ -228,32 +275,20 @@ function Load-FolderCsvToSql{
 function New-Transform{
     param(
             [Parameter(Mandatory=$true)]
-            [string]$XmlPath,
-            [Parameter(Mandatory=$true)]
-            [string]$FileUdpXslPath,            
-            [Parameter(Mandatory=$true)]
-            [string]$FolderUdpXslPath,
-            [Parameter(Mandatory=$true)]
-            [string]$VaultFilesXslPath,
-            [Parameter(Mandatory=$true)]
-            [string]$VaultFoldersXslPath,
-            [Parameter(Mandatory=$true)]
-            [string]$FileFileRelationsXslPath,
-            [Parameter(Mandatory=$true)]
-            [string]$OutputFilePath
+            [string]$XmlPath
         )
     $job = [Job]::new($XmlPath,$null)
-    $fileUdps = [XmlTransform]::new($FileUdpXslPath,$null)
+    $fileUdps = [XmlTransform]::new("$($PSScriptRoot)\ExportFileUDP.xsl",$null)
     $job.AddStage($fileUdps)
-    $folderUdps = [XmlTransform]::new($FolderUdpXslPath,$null)
+    $folderUdps = [XmlTransform]::new("$($PSScriptRoot)\ExportFolderUDP.xsl",$null)
     $job.AddStage($folderUdps)
     $job.Invoke()
     $job = [Job]::new($XmlPath,$null)
-    $vaultFiles = [CsvTransform]::new($VaultFilesXslPath,$null,$fileUdps.OutputFilePath)
+    $vaultFiles = [CsvTransform]::new("$($PSScriptRoot)\VaultFilesUDP.xsl",$null,$fileUdps.OutputFilePath)
     $job.AddStage($vaultFiles)
-    $vaultFolders = [CsvTransform]::new($VaultFoldersXslPath,$null,$folderUdps.OutputFilePath)
+    $vaultFolders = [CsvTransform]::new("$($PSScriptRoot)\VaultFolders.xsl",$null,$folderUdps.OutputFilePath)
     $job.AddStage($vaultFolders)
-    $fileFileRelations = [CsvTransform]::new($FileFileRelationsXslPath,$null,$null)
+    $fileFileRelations = [CsvTransform]::new("$($PSScriptRoot)\FileFileRelations.xsl",$null,$null)
     $job.AddStage($fileFileRelations)
     return $job.Invoke()
 }
@@ -366,7 +401,7 @@ class RemoveColumns: Stage{
         foreach ($ColumnName in $this.Columns){
             $CommandText = "IF COL_LENGTH('dbo.$($this.Table)', '$ColumnName') IS NOT NULL
             Begin
-	            alter table dbo.Folders Drop column $($ColumnName)
+	            alter table dbo.$($this.Table) Drop column $($ColumnName)
             End"
 
             Run-SqlCommand -SqlQuery $CommandText
@@ -375,8 +410,75 @@ class RemoveColumns: Stage{
     }
 }
 
+class CopyTable: Stage{
+    [string] $Table
+    [string] $NewTable
+    CopyTable ($Table,$NewTable): base('Copy from table') {
+        $this.Table = $Table
+        $this.NewTable = $NewTable  
+    }
+
+    Invoke([job]$J) {
+
+        $J.LogHeader($this.GetHeader())
+        $CommandText = "SELECT * INTO dbo.$($this.NewTable) FROM dbo.$($this.Table) WHERE 1 = 0;"
+
+        Run-SqlCommand -SqlQuery $CommandText
+        $J.LogEntry("[in {0:N2}s]" -f $this.GetElapsed().TotalSeconds)
+    }
+}
+
+class CreateTable: Stage{
+
+    CreateTable(): base('Create Table') {
+    }
+
+    Invoke([job]$J) {
+        
+        $J.LogHeader($this.GetHeader())
+        $CommandText = @()
+        $CommandText += "CREATE TABLE [dbo].[FilesTemp](
+	    [LocalFullFileName] [nvarchar](256) NULL,
+	    [FileID] [int] IDENTITY(1,1) NOT NULL,
+	    [FolderID] [int] NOT NULL,
+	    [FileName] [nvarchar](260) NOT NULL,
+	    [Category] [nvarchar](max) NULL,
+	    [Classification] [nvarchar](max) NULL,
+	    [RevisionLabel] [nvarchar](5) NULL,
+	    [RevisionDefinition] [nvarchar](max) NULL,
+	    [Version] [int] NULL,
+	    [LifecycleState] [nvarchar](max) NULL,
+	    [LifecycleDefinition] [nvarchar](max) NULL,
+	    [Comment] [nvarchar](max) NULL,
+	    [CreateUser] [nvarchar](max) NULL,
+	    [CreateDate] [datetime] NULL,
+	    [IterationID] [int] NULL,
+	    [Path] [nvarchar](max) NULL,
+         CONSTRAINT [PK_FilesTemp] PRIMARY KEY CLUSTERED 
+        (
+	        [FileID] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+        ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]"
+
+        $CommandText += "ALTER TABLE [dbo].[FilesTemp]  WITH CHECK ADD  CONSTRAINT [FK_FilesTemp_Files] FOREIGN KEY([FileID])
+REFERENCES [dbo].[FilesTemp] ([FileID])"
+        $CommandText += "ALTER TABLE [dbo].[FilesTemp] CHECK CONSTRAINT [FK_FilesTemp_Files]"
+
+        $CommandText += "ALTER TABLE [dbo].[FilesTemp]  WITH CHECK ADD  CONSTRAINT [FK_FilesTemp_Folders] FOREIGN KEY([FolderID])
+REFERENCES [dbo].[Folders] ([FolderID])"
+
+        $CommandText += "ALTER TABLE [dbo].[FilesTemp] CHECK CONSTRAINT [FK_FilesTemp_Folders]"
+
+        foreach($cmd in $CommandText)
+        {
+            Run-SqlCommand -SqlQuery $cmd
+        }
+        $J.LogEntry("[in {0:N2}s]" -f $this.GetElapsed().TotalSeconds)
+    }
+}
+
 class AddColumns: Stage{
-    [string[]] $XmlPath
+    [string] $XmlPath
     [string] $Table
     AddColumns ($Table, $xmlpath) : base('Add Columns to table') {
         $this.XmlPath = $xmlpath
@@ -402,6 +504,26 @@ class AddColumns: Stage{
         $J.LogEntry("[in {0:N2}s]" -f $this.GetElapsed().TotalSeconds)
     }
 }
+
+class JoinOnFilesFolderTable: Stage{
+    [string] $FileTable
+    [string] $FolderTable
+
+    JoinOnFilesFolderTable($FileTable, $FolderTable) : base('Join Files and Folder table on FolderID') {
+        $this.FileTable = $FileTable
+        $this.FolderTable = $FolderTable
+    }
+
+    Invoke([job]$J) {
+
+        $J.LogHeader($this.GetHeader())
+        $CommandText = "UPDATE dbo.$($this.FileTable) SET dbo.$($this.FileTable).FolderID = fo.FolderID FROM dbo.$($this.FileTable) fi INNER JOIN dbo.$($this.FolderTable) fo ON fi.Path = fo.Path"
+        Run-SqlCommand -SqlQuery $CommandText        
+        $J.LogEntry("[in {0:N2}s]" -f $this.GetElapsed().TotalSeconds)
+    }
+}
+
+
 
 class LoadCsvToSqlTable: Stage{
     [string[]] $CsvPath

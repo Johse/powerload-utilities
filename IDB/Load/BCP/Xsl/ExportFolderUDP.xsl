@@ -2,12 +2,12 @@
 		xmlns:h="http://schemas.autodesk.com/pseb/dm/DataImport/2015-04-14"  exclude-result-prefixes="h">
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
 	<xsl:template match="/">
-		<xsl:apply-templates/>
-	</xsl:template>
-	<xsl:template match="h:Behaviors">
 		<list>
 		<xsl:apply-templates/>
 		</list>
+	</xsl:template>
+	<xsl:template match="h:Behaviors">
+		<xsl:apply-templates/>
 	</xsl:template>
 	<xsl:template match="h:PropertyDefinition[not(@Type)]">
 		<xsl:apply-templates select="h:Assignment[@Class = 'Folder']"></xsl:apply-templates>
