@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDB.Load.Files", "Load\File
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDB.Discover.Vault", "Discover\Vault\IDB.Discover.Vault\IDB.Discover.Vault.csproj", "{1B68DD6D-CCA0-4AF1-BB2C-EDE21C07C6EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDB.Load.BCP", "Load\BCP\IDB.Load.BCP.csproj", "{F05C8E0E-C860-45CD-BE2F-3F37838A75B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{1B68DD6D-CCA0-4AF1-BB2C-EDE21C07C6EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B68DD6D-CCA0-4AF1-BB2C-EDE21C07C6EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B68DD6D-CCA0-4AF1-BB2C-EDE21C07C6EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F05C8E0E-C860-45CD-BE2F-3F37838A75B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F05C8E0E-C860-45CD-BE2F-3F37838A75B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F05C8E0E-C860-45CD-BE2F-3F37838A75B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F05C8E0E-C860-45CD-BE2F-3F37838A75B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
