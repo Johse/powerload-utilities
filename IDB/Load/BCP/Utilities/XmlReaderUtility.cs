@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using System.Linq;
 using System.Xml;
 using System.ComponentModel;
@@ -28,11 +29,11 @@ namespace IDB.Load.BCP
                 Document = XDocument.Load(path);
                 return Document;
             }
-            catch (System.IO.FileNotFoundException fileNotFoundException) 
+            catch (Exception exception) 
             {
-                MessageBox.Show(fileNotFoundException.Message);
-                Logger.Log.Error(fileNotFoundException.Message);
-                throw fileNotFoundException;
+                MessageBox.Show(exception.Message);
+                Logger.Log.Error(exception.Message);
+                throw;
             }
         }
         internal static string GetIDBBehaviors(string node)

@@ -32,40 +32,46 @@ namespace IDB.Load.BCP
         }
         private void startBtn_Click(object sender, EventArgs e)
         {
-            try
-            {
-                SQLEditor.DatabaseConnection(connectionTxtBox.Text);
-                XmlReaderUtility.parentFolderControl = false;
+	        try
+	        {
+		        Logger.Log.Debug(":Program was started with path: " + dataPathTxtBox.Text);
+		        CancelBtn.Enabled = true;
+		        chooseBtn.Enabled = false;
+		        startBtn.Enabled = false;
+		        var document = XmlReaderUtility.GetXmlDocument(dataPathTxtBox.Text + @"\Vault.xml");
+		        SQLEditor.DatabaseConnection(connectionTxtBox.Text);
+		        XmlReaderUtility.parentFolderControl = false;
 
-                XmlReaderUtility.SetBehavior("ConnectionString", connectionTxtBox.Text);
-                XmlReaderUtility.SetBehavior("DataPath", dataPathTxtBox.Text);
-                InputConnectionString = connectionTxtBox.Text;
-                processPart.Text = "Xml file is scanned,please wait";
-                Cursor.Current = Cursors.WaitCursor;
-                CancelBtn.Enabled = true;
-                chooseBtn.Enabled = false;
-                startBtn.Enabled = false;
-                var document = XmlReaderUtility.GetXmlDocument(dataPathTxtBox.Text + @"\Vault.xml");
-                Logger.Log.Debug(":Program was started with path: " + dataPathTxtBox.Text);
-                xmlDocument = XmlReaderUtility.ToXmlDocument(document);
-                var vaultElement = xmlDocument.FirstChild;
-                var statics = vaultElement.FirstChild;
-                _counter = Int64.Parse(XmlReaderUtility.GetProperty(statics, "TotalFiles")) + xmlDocument.GetElementsByTagName("Association").Count;
-                ScanedFilesQantity.Text = ScanedFilesQantity.Text + _counter.ToString();
-                workerFolders.WorkerSupportsCancellation = true;
-                workerFileFileRelations.WorkerSupportsCancellation = true;
-                workerItems.WorkerSupportsCancellation = true;
-                workerFolders.RunWorkerAsync();
-            }
-            catch (System.IO.FileNotFoundException fileNotFoundException)
-            {
-                return;
-            }
-            catch (System.Data.SqlClient.SqlException connectionError)
-            {
-                return;
-            }   
-
+		        XmlReaderUtility.SetBehavior("ConnectionString", connectionTxtBox.Text);
+		        XmlReaderUtility.SetBehavior("DataPath", dataPathTxtBox.Text);
+		        InputConnectionString = connectionTxtBox.Text;
+		        processPart.Text = "Xml file is scanned,please wait";
+		        Cursor.Current = Cursors.WaitCursor;
+		        xmlDocument = XmlReaderUtility.ToXmlDocument(document);
+		        var vaultElement = xmlDocument.FirstChild;
+		        var statics = vaultElement.FirstChild;
+		        _counter = Int64.Parse(XmlReaderUtility.GetProperty(statics, "TotalFiles")) +
+		                   xmlDocument.GetElementsByTagName("Association").Count;
+		        ScanedFilesQantity.Text = ScanedFilesQantity.Text + _counter.ToString();
+		        workerFolders.WorkerSupportsCancellation = true;
+		        workerFileFileRelations.WorkerSupportsCancellation = true;
+		        workerItems.WorkerSupportsCancellation = true;
+		        workerFolders.RunWorkerAsync();
+	        }
+	        catch (System.Data.SqlClient.SqlException connectionError)
+	        {
+		        CancelBtn.Enabled = false;
+		        chooseBtn.Enabled = true;
+				startBtn.Enabled = true;
+		        Logger.Log.Error(connectionError);
+	        }
+	        catch (Exception exception)
+	        {
+		        CancelBtn.Enabled = false;
+		        chooseBtn.Enabled = true;
+				startBtn.Enabled = true;
+		        Logger.Log.Error(exception);
+			}
         }
 
         internal void RefreshControls()
@@ -178,38 +184,17 @@ namespace IDB.Load.BCP
 
             if (e.Error != null)
             {
-
                 MessageBox.Show(e.Error.Message);
-
+				return;
             }
             if (e.Cancelled)
             {
                 processPart.Text = "Cancelled";
+				return;
             }
-            if (checkBoxInsertItem.Checked == true)   //Is not used. This part is nedeed for transport of Items and ItemItemRelations.
-            {
-                CancelBtn.Text = "Cancel";
-                processPart.Text = "";
-                ScanedFilesQantity.Text = "Scaned Files: ";
-                CancelBtn.Enabled = true;
-                progressBar1.Value = 0;
-                var document = XmlReaderUtility.GetXmlDocument(dataPathTxtBox.Text + @"\Itemswrapper.xml");
-                Item.itemXmlDocument = XmlReaderUtility.ToXmlDocument(document);
-                Item.itemsCollection = Item.itemXmlDocument.GetElementsByTagName("ItemMaster");
-                Counter = Item.itemsCollection.Count;
-                ScanedFilesQantity.Text = "Scaned Files: " + Counter;
-
-                // 
-                workerItems.RunWorkerAsync();
-            }
-            else
-            {
-
-                processPart.Text = "Finished";
-                CancelBtn.Text = "Reset";
-
-            }
-        }
+            processPart.Text = "Finished";
+            CancelBtn.Text = "Reset";
+		}
 
         private void workerItems_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -242,13 +227,6 @@ namespace IDB.Load.BCP
             {
                 processPart.Text = "Cancelled";
             }
-            if (InsertItemItemRelations.Checked == true)
-            {
-                workerItemItemsRelation.WorkerSupportsCancellation = true;
-                workerItemItemsRelation.RunWorkerAsync();
-            }
-
-
         }
         private void CancelBtn_Click(object sender, EventArgs e)
         {
@@ -265,10 +243,6 @@ namespace IDB.Load.BCP
                 this.workerItems.CancelAsync();
             }
             RefreshControls();
-        }
-        private void buttonOpenLog_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"IDB.Load.BCP.log");
         }
 
         private void ItemRelations_Click(object sender, EventArgs e)
