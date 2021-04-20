@@ -125,6 +125,11 @@
       <Version>2.0.12</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Discover\Vault\IDB.Discover.Vault\IDB.Discover.Vault.csproj">
+      <Project>{1b68dd6d-cca0-4af1-bb2c-ede21c07c6ec}</Project>
+      <Name>IDB.Discover.Vault</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
