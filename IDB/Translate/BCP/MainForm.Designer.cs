@@ -43,8 +43,6 @@
             this.progressBarTotal = new System.Windows.Forms.ProgressBar();
             this.labelProgressTotal = new System.Windows.Forms.Label();
             this.DisableConfigurationExportCheckBox = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.txtVaultConnection = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -215,38 +213,12 @@
             this.DisableConfigurationExportCheckBox.Text = "Disable Configuration Export";
             this.DisableConfigurationExportCheckBox.UseVisualStyleBackColor = true;
             // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(12, 341);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(164, 23);
-            this.button1.TabIndex = 15;
-            this.button1.Text = "Transfer from Vault";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // txtVaultConnection
-            // 
-            this.txtVaultConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtVaultConnection.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtVaultConnection.Location = new System.Drawing.Point(13, 317);
-            this.txtVaultConnection.Name = "txtVaultConnection";
-            this.txtVaultConnection.Size = new System.Drawing.Size(397, 22);
-            this.txtVaultConnection.TabIndex = 16;
-            this.txtVaultConnection.Text = "Server=(local)\\AUTODESKVAULT;Database=Vault;Trusted_Connection=True;";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(438, 376);
-            this.Controls.Add(this.txtVaultConnection);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.DisableConfigurationExportCheckBox);
             this.Controls.Add(this.labelProgressTotal);
             this.Controls.Add(this.progressBarTotal);
@@ -286,8 +258,6 @@
         private System.Windows.Forms.ProgressBar progressBarTotal;
         private System.Windows.Forms.Label labelProgressTotal;
         private System.Windows.Forms.CheckBox DisableConfigurationExportCheckBox;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox txtVaultConnection;
     }
 }
 

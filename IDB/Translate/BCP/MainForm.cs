@@ -14,7 +14,6 @@ using bcpDevKit.Entities.General;
 using bcpDevKit.Entities.Items;
 using bcpDevKit.Entities.Vault;
 using Dapper;
-using IDB.Discover.Vault;
 using IDB.Translate.BCP.DbEntity;
 using IDB.Translate.BCP.DbLink;
 using IDB.Translate.BCP.DbRelation;
@@ -994,12 +993,5 @@ namespace IDB.Translate.BCP
             log4net.Config.XmlConfigurator.Configure(fi);
         }
         #endregion
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            string vaultConnectionString = txtVaultConnection.Text;
-            string loadConnectionString = txtConnectionString.Text;
-            VaultDbExtractor.Transfer(vaultConnectionString, loadConnectionString);
-        }
     }
 }
