@@ -214,8 +214,8 @@ namespace IDB.Translate.BCP
                     Log.Debug("Reading Files table ...");
                     SetProgress("Reading 'Files' table ...", progressTaskText, 15, progressTask);
                     var filesQuery = !string.IsNullOrEmpty(Properties.Settings.Default.CustomFilesOrderByFields)
-                        ? $@"SELECT * FROM Files ORDER BY {Properties.Settings.Default.CustomFilesOrderByFields}"
-                        : @"SELECT * FROM Files ORDER BY FileName, RevisionLabel, Version";
+                        ? $@"SELECT * FROM Files Where IsExcluded = 0 OR IsExcluded is NULL ORDER BY {Properties.Settings.Default.CustomFilesOrderByFields}"
+                        : @"SELECT * FROM Files Where IsExcluded = 0 OR IsExcluded is NULL ORDER BY FileName, RevisionLabel, Version";
                     _files = connection.Query(filesQuery)
                         .Select(x => new KeyValuePair<int, DbEntity.File>(x.FileID, Convert.To<DbEntity.File>(x)))
                         .ToDictionary(t => t.Key, t => t.Value);
@@ -352,7 +352,7 @@ namespace IDB.Translate.BCP
                                 }
                             }
 
-                            var createUser = fileIteration.CreateUser;
+							var createUser = fileIteration.CreateUser;
                             if (string.IsNullOrEmpty(fileIteration.CreateUser))
                                 createUser = "cO";
                             Log.DebugFormat("Adding 'Created' element: User: {0}, Date: {1}", createUser, fileIteration.CreateDate);
@@ -392,6 +392,9 @@ namespace IDB.Translate.BCP
                             fileIteration.BcpFileIteration = fileObject.LatestIteration;
                             Log.DebugFormat("Adding file iteration. Done!" + Environment.NewLine);
                         }
+
+                        if (fileMaster.Value.Last().IsHidden)
+	                        fileObject.Hidden = "true";
 
                     }
                     catch (Exception ex)

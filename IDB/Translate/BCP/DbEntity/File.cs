@@ -19,7 +19,9 @@ namespace IDB.Translate.BCP.DbEntity
         public string Comment { get; set; }
         public string CreateUser { get; set; }
         public DateTime CreateDate { get; set; }
-        public Dictionary<string, object> UserDefinedProperties { get; set; }
+        public bool IsHidden { get; set; }
+		public bool IsExcluded { get; set; }
+		public Dictionary<string, object> UserDefinedProperties { get; set; }
         public bcpDevKit.Entities.Vault.FileIteration BcpFileIteration { get; set; }
     }
 }
