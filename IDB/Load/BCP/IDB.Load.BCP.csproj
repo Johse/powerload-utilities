@@ -101,7 +101,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="coolorange.ico" />
-    <Content Include="favicon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
