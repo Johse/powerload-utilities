@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("IDB.Discover.Vault")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Extracts data from Vault and adds it to the IDB")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("COOLORANGE s.r.l.")]
 [assembly: AssemblyProduct("IDB.Discover.Vault")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCopyright("Copyright © COOLORANGE s.r.l. 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
