@@ -1,4 +1,4 @@
-﻿using IDB.Core;
+﻿using IDB.Core.INI;
 
 namespace IDB.Load.Files
 {

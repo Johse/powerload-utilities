@@ -1,10 +1,8 @@
-﻿using System.Configuration;
-using Autodesk.AutoCAD.ApplicationServices.Core;
+﻿using Autodesk.AutoCAD.ApplicationServices.Core;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Runtime;
 using IDB.Analyzer.Common;
 using log4net;
-using Exception = Autodesk.AutoCAD.Runtime.Exception;
 
 [assembly: CommandClass(typeof(IDB.Analyzer.AutoCAD.AnalyzerAcadCommands))]
 

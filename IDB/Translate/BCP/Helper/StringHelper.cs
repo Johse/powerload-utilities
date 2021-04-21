@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace IDB.Translate.BCP.Helpers
+namespace IDB.Translate.BCP.Helper
 {
     public static class StringHelper
     {

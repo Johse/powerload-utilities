@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using bcpDevKit.Entities.UoM;
 using log4net;
 
-namespace IDB.Translate.BCP.Helpers
+namespace IDB.Translate.BCP.Helper
 {
     class UnitsHelper
     {

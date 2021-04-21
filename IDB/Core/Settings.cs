@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using IDB.Core.INI;
 
 namespace IDB.Core
 {

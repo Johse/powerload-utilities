@@ -58,7 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\ProductInfo.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="IniHandler.cs" />
+    <Compile Include="INI\IniHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\database\Create.IDB.sql">
@@ -80,5 +80,6 @@
       <Version>2.0.12</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -17,7 +17,7 @@ using Dapper;
 using IDB.Core.DbEntity;
 using IDB.Core.DbLink;
 using IDB.Core.DbRelation;
-using IDB.Translate.BCP.Helpers;
+using IDB.Translate.BCP.Helper;
 using IDB.Translate.BCP.Validation;
 using log4net;
 using File = IDB.Core.DbEntity.File;
