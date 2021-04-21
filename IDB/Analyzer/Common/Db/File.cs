@@ -7,7 +7,7 @@ namespace IDB.Analyzer.Common.Db
         [XmlElement]
         public string LocalFullFileName { get; set; }
         [XmlElement]
-        public int FileID { get; set; }
+        public long FileID { get; set; }
         [XmlElement]
         public string FileName { get; set; }
     }

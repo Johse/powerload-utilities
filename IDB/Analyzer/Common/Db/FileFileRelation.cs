@@ -5,9 +5,9 @@ namespace IDB.Analyzer.Common.Db
     public class FileFileRelation
     {
         [XmlElement]
-        public int ParentFileID { get; set; }
+        public long ParentFileID { get; set; }
         [XmlElement]
-        public int ChildFileID { get; set; }
+        public long ChildFileID { get; set; }
         [XmlElement]
         public bool IsAttachment { get; set; }
         [XmlElement]

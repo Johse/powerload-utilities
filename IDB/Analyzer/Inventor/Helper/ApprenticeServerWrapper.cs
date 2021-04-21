@@ -121,7 +121,7 @@ namespace IDB.Analyzer.Inventor.Helper
                 InvDoc.Close();        
         }
 
-        public void CollectReferenceInformation(int parentFileId, Dictionary<string, FileFileRelation> fileRelations, List<string> missingReferences, List<string> unknownReferences)
+        public void CollectReferenceInformation(long parentFileId, Dictionary<string, FileFileRelation> fileRelations, List<string> missingReferences, List<string> unknownReferences)
         {
             if (InvDoc == null)
                 throw new Exception("CollectReferenceInformation(): No document open in Apprentice");
@@ -190,7 +190,7 @@ namespace IDB.Analyzer.Inventor.Helper
             }
         }
 
-        public void CollectOleReferenceInformation(int parentFileId, Dictionary<string, FileFileRelation> fileRelations, List<string> missingOleReferences, List<string> unknownReferences)
+        public void CollectOleReferenceInformation(long parentFileId, Dictionary<string, FileFileRelation> fileRelations, List<string> missingOleReferences, List<string> unknownReferences)
         {
             if (InvDoc == null)
                 throw new Exception("CollectOleReferenceInformation(): No document open in Apprentice");

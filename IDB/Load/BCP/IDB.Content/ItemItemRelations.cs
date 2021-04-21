@@ -150,9 +150,9 @@ namespace IDB.Load.BCP.IDB.Content
                 using (var cmd = new SqlCommand(sqlExpression, connection))
                 {
                     cmd.CommandTimeout = 600;
-                    cmd.Parameters.Add("@ParentItemID", SqlDbType.Int);
+                    cmd.Parameters.Add("@ParentItemID", SqlDbType.BigInt);
                     cmd.Parameters["@ParentItemID"].Value = parentIdDB;
-                    cmd.Parameters.Add("@ChildItemID", SqlDbType.Int);
+                    cmd.Parameters.Add("@ChildItemID", SqlDbType.BigInt);
                     cmd.Parameters["@ChildItemID"].Value = childId;
                     cmd.Parameters.Add("@Position", SqlDbType.Int);
                     cmd.Parameters["@Position"].Value = position;

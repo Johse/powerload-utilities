@@ -28,9 +28,9 @@ namespace IDB.Analyzer.Common
         private int ConsoleBufferWidth { get; set; }
 
         public  Dictionary<string, string> Settings { get; private set; }
-        public Dictionary<int, File> FilesById { get; private set; }
+        public Dictionary<long, File> FilesById { get; private set; }
         public List<FileFileRelation> AllFileRelations { get; private set; }
-        public Dictionary<int, Dictionary<int, FileFileRelation>> FileRelationsById { get; private set; }
+        public Dictionary<long, Dictionary<long, FileFileRelation>> FileRelationsById { get; private set; }
 
         public Dictionary<string, File> FilesByOrigName { get; private set; }
         public List<FileFileRelation> NewFileRelations { get; private set; }
@@ -70,7 +70,7 @@ namespace IDB.Analyzer.Common
                 Console.Write("Reading 'Files' data from file ...");
                 ReadXml(FileDataName, out IEnumerable<File> fileData);
                 FilesById = fileData
-                    .Select(x => new KeyValuePair<int, File>(x.FileID, x))
+                    .Select(x => new KeyValuePair<long, File>(x.FileID, x))
                     .ToDictionary(t => t.Key, t => t.Value);
                 Console.WriteLine($"\rReading 'Files' data from file. Done: ({FilesById.Count}) files".PadRight(ConsoleBufferWidth, ' '));
 
@@ -107,7 +107,7 @@ namespace IDB.Analyzer.Common
                     Console.Write("Reading 'Files' table ...");
                     Log.Info("Reading 'Files' table ...");
                     FilesById = connection.Query(@"SELECT * FROM Files ORDER BY FileName, RevisionLabel")
-                        .Select(x => new KeyValuePair<int, File>(x.FileID, ConvertDb.To<File>(x)))
+                        .Select(x => new KeyValuePair<long, File>(x.FileID, ConvertDb.To<File>(x)))
                         .ToDictionary(t => t.Key, t => t.Value);
                     Console.WriteLine($"\rReading 'Files' table. Done: ({FilesById.Count}) files".PadRight(ConsoleBufferWidth, ' '));
                     Log.InfoFormat("Reading 'Files' table. Done: ({0}) files", FilesById.Count);
@@ -212,12 +212,12 @@ namespace IDB.Analyzer.Common
                 NewFileRelations = new List<FileFileRelation>();
 
             Log.Info("Building 'FileFileRelations' dictionary ...");
-            FileRelationsById = new Dictionary<int, Dictionary<int, FileFileRelation>>();
+            FileRelationsById = new Dictionary<long, Dictionary<long, FileFileRelation>>();
             foreach (var relation in AllFileRelations)
             {
-                if (!FileRelationsById.TryGetValue(relation.ParentFileID, out Dictionary<int, FileFileRelation> fileReferences))
+                if (!FileRelationsById.TryGetValue(relation.ParentFileID, out Dictionary<long, FileFileRelation> fileReferences))
                 {
-                    fileReferences = new Dictionary<int, FileFileRelation>();
+                    fileReferences = new Dictionary<long, FileFileRelation>();
                     FileRelationsById.Add(relation.ParentFileID, fileReferences);
                 }
                 fileReferences.Add(relation.ChildFileID, relation);

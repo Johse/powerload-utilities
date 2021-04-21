@@ -185,7 +185,7 @@ namespace IDB.Load.BCP.Utilities
                         cmd.CommandTimeout = 600;
                         cmd.Parameters.Add("@ParentFileID", SqlDbType.NVarChar);
                         cmd.Parameters["@ParentFileID"].Value = fileInfo.parentId;
-                        cmd.Parameters.Add("@ChildFileID", SqlDbType.Int);
+                        cmd.Parameters.Add("@ChildFileID", SqlDbType.BigInt);
                         cmd.Parameters["@ChildFileID"].Value = fileInfo.childId;
                         cmd.Parameters.Add("@IsAttachment", SqlDbType.Bit);
                         cmd.Parameters["@IsAttachment"].Value = fileInfo.isAttachement;
@@ -259,7 +259,7 @@ namespace IDB.Load.BCP.Utilities
                     insertStatement = insertStatement + ";SET @newId = SCOPE_IDENTITY();";
 
                     cmd.CommandTimeout = 600;
-                    cmd.Parameters.Add("@folderId", SqlDbType.Int);
+                    cmd.Parameters.Add("@folderId", SqlDbType.BigInt);
                     cmd.Parameters["@folderId"].Value = folderId;
                     cmd.Parameters.Add("@LocalFullFileName", SqlDbType.NVarChar);
                     cmd.Parameters["@LocalFullFileName"].Value = fileInfo.localFullFilNename;
@@ -349,7 +349,7 @@ namespace IDB.Load.BCP.Utilities
                     cmd.Parameters.Add("@Version", SqlDbType.NVarChar);
                     cmd.Parameters["@Version"].Value = fileInfo.version;
 
-                    var outParam = cmd.Parameters.Add("@newId", SqlDbType.Int);
+                    var outParam = cmd.Parameters.Add("@newId", SqlDbType.BigInt);
                     outParam.Direction = ParameterDirection.Output;
 
 

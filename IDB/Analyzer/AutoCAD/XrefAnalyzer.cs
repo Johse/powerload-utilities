@@ -96,7 +96,7 @@ namespace IDB.Analyzer.AutoCAD
             Log.Info("Analyzing AutoCAD Xrefs. Done!");
         }
 
-        private Dictionary<int, File> GetDwgFilesById()
+        private Dictionary<long, File> GetDwgFilesById()
         {
             return (from fileEntry in DataHandler.Instance.FilesById
                 where IsAutoCADFile(fileEntry.Value.LocalFullFileName)
@@ -110,7 +110,7 @@ namespace IDB.Analyzer.AutoCAD
         }
 
 
-        private void CollectXrefsInformation(int parentFileId, Database db, Dictionary<string, FileFileRelation> fileRelations, List<string> missingReferences, List<string> unknownReferences)
+        private void CollectXrefsInformation(long parentFileId, Database db, Dictionary<string, FileFileRelation> fileRelations, List<string> missingReferences, List<string> unknownReferences)
         {
             using (var tx = db.TransactionManager.StartTransaction())
             {

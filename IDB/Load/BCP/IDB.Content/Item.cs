@@ -139,7 +139,7 @@ namespace IDB.Load.BCP.IDB.Content
                 using (var cmd = new SqlCommand(sqlExpression, connection))
                 {
                     sqlExpression = sqlExpression + ";SET @newId = SCOPE_IDENTITY();";
-                    SqlParameter outParam = cmd.Parameters.Add("@newId", SqlDbType.Int);
+                    SqlParameter outParam = cmd.Parameters.Add("@newId", SqlDbType.BigInt);
                     outParam.Direction = ParameterDirection.Output;
 
 

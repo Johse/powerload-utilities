@@ -51,7 +51,7 @@ namespace IDB.Load.Files
 
                 using (var cmd = new SqlCommand(sqlExpression, connection))
                 {
-                    cmd.Parameters.Add("@folderId", SqlDbType.Int);
+                    cmd.Parameters.Add("@folderId", SqlDbType.BigInt);
                     cmd.Parameters["@folderId"].Value = folderId;
                     cmd.Parameters.Add("@LocalFullFileName", SqlDbType.NVarChar);
                     cmd.Parameters["@LocalFullFileName"].Value = fullFileName;
