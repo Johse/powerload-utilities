@@ -1,4 +1,4 @@
-﻿namespace IDB.DbTargetVault
+﻿namespace IDB.Data.DbTargetVault
 {
     public class TargetVaultCategory
     {

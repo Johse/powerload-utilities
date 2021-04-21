@@ -1,8 +1,9 @@
-﻿using System.Data.SqlClient;
-using System.Collections.Generic;
-using log4net;
+﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Windows.Forms;
-namespace IDB.Translate.BCP
+using log4net;
+
+namespace IDB.Translate.BCP.IDB.Validation
 {
     class IDBValidator {
         private static readonly ILog Log = LogManager.GetLogger("IDBTranslateBCPApp");

@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Xml.Linq;
-using System.Linq;
-using System.Xml;
-using System.ComponentModel;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
+using IDB.Load.BCP.IDB.Content;
 
-namespace IDB.Load.BCP
+namespace IDB.Load.BCP.Utilities
 
 {
 

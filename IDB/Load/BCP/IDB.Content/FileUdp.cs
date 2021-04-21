@@ -1,5 +1,4 @@
-﻿using System.Data.SqlClient;
-namespace IDB.Load.BCP
+﻿namespace IDB.Load.BCP.IDB.Content
 {
     public class FileUdp
     {

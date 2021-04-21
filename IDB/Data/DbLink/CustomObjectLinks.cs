@@ -1,4 +1,4 @@
-﻿namespace IDB.DbLink
+﻿namespace IDB.Data.DbLink
 {
     public class CustomObjectCustomObjectLink
     {

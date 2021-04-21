@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml;
 using System.Data.SqlClient;
+using System.Xml;
+using IDB.Load.BCP.Utilities;
 
-namespace IDB.Load.BCP
+namespace IDB.Load.BCP.IDB.Content
 {
     class FilesInfo
     {

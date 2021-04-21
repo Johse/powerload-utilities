@@ -1,4 +1,4 @@
-﻿namespace IDB.DbRelation
+﻿namespace IDB.Data.DbRelation
 {
     public class ItemFileRelation
     {

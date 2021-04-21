@@ -73,9 +73,9 @@
     <Content Include="coolorange.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\IDB\IDB.csproj">
+    <ProjectReference Include="..\..\..\Data\IDB.Data.csproj">
       <Project>{b1085f8f-8418-49da-afdd-22a5a9234d0d}</Project>
-      <Name>IDB</Name>
+      <Name>IDB.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

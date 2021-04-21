@@ -14,11 +14,13 @@ using bcpDevKit.Entities.General;
 using bcpDevKit.Entities.Items;
 using bcpDevKit.Entities.Vault;
 using Dapper;
-using IDB.DbEntity;
-using IDB.DbLink;
-using IDB.DbRelation;
+using IDB.Data.DbEntity;
+using IDB.Data.DbLink;
+using IDB.Data.DbRelation;
 using IDB.Translate.BCP.Helpers;
+using IDB.Translate.BCP.IDB.Validation;
 using log4net;
+using File = IDB.Data.DbEntity.File;
 
 namespace IDB.Translate.BCP
 {
@@ -27,7 +29,7 @@ namespace IDB.Translate.BCP
         private static readonly ILog Log = LogManager.GetLogger("IDBTranslateBCPApp");
 
         private Dictionary<long, Folder> _folders;
-        private Dictionary<long, DbEntity.File> _files;
+        private Dictionary<long, File> _files;
         private Dictionary<long, Item> _items;
         private Dictionary<long, CustomObject> _customObjects;
 
@@ -216,7 +218,7 @@ namespace IDB.Translate.BCP
                         ? $@"SELECT * FROM Files Where IsExcluded = 0 OR IsExcluded is NULL ORDER BY {Properties.Settings.Default.CustomFilesOrderByFields}"
                         : @"SELECT * FROM Files Where IsExcluded = 0 OR IsExcluded is NULL ORDER BY FileName, RevisionLabel, Version";
                     _files = connection.Query(filesQuery)
-                        .Select(x => new KeyValuePair<long, DbEntity.File>(x.FileID, Convert.To<DbEntity.File>(x)))
+                        .Select(x => new KeyValuePair<long, File>(x.FileID, Convert.To<File>(x)))
                         .ToDictionary(t => t.Key, t => t.Value);
                     Log.Debug($"Reading Files table. Done! Number of files: {_files.Count}");
 

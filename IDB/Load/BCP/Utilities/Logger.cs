@@ -1,8 +1,7 @@
 ﻿using log4net;
 using log4net.Config;
 
-
-namespace IDB.Load.BCP
+namespace IDB.Load.BCP.Utilities
 {
     public static class Logger
     {

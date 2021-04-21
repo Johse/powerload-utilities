@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using IDB.DbEntity;
+using IDB.Data.DbEntity;
 
-namespace IDB.DbRelation
+namespace IDB.Data.DbRelation
 {
     public class ItemItemRelation : IDbEntity
     {

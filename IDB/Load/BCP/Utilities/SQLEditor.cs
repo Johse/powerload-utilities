@@ -1,11 +1,12 @@
-﻿using System.Data;
-using System.Xml;
-using System.Data.SqlClient;
-using System;
+﻿using System;
 using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
 using System.Windows.Forms;
+using System.Xml;
+using IDB.Load.BCP.IDB.Content;
 
-namespace IDB.Load.BCP
+namespace IDB.Load.BCP.Utilities
 {
     static class SQLEditor
     {

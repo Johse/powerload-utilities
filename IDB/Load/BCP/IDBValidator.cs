@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
+using IDB.Load.BCP.Utilities;
 
 namespace IDB.Load.BCP
 {

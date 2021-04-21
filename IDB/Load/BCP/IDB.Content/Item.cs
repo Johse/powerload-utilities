@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Xml;
-using System.Data.SqlClient;
 using System.Data;
-using System;
+using System.Data.SqlClient;
+using System.Xml;
+using IDB.Load.BCP.Utilities;
 
-namespace IDB.Load.BCP
+namespace IDB.Load.BCP.IDB.Content
 {
     class Item
     {

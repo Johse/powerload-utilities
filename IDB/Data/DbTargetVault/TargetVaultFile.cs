@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IDB.DbTargetVault
+namespace IDB.Data.DbTargetVault
 {
     public class TargetVaultFile
     {

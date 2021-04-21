@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace IDB.DbEntity
+namespace IDB.Data.DbEntity
 {
     public interface IDbEntity
     {

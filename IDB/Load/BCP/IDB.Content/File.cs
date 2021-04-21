@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IDB.Load.BCP
+namespace IDB.Load.BCP.IDB.Content
 {
     class File
     {
