@@ -25,17 +25,8 @@ namespace IDB.Analyzer.AutoCAD
             Log.Info(msg);
             ed.WriteMessage("\n" + msg);
 
-            var config = ConfigurationManager.OpenExeConfiguration(GetType().Assembly.Location);
-            var xmlConfig = new ConfigXmlDocument();
-            xmlConfig.Load(config.FilePath);
-
-            var filestorePath = xmlConfig.SelectSingleNode("//setting[@name='FilestorePath']").InnerText;
-            var connectionString = xmlConfig.SelectSingleNode("//setting[@name='ConnectionString']").InnerText;
-            var workingDirectory = xmlConfig.SelectSingleNode("//setting[@name='WorkingDirectory']").InnerText;
-            var differentLoadLocalFilestorePath = xmlConfig.SelectSingleNode("//setting[@name='DifferentLoadLocalFilestorePath']").InnerText;
-
             // Initialize common DataHandler
-            DataHandler.Instance.Initialize(Log, connectionString, workingDirectory, filestorePath, differentLoadLocalFilestorePath);
+            DataHandler.Instance.Initialize(Log);
 
             var result = ed.GetString("\nIDB.Analyze mode (NORMAL, EXPORT, IMPORT, OFFLINE) [NORMAL]: ");
             if (result.Status != PromptStatus.OK)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using IDB.Core;
 
 namespace IDB.Discover.Vault
 {
@@ -8,8 +9,8 @@ namespace IDB.Discover.Vault
         public MainForm()
         {
             InitializeComponent();
-            //txtConnectionString.Text = "Properties.Settings.Default.ConnectionString";
-            //txtVaultConnection.Text = "Properties.Settings.Default.ExportDirectory";
+            txtConnectionString.Text = Settings.IdbConnectionString;
+            txtVaultConnection.Text = Settings.VaultConnectionString;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -31,6 +32,17 @@ namespace IDB.Discover.Vault
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void txtConnectionString_TextChanged(object sender, EventArgs e)
+        {
+            Settings.IdbConnectionString = txtConnectionString.Text;
+            
+        }
+
+        private void txtVaultConnection_TextChanged(object sender, EventArgs e)
+        {
+            Settings.VaultConnectionString = txtVaultConnection.Text;
         }
     }
 }

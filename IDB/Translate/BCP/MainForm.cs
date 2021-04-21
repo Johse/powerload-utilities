@@ -14,13 +14,13 @@ using bcpDevKit.Entities.General;
 using bcpDevKit.Entities.Items;
 using bcpDevKit.Entities.Vault;
 using Dapper;
-using IDB.Data.DbEntity;
-using IDB.Data.DbLink;
-using IDB.Data.DbRelation;
+using IDB.Core.DbEntity;
+using IDB.Core.DbLink;
+using IDB.Core.DbRelation;
 using IDB.Translate.BCP.Helpers;
-using IDB.Translate.BCP.IDB.Validation;
+using IDB.Translate.BCP.Validation;
 using log4net;
-using File = IDB.Data.DbEntity.File;
+using File = IDB.Core.DbEntity.File;
 
 namespace IDB.Translate.BCP
 {
@@ -52,21 +52,16 @@ namespace IDB.Translate.BCP
             InitializeLogging();
 
             InitializeComponent();
-            txtConnectionString.Text = Properties.Settings.Default.ConnectionString;
-            txtExportDirectory.Text = Properties.Settings.Default.ExportDirectory;
-            var vaultVersion = Properties.Settings.Default.VaultVersion;
+
+            txtConnectionString.Text = Core.Settings.IdbConnectionString;
+            txtExportDirectory.Text = Core.Settings.ExportPath;
+            var vaultVersion = Core.Settings.VaultVersion;
             comboBoxVaultVersion.Text = (comboBoxVaultVersion.Items.Contains(vaultVersion)) ? vaultVersion : "2020";
         }
 
         #region UI Events
         private void BtnExport_Click(object sender, EventArgs e)
         {
-            // save current settings for next time
-            Properties.Settings.Default.ConnectionString = txtConnectionString.Text;
-            Properties.Settings.Default.ExportDirectory = txtExportDirectory.Text;
-            Properties.Settings.Default.VaultVersion = comboBoxVaultVersion.Text;
-            Properties.Settings.Default.Save();
-
             if (_exportInProgress)
                 return;
 
@@ -134,6 +129,20 @@ namespace IDB.Translate.BCP
         private void BtnClose_Click(object sender, EventArgs e)
         {
             Close();
+        }
+        private void OnTxtConnectionStringTextChanged(object sender, EventArgs e)
+        {
+            Core.Settings.IdbConnectionString = txtConnectionString.Text;
+        }
+
+        private void OnComboBoxVaultVersionTextChanged(object sender, EventArgs e)
+        {
+            Core.Settings.VaultVersion = comboBoxVaultVersion.Text;
+        }
+
+        private void OnTxtExportDirectoryTextChanged(object sender, EventArgs e)
+        {
+            Core.Settings.ExportPath = txtExportDirectory.Text;
         }
         #endregion
 
@@ -214,8 +223,8 @@ namespace IDB.Translate.BCP
 
                     Log.Debug("Reading Files table ...");
                     SetProgress("Reading 'Files' table ...", progressTaskText, 15, progressTask);
-                    var filesQuery = !string.IsNullOrEmpty(Properties.Settings.Default.CustomFilesOrderByFields)
-                        ? $@"SELECT * FROM Files Where IsExcluded = 0 OR IsExcluded is NULL ORDER BY {Properties.Settings.Default.CustomFilesOrderByFields}"
+                    var filesQuery = !string.IsNullOrEmpty(Settings.CustomFilesOrderByFields)
+                        ? $@"SELECT * FROM Files Where IsExcluded = 0 OR IsExcluded is NULL ORDER BY {Settings.CustomFilesOrderByFields}"
                         : @"SELECT * FROM Files Where IsExcluded = 0 OR IsExcluded is NULL ORDER BY FileName, RevisionLabel, Version";
                     _files = connection.Query(filesQuery)
                         .Select(x => new KeyValuePair<long, File>(x.FileID, Convert.To<File>(x)))
@@ -224,8 +233,8 @@ namespace IDB.Translate.BCP
 
                     Log.Debug("Reading Items table ...");
                     SetProgress("Reading 'Items' table ...", progressTaskText, 30, progressTask);
-                    var itemsQuery = !string.IsNullOrEmpty(Properties.Settings.Default.CustomItemsOrderByFields)
-                        ? $@"SELECT * FROM Items ORDER BY {Properties.Settings.Default.CustomItemsOrderByFields}"
+                    var itemsQuery = !string.IsNullOrEmpty(Settings.CustomItemsOrderByFields)
+                        ? $@"SELECT * FROM Items ORDER BY {Settings.CustomItemsOrderByFields}"
                         : @"SELECT * FROM Items ORDER BY ItemNumber, RevisionLabel, Version";
                     _items = connection.Query(itemsQuery)
                         .Select(x => new KeyValuePair<long, Item>(x.ItemID, Convert.To<Item>(x)))

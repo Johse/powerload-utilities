@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Autodesk.AutoCAD.ApplicationServices.Core;
 using Autodesk.AutoCAD.DatabaseServices;
-using IDB.Analyzer.AutoCAD.Properties;
 using IDB.Analyzer.Common;
 using IDB.Analyzer.Common.Db;
 using IDB.Analyzer.Common.Helper;
@@ -24,7 +23,7 @@ namespace IDB.Analyzer.AutoCAD
             ed.WriteMessage("\nAnalyzing AutoCAD references!");
             Log.Info("Analyzing AutoCAD references ...");
 
-            if (!string.IsNullOrEmpty(Settings.Default.DifferentLoadLocalFilestorePath) && string.IsNullOrEmpty(Settings.Default.FilestorePath))
+            if (!string.IsNullOrEmpty(Common.Settings.DifferentLoadLocalFilestorePath) && string.IsNullOrEmpty(Common.Settings.FilestorePath))
             {
                 Log.Error("Setting 'FilestorePath' is required if 'DifferentLoadLocalFilestorePath' is set");
                 ed.WriteMessage("Setting 'FilestorePath' is required if 'DifferentLoadLocalFilestorePath' is set!");

@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
-using IDB.Data.DbTargetVault;
+using IDB.Core.DbTargetVault;
 using Z.Dapper.Plus;
 
 namespace IDB.Discover.Vault

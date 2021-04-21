@@ -6,12 +6,11 @@ namespace IDB.Load.Files
 {
     internal class SqlEditor
     {
-        public static void InsertFolder(string fullFolderPath, string basePathReplacement)
+        public static void InsertFolder(string fullFolderPath, string basePathReplacement, string connectionString)
         {
             var sqlExpression =
                 "insert into Folders(FolderName,Path,Category,CreateUser,CreateDate)values(@FolderName,@Path,@Category,@CreateUser,@CreateDate)";
 
-            var connectionString = XmlConfiguration.GetBehavior("ConnectionString");
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -22,9 +21,9 @@ namespace IDB.Load.Files
                     cmd.Parameters.Add("@FolderName", SqlDbType.NChar);
                     cmd.Parameters["@FolderName"].Value = new DirectoryInfo(fullFolderPath).Name;
                     cmd.Parameters.Add("@Category", SqlDbType.NVarChar);
-                    cmd.Parameters["@Category"].Value = XmlConfiguration.GetBehavior("Folders", "Category");
+                    cmd.Parameters["@Category"].Value = Settings.FolderCategory;
                     cmd.Parameters.Add("@CreateUser", SqlDbType.NVarChar);
-                    cmd.Parameters["@CreateUser"].Value = XmlConfiguration.GetBehavior("Folders", "CreateUser");
+                    cmd.Parameters["@CreateUser"].Value = Settings.FolderCreateUser;
                     cmd.Parameters.Add("@CreateDate", SqlDbType.DateTime);
                     cmd.Parameters["@CreateDate"].Value = Directory.GetCreationTime(fullFolderPath);
 
@@ -33,12 +32,11 @@ namespace IDB.Load.Files
             }
         }
 
-        public static void InsertFile(string fullFileName)
+        public static void InsertFile(string fullFileName, string connectionString)
         {
             var sqlExpression = 
                 "insert into Files(FolderID,Filename,LocalFullFileName,RevisionLabel,Version,Category,LifeCycleState,LifeCycleDefinition,RevisionDefinition,CreateUser,CreateDate,Classification)values(@FolderId,@FileName,@LocalFullFileName,@RevisionLabel,@Version,@Category,@LifeCycleState,@LifeCycleDefinition,@RevisionDefinition,@CreateUser,@CreateDate,@Classification)";
 
-            var connectionString = XmlConfiguration.GetBehavior("ConnectionString");
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -58,21 +56,21 @@ namespace IDB.Load.Files
                     cmd.Parameters.Add("@FileName", SqlDbType.NVarChar);
                     cmd.Parameters["@FileName"].Value = new DirectoryInfo(fullFileName).Name;
                     cmd.Parameters.Add("@Category", SqlDbType.NVarChar);
-                    cmd.Parameters["@Category"].Value = XmlConfiguration.GetBehavior("Files", "Category");
+                    cmd.Parameters["@Category"].Value = Settings.FileCategory;
                     cmd.Parameters.Add("@RevisionDefinition", SqlDbType.NVarChar);
-                    cmd.Parameters["@RevisionDefinition"].Value = XmlConfiguration.GetBehavior("Files", "RevisionDefinition");
+                    cmd.Parameters["@RevisionDefinition"].Value = Settings.FileRevisionDefinition;
                     cmd.Parameters.Add("@LifeCycleState", SqlDbType.NVarChar);
-                    cmd.Parameters["@LifeCycleState"].Value = XmlConfiguration.GetBehavior("Files", "LifeCycleState");
+                    cmd.Parameters["@LifeCycleState"].Value = Settings.FileLifeCycleState;
                     cmd.Parameters.Add("@LifeCycleDefinition", SqlDbType.NVarChar);
-                    cmd.Parameters["@LifeCycleDefinition"].Value = XmlConfiguration.GetBehavior("Files", "LifeCycleDefinition");
+                    cmd.Parameters["@LifeCycleDefinition"].Value = Settings.FileLifeCycleDefinition;
                     cmd.Parameters.Add("@CreateUser", SqlDbType.NVarChar);
-                    cmd.Parameters["@CreateUser"].Value = XmlConfiguration.GetBehavior("Files", "CreateUser");
+                    cmd.Parameters["@CreateUser"].Value = Settings.FolderCreateUser;
                     cmd.Parameters.Add("@CreateDate", SqlDbType.DateTime);
                     cmd.Parameters["@CreateDate"].Value = Directory.GetCreationTime(fullFileName);
                     cmd.Parameters.Add("@RevisionLabel", SqlDbType.NVarChar);
-                    cmd.Parameters["@RevisionLabel"].Value = XmlConfiguration.GetBehavior("Files", "RevisionLabel");
+                    cmd.Parameters["@RevisionLabel"].Value = Settings.FileRevisionLabel;
                     cmd.Parameters.Add("@Classification", SqlDbType.NVarChar);
-                    cmd.Parameters["@Classification"].Value = XmlConfiguration.GetBehavior("Files", "Classification");
+                    cmd.Parameters["@Classification"].Value = Settings.FileClassification;
                     cmd.Parameters.Add("@Version", SqlDbType.NVarChar);
                     cmd.Parameters["@Version"].Value = "001";
 

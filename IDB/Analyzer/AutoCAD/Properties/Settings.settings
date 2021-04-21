@@ -1,18 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="IDB.Analyzer.AutoCAD.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
   <Profiles />
-  <Settings>
-    <Setting Name="FilestorePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="ConnectionString" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Server=(local)\AUTODESKVAULT;Database=Load;Trusted_Connection=True;</Value>
-    </Setting>
-    <Setting Name="WorkingDirectory" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\temp\IDBAnalyze\AutoCADData</Value>
-    </Setting>
-    <Setting Name="DifferentLoadLocalFilestorePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
-    </Setting>
-  </Settings>
+  <Settings />
 </SettingsFile>

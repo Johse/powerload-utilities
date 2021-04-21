@@ -1,115 +1,102 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using IDB.Core;
 using IDB.Load.BCP.IDB.Content;
 using IDB.Load.BCP.Utilities;
 
-
 namespace IDB.Load.BCP
 {
-
     public partial class DataScanner : Form
     {
         private static string _inputConnectionString;
-        internal static string InputConnectionString { get { return _inputConnectionString; } set { _inputConnectionString = value; } }
+
+        internal static string InputConnectionString
+        {
+            get { return _inputConnectionString; }
+            set { _inputConnectionString = value; }
+        }
+
         internal static System.Xml.XmlDocument xmlDocument;
         private static long _counter;
-        public static long Counter { set { _counter = value; } get { return _counter; } }
+
+        public static long Counter
+        {
+            set { _counter = value; }
+            get { return _counter; }
+        }
+
         public DataScanner()
         {
             InitializeComponent();
+            connectionTxtBox.Text = Settings.IdbConnectionString;
+            dataPathTxtBox.Text = Settings.ImportPath;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void startBtn_Click(object sender, EventArgs e)
         {
             try
             {
-                connectionTxtBox.Text = XmlReaderUtility.GetIDBBehaviors("ConnectionString");
-                dataPathTxtBox.Text = XmlReaderUtility.GetIDBBehaviors("DataPath");
-            }
-            catch (System.IO.FileNotFoundException fileNotFoundException)
-            {
-                return;
-            }
-        }
-        private void startBtn_Click(object sender, EventArgs e)
-        {
-	        try
-	        {
-		        Logger.Log.Debug(":Program was started with path: " + dataPathTxtBox.Text);
-		        CancelBtn.Enabled = true;
-		        chooseBtn.Enabled = false;
-		        startBtn.Enabled = false;
-		        var document = XmlReaderUtility.GetXmlDocument(dataPathTxtBox.Text + @"\Vault.xml");
-		        SQLEditor.DatabaseConnection(connectionTxtBox.Text);
-		        XmlReaderUtility.parentFolderControl = false;
+                Logger.Log.Debug(":Program was started with path: " + dataPathTxtBox.Text);
+                CancelBtn.Enabled = true;
+                chooseBtn.Enabled = false;
+                startBtn.Enabled = false;
+                var document = XmlReaderUtility.GetXmlDocument(dataPathTxtBox.Text + @"\Vault.xml");
+                SQLEditor.DatabaseConnection(connectionTxtBox.Text);
+                XmlReaderUtility.parentFolderControl = false;
 
-		        XmlReaderUtility.SetBehavior("ConnectionString", connectionTxtBox.Text);
-		        XmlReaderUtility.SetBehavior("DataPath", dataPathTxtBox.Text);
-		        InputConnectionString = connectionTxtBox.Text;
-		        processPart.Text = "Xml file is scanned,please wait";
-		        Cursor.Current = Cursors.WaitCursor;
-		        xmlDocument = XmlReaderUtility.ToXmlDocument(document);
-		        var vaultElement = xmlDocument.FirstChild;
-		        var statics = vaultElement.FirstChild;
-		        _counter = Int64.Parse(XmlReaderUtility.GetProperty(statics, "TotalFiles")) +
-		                   xmlDocument.GetElementsByTagName("Association").Count;
-		        ScanedFilesQantity.Text = ScanedFilesQantity.Text + _counter.ToString();
-		        workerFolders.WorkerSupportsCancellation = true;
-		        workerFileFileRelations.WorkerSupportsCancellation = true;
-		        workerItems.WorkerSupportsCancellation = true;
-		        workerFolders.RunWorkerAsync();
-	        }
-	        catch (System.Data.SqlClient.SqlException connectionError)
-	        {
-		        CancelBtn.Enabled = false;
-		        chooseBtn.Enabled = true;
-				startBtn.Enabled = true;
-		        Logger.Log.Error(connectionError);
-	        }
-	        catch (Exception exception)
-	        {
-		        CancelBtn.Enabled = false;
-		        chooseBtn.Enabled = true;
-				startBtn.Enabled = true;
-		        Logger.Log.Error(exception);
-			}
+                InputConnectionString = connectionTxtBox.Text;
+                processPart.Text = "Xml file is scanned,please wait";
+                Cursor.Current = Cursors.WaitCursor;
+                xmlDocument = XmlReaderUtility.ToXmlDocument(document);
+                var vaultElement = xmlDocument.FirstChild;
+                var statics = vaultElement.FirstChild;
+                _counter = Int64.Parse(XmlReaderUtility.GetProperty(statics, "TotalFiles")) +
+                           xmlDocument.GetElementsByTagName("Association").Count;
+                ScanedFilesQantity.Text = ScanedFilesQantity.Text + _counter.ToString();
+                workerFolders.WorkerSupportsCancellation = true;
+                workerFileFileRelations.WorkerSupportsCancellation = true;
+                workerItems.WorkerSupportsCancellation = true;
+                workerFolders.RunWorkerAsync();
+            }
+            catch (System.Data.SqlClient.SqlException connectionError)
+            {
+                CancelBtn.Enabled = false;
+                chooseBtn.Enabled = true;
+                startBtn.Enabled = true;
+                Logger.Log.Error(connectionError);
+            }
+            catch (Exception exception)
+            {
+                CancelBtn.Enabled = false;
+                chooseBtn.Enabled = true;
+                startBtn.Enabled = true;
+                Logger.Log.Error(exception);
+            }
         }
 
         internal void RefreshControls()
         {
-            
-                FilesInfo.files.Clear();
-                CancelBtn.Text = "Cancel";
-                dataPathTxtBox.Text = "";
-                processPart.Text = "";
-                ScanedFilesQantity.Text = "Scaned Files: ";
-            try
-            {
-                connectionTxtBox.Text = XmlReaderUtility.GetIDBBehaviors("ConnectionString");
-                dataPathTxtBox.Text = XmlReaderUtility.GetIDBBehaviors("DataPath");
-            }
-            catch (System.IO.FileNotFoundException fileNotFoundException)
-            {
-                connectionTxtBox.Text = "";
-                dataPathTxtBox.Text = "";
-            }
-            progressBar1.Value = 0;
-                chooseBtn.Enabled = true;
-                startBtn.Enabled = true;
-                CancelBtn.Enabled = false;
-                Counter = 0;
-                SQLEditor.AssocCounter = 0;
-                Item.Count = 0;
+            FilesInfo.files.Clear();
+            CancelBtn.Text = "Cancel";
+            dataPathTxtBox.Text = "";
+            processPart.Text = "";
+            ScanedFilesQantity.Text = "Scaned Files: ";
 
-                XmlReaderUtility.ContentCounter = 0;
-            
-            
+            progressBar1.Value = 0;
+            chooseBtn.Enabled = true;
+            startBtn.Enabled = true;
+            CancelBtn.Enabled = false;
+            Counter = 0;
+            SQLEditor.AssocCounter = 0;
+            Item.Count = 0;
+
+            XmlReaderUtility.ContentCounter = 0;
         }
 
         private void chooseBtn_Click(object sender, EventArgs e)
         {
-            using (var fbd = new FolderBrowserDialog { Description = "Select your path." })
+            using (var fbd = new FolderBrowserDialog {Description = "Select your path."})
             {
                 if (fbd.ShowDialog() == DialogResult.OK)
                     dataPathTxtBox.Text = fbd.SelectedPath;
@@ -131,7 +118,7 @@ namespace IDB.Load.BCP
         private void WorkerFolders_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             processPart.Text = "Import records: " + XmlReaderUtility.ContentCounter.ToString();
-            progressBar1.Maximum = (int)_counter;
+            progressBar1.Maximum = (int) _counter;
             progressBar1.Step = 1;
             progressBar1.Minimum = 0;
             progressBar1.PerformStep();
@@ -143,7 +130,7 @@ namespace IDB.Load.BCP
             {
                 MessageBox.Show(e.Error.Message);
                 Logger.Log.Error(e.Error.Message);
-                
+
             }
 
             if (e.Cancelled)
@@ -152,7 +139,6 @@ namespace IDB.Load.BCP
             }
             else
             {
-
                 workerFileFileRelations.RunWorkerAsync();
             }
         }
@@ -173,8 +159,9 @@ namespace IDB.Load.BCP
 
         private void WorkerFileFileRelations_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            processPart.Text = "Import records: " + (XmlReaderUtility.ContentCounter + SQLEditor.AssocCounter).ToString();
-            progressBar1.Maximum = (int)_counter;
+            processPart.Text =
+                "Import records: " + (XmlReaderUtility.ContentCounter + SQLEditor.AssocCounter).ToString();
+            progressBar1.Maximum = (int) _counter;
             progressBar1.Step = 1;
             progressBar1.Minimum = 0;
             progressBar1.PerformStep();
@@ -187,16 +174,18 @@ namespace IDB.Load.BCP
             if (e.Error != null)
             {
                 MessageBox.Show(e.Error.Message);
-				return;
+                return;
             }
+
             if (e.Cancelled)
             {
                 processPart.Text = "Cancelled";
-				return;
+                return;
             }
+
             processPart.Text = "Finished";
             CancelBtn.Text = "Reset";
-		}
+        }
 
         private void workerItems_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -207,7 +196,6 @@ namespace IDB.Load.BCP
                 return;
             }
 
-
             e.Result = Item.GetItemAtrrributes(dataPathTxtBox.Text, worker, e);
         }
 
@@ -215,7 +203,7 @@ namespace IDB.Load.BCP
         {
             processPart.Text = "Import records: " + Item.Count.ToString();
             ScanedFilesQantity.Text = "Scaned Items: " + Counter;
-            progressBar1.Maximum = (int)Counter;
+            progressBar1.Maximum = (int) Counter;
             progressBar1.Step = 1;
             progressBar1.Minimum = 0;
             progressBar1.PerformStep();
@@ -230,20 +218,24 @@ namespace IDB.Load.BCP
                 processPart.Text = "Cancelled";
             }
         }
+
         private void CancelBtn_Click(object sender, EventArgs e)
         {
             if (this.workerFolders.IsBusy)
             {
                 this.workerFolders.CancelAsync();
             }
+
             if (this.workerFileFileRelations.IsBusy)
             {
                 this.workerFileFileRelations.CancelAsync();
             }
+
             if (this.workerFolders.IsBusy)
             {
                 this.workerItems.CancelAsync();
             }
+
             RefreshControls();
         }
 
@@ -266,6 +258,7 @@ namespace IDB.Load.BCP
                 e.Cancel = true;
                 return;
             }
+
             ItemItemRelations itemRelations = new ItemItemRelations();
             e.Result = itemRelations.RelationDataFounder(worker, e);
         }
@@ -274,7 +267,7 @@ namespace IDB.Load.BCP
         {
             processPart.Text = "Import records: " + ItemItemRelations.count.ToString();
             ScanedFilesQantity.Text = "Scaned ItemItemRelations: " + Counter;
-            progressBar1.Maximum = (int)Counter;
+            progressBar1.Maximum = (int) Counter;
             progressBar1.Step = 1;
             progressBar1.Minimum = 0;
             progressBar1.PerformStep();
@@ -293,7 +286,6 @@ namespace IDB.Load.BCP
                 Item.item4Relations.Clear();
                 processPart.Text = "Finished";
                 CancelBtn.Text = "Reset";
-
             }
         }
 
@@ -319,11 +311,6 @@ namespace IDB.Load.BCP
              MessageBox.Show("There are " + counter + " elements in the database ,that are false");*/
         }
 
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void ItemsInsert_Click(object sender, EventArgs e)
         {
             CancelBtn.Enabled = true;
@@ -335,10 +322,15 @@ namespace IDB.Load.BCP
             ScanedFilesQantity.Text = "Scaned Files: " + Counter;
             workerItems.RunWorkerAsync();
         }
+
+        private void dataPathTxtBox_TextChanged(object sender, EventArgs e)
+        {
+            Settings.ImportPath = dataPathTxtBox.Text;
+        }
+
+        private void connectionTxtBox_TextChanged(object sender, EventArgs e)
+        {
+            Settings.IdbConnectionString = connectionTxtBox.Text;
+        }
     }
-
-
 }
-
-
-

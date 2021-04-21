@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("IDB.Analyzer.Inventor")]
+[assembly: AssemblyProduct("IDB.Analyzer")]
 [assembly: AssemblyDescription("Analyze Inventor References for IDB")]
 
 // Setting ComVisible to false makes the types in this assembly not visible

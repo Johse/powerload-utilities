@@ -61,6 +61,7 @@ namespace IDB.Discover.Vault
             this.txtConnectionString.Size = new System.Drawing.Size(397, 22);
             this.txtConnectionString.TabIndex = 1;
             this.txtConnectionString.Text = "Server=(local)\\AUTODESKVAULT;Database=Load;Trusted_Connection=True;";
+            this.txtConnectionString.TextChanged += new System.EventHandler(this.txtConnectionString_TextChanged);
             // 
             // btnClose
             // 
@@ -109,6 +110,7 @@ namespace IDB.Discover.Vault
             this.txtVaultConnection.Size = new System.Drawing.Size(397, 22);
             this.txtVaultConnection.TabIndex = 16;
             this.txtVaultConnection.Text = "Server=(local)\\AUTODESKVAULT;Database=Vault;Trusted_Connection=True;";
+            this.txtVaultConnection.TextChanged += new System.EventHandler(this.txtVaultConnection_TextChanged);
             // 
             // label2
             // 

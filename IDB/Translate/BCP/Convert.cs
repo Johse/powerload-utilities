@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using IDB.Data.DbEntity;
+using IDB.Core.DbEntity;
 
 namespace IDB.Translate.BCP
 {

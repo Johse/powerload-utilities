@@ -7,12 +7,14 @@ namespace IDB.Load.Files
     internal class FileSystemScanner
     {
         private readonly string _basePath;
+        private readonly string _connectionString;
 
         public static long ContentCounter { get; set; }
 
-        public FileSystemScanner(string basePath)
+        public FileSystemScanner(string basePath, string connectionString)
         {
             _basePath = basePath;
+            _connectionString = connectionString;
         }
 
         public long Execute(string localPath, BackgroundWorker worker, DoWorkEventArgs e, long counter)
@@ -24,7 +26,7 @@ namespace IDB.Load.Files
                 e.Cancel = true; return ContentCounter;
                 
             }
-            SqlEditor.InsertFolder(localPath, _basePath);
+            SqlEditor.InsertFolder(localPath, _basePath, _connectionString);
             Logger.Log.Info(":Folder was inserted:  " + localPath);
             int percentComplete;
 
@@ -40,7 +42,7 @@ namespace IDB.Load.Files
             {
                 ContentCounter++;
                 percentComplete = (int) (ContentCounter / counter * 100);
-                SqlEditor.InsertFile(filename);
+                SqlEditor.InsertFile(filename, _connectionString);
 
                 var file = new DirectoryInfo(filename).Name;
                 Logger.Log.Info(":File was inserted:" + file);

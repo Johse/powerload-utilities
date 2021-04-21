@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Data.SqlClient;
 using System.IO;
 using System.Windows.Forms;
-using System.Threading;
 
 namespace IDB.Load.Files
 {
@@ -18,6 +17,9 @@ namespace IDB.Load.Files
             InitializeComponent();
             InitializeBackgroundWorker();
             RefreshControls();
+
+            connectionString.Text = Core.Settings.IdbConnectionString;
+            input.Text = Core.Settings.ImportPath;
         }
 
         private void InitializeBackgroundWorker()
@@ -91,19 +93,11 @@ namespace IDB.Load.Files
             }
         }
 
-        private void Refresh_Click(object sender, EventArgs e)
-        {
-            RefreshControls();
-            
-        }
-
         private void RefreshControls()
         {
             input.Text = "";
             processPart.Text = "";
             ScanedFilesQantity.Text = " ";
-            connectionString.Text = XmlConfiguration.GetBehavior("ConnectionString");
-            input.Text = XmlConfiguration.GetBehavior("DataPath");
             progressBar1.Value = 0;
             button2.Enabled = true;
             FileSystemScanner.ContentCounter = 0;
@@ -119,24 +113,17 @@ namespace IDB.Load.Files
             }
         }
 
-        private void saveBtn_Click(object sender, EventArgs e)
-        {
-            XmlConfiguration.SetBehavior("ConnectionString", connectionString.Text);
-            XmlConfiguration.SetBehavior("DataPath", input.Text);
-        }
-
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             var worker = sender as BackgroundWorker;
             
-           if (worker.CancellationPending)
+            if (worker.CancellationPending)
             {
                 e.Cancel = true;
                 return;
-           }
-            var scanner = new FileSystemScanner(Directory.GetParent(input.Text).FullName);
+            }
+            var scanner = new FileSystemScanner(Directory.GetParent(input.Text).FullName, connectionString.Text);
             e.Result = scanner.Execute(input.Text, worker, e, _counter);
-           
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -170,9 +157,14 @@ namespace IDB.Load.Files
 
         }
 
-        private void FolderScannerDialog_Load(object sender, EventArgs e)
+        private void connectionString_TextChanged(object sender, EventArgs e)
         {
-            input.Text = XmlConfiguration.GetBehavior("DataPath");
+            Core.Settings.IdbConnectionString = connectionString.Text;
+        }
+
+        private void input_TextChanged(object sender, EventArgs e)
+        {
+            Core.Settings.ImportPath = input.Text;
         }
     }
 }

@@ -6,7 +6,6 @@ using IDB.Analyzer.Common;
 using IDB.Analyzer.Common.Db;
 using IDB.Analyzer.Common.Helper;
 using IDB.Analyzer.Inventor.Helper;
-using IDB.Analyzer.Inventor.Properties;
 using log4net;
 
 using FileInfo = System.IO.FileInfo;
@@ -26,10 +25,10 @@ namespace IDB.Analyzer.Inventor
             InitializeConsoleAndLogging();
 
             // Initialize common DataHandler
-            DataHandler.Instance.Initialize(Log, Settings.Default.ConnectionString, Settings.Default.WorkingDirectory, Settings.Default.FilestorePath, Settings.Default.DifferentLoadLocalFilestorePath);
+            DataHandler.Instance.Initialize(Log);
 
             // Initialize Inventor helper class
-            ApprenticeServerWrapper.Instance.SetProjectFile(Settings.Default.InventorProjectFile);
+            ApprenticeServerWrapper.Instance.SetProjectFile(Common.Settings.InventorProjectFile);
 
             var runMode = GetRunModeFromParameters(args);
             Console.WriteLine("Mode: {0}", runMode);
@@ -79,7 +78,7 @@ namespace IDB.Analyzer.Inventor
             Console.WriteLine("Analyzing Inventor references ...");
             Log.Info("Analyzing Inventor references ...");
 
-            if (!string.IsNullOrEmpty(Properties.Settings.Default.DifferentLoadLocalFilestorePath) && string.IsNullOrEmpty(Properties.Settings.Default.FilestorePath))
+            if (!string.IsNullOrEmpty(Common.Settings.DifferentLoadLocalFilestorePath) && string.IsNullOrEmpty(Common.Settings.FilestorePath))
             {
                 Log.Error("Setting 'FilestorePath' is required if 'DifferentLoadLocalFilestorePath' is set");
                 Console.WriteLine("Setting 'FilestorePath' is required if 'DifferentLoadLocalFilestorePath' is set!");

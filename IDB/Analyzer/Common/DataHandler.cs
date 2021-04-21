@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Xml.Serialization;
@@ -35,17 +34,17 @@ namespace IDB.Analyzer.Common
         public Dictionary<string, File> FilesByOrigName { get; private set; }
         public List<FileFileRelation> NewFileRelations { get; private set; }
 
-        public void Initialize(ILog logger, string connectionString, string workingDirectory, string filestorePath, string differentLoadLocalFilestorePath)
+        public void Initialize(ILog logger)
         {
             Log = logger;
             ConsoleBufferWidth = 300;
 
             Settings = new Dictionary<string, string>
             {
-                {"ConnectionString", connectionString},
-                {"WorkingDirectory", workingDirectory},
-                {"FilestorePath", filestorePath},
-                {"DifferentLoadLocalFilestorePath", differentLoadLocalFilestorePath}
+                {"ConnectionString", Core.Settings.IdbConnectionString},
+                {"WorkingDirectory", Common.Settings.WorkingDirectory},
+                {"FilestorePath", Common.Settings.FilestorePath},
+                {"DifferentLoadLocalFilestorePath", Common.Settings.DifferentLoadLocalFilestorePath}
             };
         }
 

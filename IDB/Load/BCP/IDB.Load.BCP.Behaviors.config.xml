@@ -1,5 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Root>
-  <ConnectionString>Data Source=(local)\AUTODESKVAULT;Initial Catalog=Load;Trusted_Connection=True;</ConnectionString>
-  <DataPath>Specify path to Vault_xml</DataPath>
-</Root>

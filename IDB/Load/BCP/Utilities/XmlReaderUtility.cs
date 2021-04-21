@@ -37,30 +37,30 @@ namespace IDB.Load.BCP.Utilities
                 throw;
             }
         }
-        internal static string GetIDBBehaviors(string node)
-        {
-            try
-            {
-                var document = GetXmlDocument("IDB.Load.BCP.Behaviors.config.xml");
-                var rootElement = document.Element("Root");
-                var mainElement = rootElement.Element(node);
-                return mainElement.Value;
-            }
-            catch (System.IO.FileNotFoundException fileNotFoundException) 
-            {
-                throw fileNotFoundException;
-            }
+        //internal static string GetIDBBehaviors(string node)
+        //{
+        //    try
+        //    {
+        //        var document = GetXmlDocument("IDB.Load.BCP.Behaviors.config.xml");
+        //        var rootElement = document.Element("Root");
+        //        var mainElement = rootElement.Element(node);
+        //        return mainElement.Value;
+        //    }
+        //    catch (System.IO.FileNotFoundException fileNotFoundException) 
+        //    {
+        //        throw fileNotFoundException;
+        //    }
 
-        }
-        internal static void SetBehavior(string node, string value)
-        {
-            var document = GetXmlDocument("IDB.Load.BCP.Behaviors.config.xml");
-            var rootElement = document.Element("Root");
-            var mainElement = rootElement.Element(node);
-            mainElement.RemoveAttributes();
-            mainElement.SetValue(value);
-            document.Save("IDB.Load.BCP.Behaviors.config.xml");
-        }
+        //}
+        //internal static void SetBehavior(string node, string value)
+        //{
+        //    var document = GetXmlDocument("IDB.Load.BCP.Behaviors.config.xml");
+        //    var rootElement = document.Element("Root");
+        //    var mainElement = rootElement.Element(node);
+        //    mainElement.RemoveAttributes();
+        //    mainElement.SetValue(value);
+        //    document.Save("IDB.Load.BCP.Behaviors.config.xml");
+        //}
 
         internal static long GetVaultData(string path, BackgroundWorker worker, DoWorkEventArgs e, long counter)
         {
