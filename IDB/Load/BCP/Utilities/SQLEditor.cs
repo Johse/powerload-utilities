@@ -5,11 +5,15 @@ using System.Data.SqlClient;
 using System.Windows.Forms;
 using System.Xml;
 using IDB.Load.BCP.IDB.Content;
+using log4net;
+using log4net.Repository.Hierarchy;
 
 namespace IDB.Load.BCP.Utilities
 {
     static class SQLEditor
     {
+        private static readonly ILog Log = LogManager.GetLogger("IDBLoadBCP");
+
         private static int _assocCounter = 0;
         internal static int AssocCounter
         {
@@ -19,7 +23,7 @@ namespace IDB.Load.BCP.Utilities
 
         internal static void UdpAdder(string udpName, string udpTable)
         {
-            var connectionString = DataScanner.InputConnectionString;
+            var connectionString = MainForm.InputConnectionString;
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -36,14 +40,14 @@ namespace IDB.Load.BCP.Utilities
         }
         internal static int UdpCheck(string udpName, string udpTable)
         {
-            var connectionString = DataScanner.InputConnectionString;
+            var connectionString = MainForm.InputConnectionString;
             using (var connection = new SqlConnection(connectionString))
             {
 
                 connection.Open();
                 int count;
 
-                using (var cmd = new SqlCommand("use [" + SQLEditor.getBetween(DataScanner.InputConnectionString, "Catalog=", ";") + "] select count(*) from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '" + udpTable + "' AND COLUMN_NAME = '" + udpName + "'", connection))
+                using (var cmd = new SqlCommand("use [" + SQLEditor.getBetween(MainForm.InputConnectionString, "Catalog=", ";") + "] select count(*) from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '" + udpTable + "' AND COLUMN_NAME = '" + udpName + "'", connection))
                 {
                     cmd.CommandTimeout = 600;
                     count = (int)cmd.ExecuteScalar();
@@ -105,7 +109,7 @@ namespace IDB.Load.BCP.Utilities
             int percentComplete = 0;
             worker.WorkerSupportsCancellation = true;
             worker.WorkerReportsProgress = true;
-            var files = DataScanner.xmlDocument.GetElementsByTagName("File");
+            var files = MainForm.xmlDocument.GetElementsByTagName("File");
             foreach (XmlElement file in files)
             {
                 if (file.GetElementsByTagName("Association").Count == 0)
@@ -142,7 +146,7 @@ namespace IDB.Load.BCP.Utilities
                             fileInfo.childId = ChildIdSelection(association.GetAttribute("ChildId"));
                             if (fileInfo.childId == 0)
                             {
-                                Logger.Log.Error(":ChildFile with ID " + association.GetAttribute("ChildId") + " was not found ");
+                                Log.Error(":ChildFile with ID " + association.GetAttribute("ChildId") + " was not found ");
                                 worker.CancelAsync();
                             }
                             fileInfo.source = XmlReaderUtility.GetProperty(association, "Source");
@@ -174,7 +178,7 @@ namespace IDB.Load.BCP.Utilities
         internal static void InsertIntoFileFilesRelation(FilesInfo fileInfo)
         {
             var sqlExpression = "insert into FileFileRelations(ParentFileID,ChildFileID,IsAttachment,IsDependency,NeedsResolution,Source,RefId)values(@ParentFileID,@ChildFileID,@IsAttachment,@IsDependency,@NeedsResolution,@Source,@RefId)";
-            var connectionString = DataScanner.InputConnectionString;
+            var connectionString = MainForm.InputConnectionString;
             using (var connection = new SqlConnection(connectionString))
             {
                 try
@@ -216,14 +220,14 @@ namespace IDB.Load.BCP.Utilities
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log.Error("Error during inserting into FileFilerelations.Inserting data : ParentFileID: " + fileInfo.parentId + ", ChildFileID: " + fileInfo.childId);
-                    Logger.Log.Error("Reason for an error:" + ex.Message);
+                    Log.Error("Error during inserting into FileFilerelations.Inserting data : ParentFileID: " + fileInfo.parentId + ", ChildFileID: " + fileInfo.childId);
+                    Log.Error("Reason for an error:" + ex.Message);
                 }
             }
         }
         internal static int InsertFile(XmlElement filePath, string insertStatement, FilesInfo fileInfo,int parentFolderId)
         {
-            var connectionString = DataScanner.InputConnectionString;
+            var connectionString = MainForm.InputConnectionString;
             using (var connection = new SqlConnection(connectionString))
             {
                 int folderId;
@@ -361,7 +365,7 @@ namespace IDB.Load.BCP.Utilities
         }
         internal static int getFolderId()
         {
-            var connectionString = DataScanner.InputConnectionString;
+            var connectionString = MainForm.InputConnectionString;
             var replacedName = XmlReaderUtility.PathIDB.Replace("'", "''");
             var sqlExpression = "select FolderId from Folders where Path=N'" + replacedName + "'";
             using (var connection = new SqlConnection(connectionString))
@@ -393,7 +397,7 @@ namespace IDB.Load.BCP.Utilities
                 }
             }
             var sqlExpression = insertAttributes + insertValues;
-            var connectionString = DataScanner.InputConnectionString;
+            var connectionString = MainForm.InputConnectionString;
 
             using (var connection = new SqlConnection(connectionString))
             {

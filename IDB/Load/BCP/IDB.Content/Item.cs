@@ -115,13 +115,13 @@ namespace IDB.Load.BCP.IDB.Content
                     }
                 }
 
-                if (DataScanner.Counter == 0)
+                if (MainForm.Counter == 0)
                 {
                     percentComplete = 0;
                 }
                 else
                 {
-                    percentComplete = (int)(Count / DataScanner.Counter * 100);
+                    percentComplete = (int)(Count / MainForm.Counter * 100);
                 }
 
 
@@ -132,7 +132,7 @@ namespace IDB.Load.BCP.IDB.Content
         }
         private  int InsertItem(string sqlExpression)
         {
-            var connectionString = DataScanner.InputConnectionString;
+            var connectionString = MainForm.InputConnectionString;
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();

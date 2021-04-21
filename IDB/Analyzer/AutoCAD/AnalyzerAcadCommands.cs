@@ -19,7 +19,7 @@ namespace IDB.Analyzer.AutoCAD
         {
             var ed = Application.DocumentManager.MdiActiveDocument.Editor;
 
-            var msg = $"coolOrange IDB.Analyze.AutoCAD Tool v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version} for Intermediate DB";
+            var msg = $"COOLORANGE IDB.Analyze.AutoCAD Tool v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version} for Intermediate DB";
             Log.Info(msg);
             ed.WriteMessage("\n" + msg);
 

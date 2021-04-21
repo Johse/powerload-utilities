@@ -7,7 +7,7 @@
     </layout>
   </appender>
   <appender name="RollingFileAppender" type="log4net.Appender.RollingFileAppender,log4net">
-    <file type="log4net.Util.PatternString" value="${LOCALAPPDATA}\coolOrange\powerLoad\IDB.Translate.BCP.log" />
+    <file type="log4net.Util.PatternString" value="${LOCALAPPDATA}\coolOrange\powerLoad\IDB.Load.BCP.log" />
     <param name="AppendToFile" value="false" />
     <param name="RollingStyle" value="Size" />
     <param name="MaximumFileSize" value="20mb" />
@@ -19,7 +19,7 @@
   </appender>
   
   <!-- Setup the root category, add the appenders and set the default priority -->
-  <logger name="IDBTranslateBCP" additivity="false">
+  <logger name="IDBLoadBCP" additivity="false">
     <level value="INFO" />
     <appender-ref ref="RollingFileAppender" />
     <appender-ref ref="OutputDebugStringAppender" />

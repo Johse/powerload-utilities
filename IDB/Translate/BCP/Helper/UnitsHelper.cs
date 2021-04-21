@@ -11,7 +11,7 @@ namespace IDB.Translate.BCP.Helper
 {
     class UnitsHelper
     {
-        private static readonly ILog Log = LogManager.GetLogger("IDBTranslateBCPApp");
+        private static readonly ILog Log = LogManager.GetLogger("IDBTranslateBCP");
 
         private static UnitsHelper _instance;
         public static UnitsHelper Instance

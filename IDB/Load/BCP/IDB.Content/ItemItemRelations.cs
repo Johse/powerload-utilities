@@ -4,12 +4,15 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Xml;
-using IDB.Load.BCP.Utilities;
+using log4net;
+using log4net.Repository.Hierarchy;
 
 namespace IDB.Load.BCP.IDB.Content
 {
     class ItemItemRelations
     {
+        private static readonly ILog Log = LogManager.GetLogger("IDBLoadBCP");
+
         internal int parentId;
         internal int childId;
         internal string id;
@@ -24,7 +27,7 @@ namespace IDB.Load.BCP.IDB.Content
             worker.WorkerSupportsCancellation = true;
             worker.WorkerReportsProgress = true;
             var items = Item.itemXmlDocument.GetElementsByTagName("ItemMaster");
-            var bomLinksQuantity = DataScanner.Counter;
+            var bomLinksQuantity = MainForm.Counter;
             count = 0;
             foreach (XmlElement item in items)
             {
@@ -41,7 +44,7 @@ namespace IDB.Load.BCP.IDB.Content
                         parentId = ParentIdSelection(masterId,iterationID);
                         if (parentId == 0)
                         {
-                            Logger.Log.Error(":ParentItem with ID " + Int32.Parse(item.GetAttribute("ItemMasterID").Remove(0, 1)) + " was not found ");
+                            Log.Error(":ParentItem with ID " + Int32.Parse(item.GetAttribute("ItemMasterID").Remove(0, 1)) + " was not found ");
                             //worker.CancelAsync();
                             continue;
                         }
@@ -51,7 +54,7 @@ namespace IDB.Load.BCP.IDB.Content
                             childId = ChildIdSelection((string)bomLink.GetAttribute("ChildItemMasterID"));
                             if (childId == 0)
                             {
-                                Logger.Log.Error(":ChildItem with ID " + Int32.Parse(bomLink.GetAttribute("ChildItemMasterID").Remove(0, 1)) + " was not found ");
+                                Log.Error(":ChildItem with ID " + Int32.Parse(bomLink.GetAttribute("ChildItemMasterID").Remove(0, 1)) + " was not found ");
                                 continue;
                             }
 
@@ -142,7 +145,7 @@ namespace IDB.Load.BCP.IDB.Content
         private void InsertItemItemRelation(int parentIdDB, int childId, int position, string quantity, string unit, string linkType, int instanceCount, string unitsize, string cad)
         {
             var sqlExpression = "insert into ItemItemRelations(ParentItemID,ChildItemID,Position,Quantity,Unit,LinkType,InstanceCount,UnitSize,CAD)values(@ParentItemID,@ChildItemID,@Position,@Quantity,@Unit,@LinkType,@InstanceCount,@UnitSize,@CAD)";
-            var connectionString = DataScanner.InputConnectionString;
+            var connectionString = MainForm.InputConnectionString;
             using (var connection = new SqlConnection(connectionString))
             {
 

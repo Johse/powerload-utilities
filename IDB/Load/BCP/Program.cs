@@ -14,7 +14,7 @@ namespace IDB.Load.BCP
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new DataScanner());
+            Application.Run(new MainForm());
         }
     }
 }

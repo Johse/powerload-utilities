@@ -3,17 +3,22 @@ using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using IDB.Core.DbTargetVault;
+using log4net;
 using Z.Dapper.Plus;
 
 namespace IDB.Discover.Vault
 {
     public class VaultDbExtractor
     {
+        private static readonly ILog Log = LogManager.GetLogger("IDBDiscoverVault");
+
         private static string _vaultConnectionString;
         private static string _loadConnectionString;
 
         public static void Transfer(string vaultConnectionString, string loadConnectionString)
         {
+            Log.Debug("Starting transfer");
+
             _vaultConnectionString = vaultConnectionString;
             _loadConnectionString = loadConnectionString;
 
@@ -97,10 +102,14 @@ namespace IDB.Discover.Vault
 
         public static void TransferTable<T>(string sqlQuery, string loadTable)
         {
+            Log.Info($"Transferring Vault information to IDB table '{loadTable}'");
+            Log.Debug(sqlQuery);
+
             List<T> files;
             using (var vaultConnection = new SqlConnection(_vaultConnectionString))
             {
                 files = vaultConnection.Query<T>(sqlQuery).ToList();
+                Log.Info($"{files.Count} rows found");
             }
 
             using (var loadConnection = new SqlConnection(_loadConnectionString))

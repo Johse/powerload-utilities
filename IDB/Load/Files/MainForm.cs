@@ -2,24 +2,39 @@
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
+using log4net;
+using log4net.Repository.Hierarchy;
 
 namespace IDB.Load.Files
 {
-    public partial class FolderScannerDialog : Form
+    public partial class MainForm : Form
     {
+        private static readonly ILog Log = LogManager.GetLogger("IDBLoadFiles");
+
         private static long _counter;
 
         public static string ErrorMsg { get; set; }
 
-        public FolderScannerDialog()
+        public MainForm()
         {
+            InitializeLogging();
             InitializeComponent();
             InitializeBackgroundWorker();
             RefreshControls();
 
             connectionString.Text = Core.Settings.IdbConnectionString;
             input.Text = Core.Settings.ImportPath;
+        }
+
+        private void InitializeLogging()
+        {
+            var thisAssembly = Assembly.GetExecutingAssembly();
+            var fi = new FileInfo(thisAssembly.Location + ".log4net");
+            log4net.Config.XmlConfigurator.Configure(fi);
+
+            Log.Info($"COOLORANGE {Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}");
         }
 
         private void InitializeBackgroundWorker()
@@ -31,7 +46,7 @@ namespace IDB.Load.Files
 
         private void startBtn_Click(object sender, EventArgs e)
         {
-            Logger.Log.Debug(":Program was started with path: " + input.Text);
+            Log.Debug(":Program was started with path: " + input.Text);
             CancelBtn.Enabled = true;
             button2.Enabled = false;
             try
@@ -57,11 +72,11 @@ namespace IDB.Load.Files
                 MessageBox.Show("Program has not acces for this data!");
                 processPart.Text = "";
                 _counter = 0;
-                Logger.Log.Error(":Folder acces Error.");
+                Log.Error(":Folder acces Error.");
             }
             catch (SqlException insertException)
             {
-                Logger.Log.Error(":These data are already exist in database.");
+                Log.Error(":These data are already exist in database.");
 
                 var sqlError = new SQLError();
                 sqlError.ErrorSql = "These data are already exist in database";
@@ -74,7 +89,7 @@ namespace IDB.Load.Files
             {
                 processPart.Text = "";
                 _counter = 0;
-                Logger.Log.Error(":Connection String is false.");
+                Log.Error(":Connection String is false.");
                 var sqlError = new SQLError();
                 sqlError.ErrorSql = "Connection String is false.";
                 ErrorMsg = argumentException.ToString();
@@ -82,7 +97,7 @@ namespace IDB.Load.Files
             }
             catch (IOException pathException)
             {
-                Logger.Log.Error(":Path was not found.");
+                Log.Error(":Path was not found.");
 
                 var sqlError = new SQLError();
                 sqlError.ErrorSql = "Path was not found.";
@@ -143,8 +158,8 @@ namespace IDB.Load.Files
                 MessageBox.Show(e.Error.Message);
             else if (e.Cancelled)
                 processPart.Text = "Finished";
-                CancelBtn.Text = "Reset";
-
+     
+            CancelBtn.Text = "Reset";
         }
 
         private void CancelBtn_Click(object sender, EventArgs e)

@@ -1,6 +1,6 @@
 ﻿namespace IDB.Load.BCP
 {
-    partial class DataScanner
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataScanner));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.connectionTxtBox = new System.Windows.Forms.TextBox();
             this.startBtn = new System.Windows.Forms.Button();
             this.dataPathTxtBox = new System.Windows.Forms.TextBox();

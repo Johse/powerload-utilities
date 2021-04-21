@@ -58,7 +58,7 @@ namespace IDB.Analyzer.Inventor
         {
             Console.BufferWidth = 300;
             Console.WindowWidth = 140;
-            var msg = $"coolOrange IDB.Analyze.Inventor Tool v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version} for Intermediate DB";
+            var msg = $"COOLORANGE IDB.Analyze.Inventor Tool v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version} for Intermediate DB";
             Console.WriteLine(msg);
             Console.WriteLine("".PadRight(msg.Length, '*'));
 

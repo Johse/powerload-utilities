@@ -26,7 +26,7 @@ namespace IDB.Translate.BCP
 {
     public partial class MainForm : Form
     {
-        private static readonly ILog Log = LogManager.GetLogger("IDBTranslateBCPApp");
+        private static readonly ILog Log = LogManager.GetLogger("IDBTranslateBCP");
 
         private Dictionary<long, Folder> _folders;
         private Dictionary<long, File> _files;
@@ -50,7 +50,6 @@ namespace IDB.Translate.BCP
         public MainForm()
         {
             InitializeLogging();
-
             InitializeComponent();
 
             txtConnectionString.Text = Core.Settings.IdbConnectionString;
@@ -72,7 +71,7 @@ namespace IDB.Translate.BCP
 
         private void btnValidate_Click(object sender, EventArgs e)
         {
-            IDBValidator validator = new IDBValidator();
+            var validator = new Validator();
             string scriptPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "SQL");
             string sqlScript = "";
             try
@@ -83,7 +82,7 @@ namespace IDB.Translate.BCP
                     {
                         try
                         {
-                            validator.Validator(txtConnectionString.Text, sqlScript);
+                            validator.Validate(txtConnectionString.Text, sqlScript);
                         }
                         catch (System.Data.SqlClient.SqlException loginException)
                         {
@@ -104,16 +103,15 @@ namespace IDB.Translate.BCP
             }
             try
             {
-                validator.Validator(txtConnectionString.Text, sqlScript);
+                validator.Validate(txtConnectionString.Text, sqlScript);
             }
             catch (System.Data.SqlClient.SqlException sqlScriptException) 
             {
                 Log.Error($"Error in SQL script: {sqlScriptException.Message}", sqlScriptException);
                 return;
             }
-            var counter = validator.AnnotationCounter(txtConnectionString.Text, "Folders") + validator.AnnotationCounter(txtConnectionString.Text, "Files") + validator.AnnotationCounter(txtConnectionString.Text, "FileFileRelations");
+            var counter = validator.GetErrorCount(txtConnectionString.Text, "Folders") + validator.GetErrorCount(txtConnectionString.Text, "Files") + validator.GetErrorCount(txtConnectionString.Text, "FileFileRelations");
             MessageBox.Show("There are " + counter + " elements with an error. Details can be found in IDB (Validation_Comment).");
-
         }
 
         private void BtnExportDirectory_Click(object sender, EventArgs e)
@@ -1004,6 +1002,8 @@ namespace IDB.Translate.BCP
             var thisAssembly = Assembly.GetExecutingAssembly();
             var fi = new FileInfo(thisAssembly.Location + ".log4net");
             log4net.Config.XmlConfigurator.Configure(fi);
+
+            Log.Info($"COOLORANGE {Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}");
         }
         #endregion
     }

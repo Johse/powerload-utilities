@@ -17,7 +17,7 @@ namespace IDB.Load.BCP.IDB.Content
         }
         internal void UdpInsert()
         {
-            var connectionString = DataScanner.InputConnectionString;
+            var connectionString = MainForm.InputConnectionString;
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();

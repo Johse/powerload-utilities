@@ -1,16 +1,32 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using IDB.Core;
+using log4net;
 
 namespace IDB.Discover.Vault
 {
     public partial class MainForm : Form
     {
+        private static readonly ILog Log = LogManager.GetLogger("IDBDiscoverVault");
+
         public MainForm()
         {
+            InitializeLogging();
             InitializeComponent();
+
             txtConnectionString.Text = Settings.IdbConnectionString;
             txtVaultConnection.Text = Settings.VaultConnectionString;
+        }
+
+        private void InitializeLogging()
+        {
+            var thisAssembly = Assembly.GetExecutingAssembly();
+            var fi = new FileInfo(thisAssembly.Location + ".log4net");
+            log4net.Config.XmlConfigurator.Configure(fi);
+
+            Log.Info($"COOLORANGE {Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -21,11 +37,21 @@ namespace IDB.Discover.Vault
                 string vaultConnectionString = txtVaultConnection.Text;
                 VaultDbExtractor.Transfer(vaultConnectionString, loadConnectionString);
 
-                MessageBox.Show("Successfully transferred target Vault behaviors to IDB");
+                Log.Info("Successfully transferred target Vault behaviors to IDB");
+                MessageBox.Show(
+                    "Successfully transferred target Vault behaviors to IDB", 
+                    "IDB.Discover.Vault", 
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                Log.Error(ex.Message, ex);
+                MessageBox.Show(
+                    ex.Message, 
+                    "IDB.Discover.Vault",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
         }
 

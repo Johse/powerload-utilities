@@ -1,10 +1,14 @@
 ﻿using System.ComponentModel;
 using System.IO;
+using log4net;
+using log4net.Repository.Hierarchy;
 
 namespace IDB.Load.Files
 {
     internal class FileSystemScanner
     {
+        private static readonly ILog Log = LogManager.GetLogger("IDBLoadFiles");
+
         private readonly string _basePath;
         private readonly string _connectionString;
 
@@ -26,7 +30,7 @@ namespace IDB.Load.Files
                 
             }
             SqlEditor.InsertFolder(localPath, _basePath, _connectionString);
-            Logger.Log.Info(":Folder was inserted:  " + localPath);
+            Log.Info(":Folder was inserted:  " + localPath);
             int percentComplete;
 
             if (counter == 0)
@@ -44,7 +48,8 @@ namespace IDB.Load.Files
                 SqlEditor.InsertFile(filename, _connectionString);
 
                 var file = new DirectoryInfo(filename).Name;
-                Logger.Log.Info(":File was inserted:" + file);
+                
+                Log.Info(":File was inserted:" + file);
 
                 worker.ReportProgress(percentComplete);
             }

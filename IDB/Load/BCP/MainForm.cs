@@ -1,14 +1,19 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using IDB.Core;
 using IDB.Load.BCP.IDB.Content;
 using IDB.Load.BCP.Utilities;
+using log4net;
 
 namespace IDB.Load.BCP
 {
-    public partial class DataScanner : Form
+    public partial class MainForm : Form
     {
+        private static readonly ILog Log = LogManager.GetLogger("IDBLoadBCP");
+
         private static string _inputConnectionString;
 
         internal static string InputConnectionString
@@ -26,18 +31,29 @@ namespace IDB.Load.BCP
             get { return _counter; }
         }
 
-        public DataScanner()
+        public MainForm()
         {
+            InitializeLogging();
             InitializeComponent();
+
             connectionTxtBox.Text = Settings.IdbConnectionString;
             dataPathTxtBox.Text = Settings.ImportPath;
+        }
+
+        private void InitializeLogging()
+        {
+            var thisAssembly = Assembly.GetExecutingAssembly();
+            var fi = new FileInfo(thisAssembly.Location + ".log4net");
+            log4net.Config.XmlConfigurator.Configure(fi);
+
+            Log.Info($"COOLORANGE {Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}");
         }
 
         private void startBtn_Click(object sender, EventArgs e)
         {
             try
             {
-                Logger.Log.Debug(":Program was started with path: " + dataPathTxtBox.Text);
+                Log.Debug(":Program was started with path: " + dataPathTxtBox.Text);
                 CancelBtn.Enabled = true;
                 chooseBtn.Enabled = false;
                 startBtn.Enabled = false;
@@ -64,14 +80,14 @@ namespace IDB.Load.BCP
                 CancelBtn.Enabled = false;
                 chooseBtn.Enabled = true;
                 startBtn.Enabled = true;
-                Logger.Log.Error(connectionError);
+                Log.Error(connectionError);
             }
             catch (Exception exception)
             {
                 CancelBtn.Enabled = false;
                 chooseBtn.Enabled = true;
                 startBtn.Enabled = true;
-                Logger.Log.Error(exception);
+                Log.Error(exception);
             }
         }
 
@@ -129,10 +145,8 @@ namespace IDB.Load.BCP
             if (e.Error != null)
             {
                 MessageBox.Show(e.Error.Message);
-                Logger.Log.Error(e.Error.Message);
-
+                Log.Error(e.Error.Message);
             }
-
             if (e.Cancelled)
             {
                 processPart.Text = "Cancelled";

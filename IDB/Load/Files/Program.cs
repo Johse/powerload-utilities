@@ -17,7 +17,7 @@ namespace IDB.Load.Files
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FolderScannerDialog());
+            Application.Run(new MainForm());
         }
     }
 }

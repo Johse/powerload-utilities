@@ -60,7 +60,7 @@
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Helper\UnitsHelper.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="Validation\IDBValidator.cs" />
+    <Compile Include="Validation\Validator.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

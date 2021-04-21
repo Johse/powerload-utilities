@@ -27,7 +27,7 @@ namespace IDB.Load.Files
         private void detailsBtn_Click(object sender, EventArgs e)
         {
             this.Close();
-            MessageBox.Show(FolderScannerDialog.ErrorMsg);
+            MessageBox.Show(MainForm.ErrorMsg);
         }
 
         private void OkBtn_Click(object sender, EventArgs e)

@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Xml;
 using IDB.Load.BCP.Utilities;
+using log4net;
+using log4net.Repository.Hierarchy;
 
 namespace IDB.Load.BCP.IDB.Content
 {
     class FilesInfo
     {
+        private static readonly ILog Log = LogManager.GetLogger("IDBLoadBCP");
+
         internal int fileId;
         internal string localFullFilNename;
         internal string fileName;
@@ -95,7 +99,7 @@ namespace IDB.Load.BCP.IDB.Content
                     }
                     catch (SqlException ex)
                     {
-                        Logger.Log.Error("Error during file inserting with LocalPath: " + filesInfo.localFullFilNename + " ,and IterationId: " + filesInfo.iterationId);//+"("+ex.Message+")");
+                        Log.Error("Error during file inserting with LocalPath: " + filesInfo.localFullFilNename + " ,and IterationId: " + filesInfo.iterationId);//+"("+ex.Message+")");
                     }
                 }
             }

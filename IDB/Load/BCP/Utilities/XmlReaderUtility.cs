@@ -7,13 +7,15 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using IDB.Load.BCP.IDB.Content;
+using log4net;
+using log4net.Repository.Hierarchy;
 
 namespace IDB.Load.BCP.Utilities
-
 {
-
     internal static class XmlReaderUtility
     {
+        private static readonly ILog Log = LogManager.GetLogger("IDBLoadBCP");
+
         private static string _pathIDB = "$/";
         internal static bool parentFolderControl;
         public static long ContentCounter { get; set; }
@@ -33,7 +35,7 @@ namespace IDB.Load.BCP.Utilities
             catch (Exception exception) 
             {
                 MessageBox.Show(exception.Message);
-                Logger.Log.Error(exception.Message);
+                Log.Error(exception.Message);
                 throw;
             }
         }
@@ -74,7 +76,7 @@ namespace IDB.Load.BCP.Utilities
 
             }
             List<string> udpList = new List<string>();
-            var vaultElement = DataScanner.xmlDocument.FirstChild;
+            var vaultElement = MainForm.xmlDocument.FirstChild;
             var rootElement = vaultElement["Root"];
             var folders = rootElement.SelectNodes(@"//Folder");
             foreach (XmlElement folder in folders)
@@ -132,7 +134,7 @@ namespace IDB.Load.BCP.Utilities
                     FilesInfo fileInfo = new FilesInfo();
                     fileInfo.GetAttributes4FileInsert(element, fileInfo,0);
 
-                    Logger.Log.Info(":File was inserted:" + GetProperty(element, "Name"));
+                    Log.Info(":File was inserted:" + GetProperty(element, "Name"));
 
                     ContentCounter++;
                     percentComplete = (int)(ContentCounter / counter * 100);
@@ -171,12 +173,12 @@ namespace IDB.Load.BCP.Utilities
             {
                 SQLEditor.InsertFolder(pathOfFolder);
                 parentID = SQLEditor.getFolderId();
-                Logger.Log.Info(":Folder was inserted:  " + PathIDB);
+                Log.Info(":Folder was inserted:  " + PathIDB);
 
             }
             catch (SqlException exception)
             {
-                Logger.Log.Error(exception.Message);
+                Log.Error(exception.Message);
             }
             int percentComplete;
             if (counter == 0)
@@ -192,7 +194,7 @@ namespace IDB.Load.BCP.Utilities
                 {
                     FilesInfo fileInfo = new FilesInfo();
                     fileInfo.GetAttributes4FileInsert(child, fileInfo, parentID);
-                    Logger.Log.Info(":File was inserted:" + GetProperty(child, "Name"));
+                    Log.Info(":File was inserted:" + GetProperty(child, "Name"));
                     ContentCounter++;
                     percentComplete = (int)(ContentCounter / counter * 100);
                     worker.ReportProgress(percentComplete);
