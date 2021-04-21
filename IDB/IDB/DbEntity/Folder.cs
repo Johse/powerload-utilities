@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IDB.Translate.BCP.DbEntity
+namespace IDB.DbEntity
 {
     public class Folder : IDbEntity
     {
-        public int FolderID { get; set; }
-        public int? ParentFolderID { get; set; }
+        public long FolderID { get; set; }
+        public long? ParentFolderID { get; set; }
         public string FolderName { get; set; }
         public string Path { get; set; }
         public bool IsLibrary { get; set; }

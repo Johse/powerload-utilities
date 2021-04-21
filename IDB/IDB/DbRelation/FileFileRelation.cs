@@ -1,9 +1,9 @@
-﻿namespace IDB.Translate.BCP.DbRelation
+﻿namespace IDB.DbRelation
 {
     public class FileFileRelation
     {
-        public int ParentFileID { get; set; }
-        public int ChildFileID { get; set; }
+        public long ParentFileID { get; set; }
+        public long ChildFileID { get; set; }
         public bool IsAttachment { get; set; }
         public bool IsDependency { get; set; }
         public bool NeedsResolution { get; set; }

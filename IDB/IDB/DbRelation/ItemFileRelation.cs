@@ -1,9 +1,9 @@
-﻿namespace IDB.Translate.BCP.DbRelation
+﻿namespace IDB.DbRelation
 {
     public class ItemFileRelation
     {
-        public int ItemID { get; set; }
-        public int FileID { get; set; }
+        public long ItemID { get; set; }
+        public long FileID { get; set; }
         public bool IsPrimaryLink { get; set; }
         public bool IsSecondaryLink { get; set; }
         public bool IsStandardComponentLink { get; set; }

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using IDB.Translate.BCP.DbEntity;
+using IDB.DbEntity;
 
-namespace IDB.Translate.BCP.DbRelation
+namespace IDB.DbRelation
 {
     public class ItemItemRelation : IDbEntity
     {
-        public int ParentItemID { get; set; }
-        public int ChildItemID { get; set; }
+        public long ParentItemID { get; set; }
+        public long ChildItemID { get; set; }
         public int Position { get; set; }
         public decimal Quantity { get; set; }
         public string Unit { get; set; }

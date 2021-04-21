@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IDB.Translate.BCP.DbEntity
+namespace IDB.DbEntity
 {
     public class Item : IDbEntity
     {
-        public int ItemID { get; set; }
+        public long ItemID { get; set; }
         public string ItemNumber { get; set; }
         public string Category { get; set; }
         public string RevisionLabel { get; set; }

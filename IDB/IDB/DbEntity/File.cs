@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IDB.Translate.BCP.DbEntity
+namespace IDB.DbEntity
 {
     public class File : IDbEntity
     {
         public string LocalFullFileName { get; set; }
-        public int FileID { get; set; }
-        public int FolderID { get; set; }
+        public long FileID { get; set; }
+        public long FolderID { get; set; }
         public string FileName { get; set; }
         public string Category { get; set; }
         public string Classification { get; set; }

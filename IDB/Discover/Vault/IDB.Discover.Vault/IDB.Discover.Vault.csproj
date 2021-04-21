@@ -29,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -58,11 +59,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="VaultDbExtractor.cs" />
-    <Compile Include="DbTargetVault\TargetVaultCategory.cs" />
-    <Compile Include="DbTargetVault\TargetVaultFile.cs" />
-    <Compile Include="DbTargetVault\TargetVaultLifeCycle.cs" />
-    <Compile Include="DbTargetVault\TargetVaultProperty.cs" />
-    <Compile Include="DbTargetVault\TargetVaultRevision.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +71,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="coolorange.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\IDB\IDB.csproj">
+      <Project>{b1085f8f-8418-49da-afdd-22a5a9234d0d}</Project>
+      <Name>IDB</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

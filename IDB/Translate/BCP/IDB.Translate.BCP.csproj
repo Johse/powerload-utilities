@@ -38,10 +38,7 @@
     <ApplicationIcon>coolorange.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="bcpDevKit, Version=19.0.5.22066, Culture=neutral, PublicKeyToken=167b9cea318222fc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\bcpDevKit.dll</HintPath>
-    </Reference>
+    <Reference Include="bcpDevKit, Version=20.0.5.27983, Culture=neutral, PublicKeyToken=167b9cea318222fc, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,17 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbEntity\CustomObject.cs" />
-    <Compile Include="DbEntity\File.cs" />
-    <Compile Include="DbEntity\Folder.cs" />
-    <Compile Include="DbEntity\IDbEntity.cs" />
     <Compile Include="Convert.cs" />
-    <Compile Include="DbEntity\Item.cs" />
-    <Compile Include="DbLink\FolderLinks.cs" />
-    <Compile Include="DbLink\CustomObjectLinks.cs" />
-    <Compile Include="DbRelation\FileFileRelation.cs" />
-    <Compile Include="DbRelation\ItemItemRelation.cs" />
-    <Compile Include="DbRelation\ItemFileRelation.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\UnitsHelper.cs" />
     <Compile Include="IDB.Validation\IDBValidator.cs" />
@@ -104,14 +91,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Database\Create.IDB.sql">
-      <Link>SQL\Create.IDB.sql</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\Database\Validate.IDB.sql">
-      <Link>SQL\Validate.IDB.sql</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="coolorange.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +100,12 @@
     <PackageReference Include="log4net">
       <Version>2.0.12</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\IDB\IDB.csproj">
+      <Project>{b1085f8f-8418-49da-afdd-22a5a9234d0d}</Project>
+      <Name>IDB</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

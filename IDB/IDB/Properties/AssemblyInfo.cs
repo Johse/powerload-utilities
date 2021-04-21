@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("IDB.Load.Files")]
-[assembly: AssemblyDescription("Utility to load files from Windows folders to the Intermediate Database (IDB)")]
+[assembly: AssemblyTitle("IDB")]
+[assembly: AssemblyDescription("IDB Common")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("COOLORANGE s.r.l.")]
-[assembly: AssemblyProduct("IDB.Load.Files")]
+[assembly: AssemblyProduct("IDB")]
 [assembly: AssemblyCopyright("Copyright © COOLORANGE s.r.l. 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a15586c0-99b1-4f60-ac0f-272d23938d2e")]
+[assembly: Guid("b1085f8f-8418-49da-afdd-22a5a9234d0d")]
 
 // Version information for an assembly consists of the following four values:
 //

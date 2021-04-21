@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("IDB.Load.BCP")]
 [assembly: AssemblyDescription("Utility to load files and folders from a BCP-package to the Intermediate Database (IDB)")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("coolOrange s.r.l")]
+[assembly: AssemblyCompany("COOLORANGE s.r.l.")]
 [assembly: AssemblyProduct("IDB.Load.BCP")]
-[assembly: AssemblyCopyright("Copyright © coolOrange s.r.l. 2020")]
+[assembly: AssemblyCopyright("Copyright © COOLORANGE s.r.l. 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

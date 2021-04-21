@@ -14,12 +14,11 @@ using bcpDevKit.Entities.General;
 using bcpDevKit.Entities.Items;
 using bcpDevKit.Entities.Vault;
 using Dapper;
-using IDB.Translate.BCP.DbEntity;
-using IDB.Translate.BCP.DbLink;
-using IDB.Translate.BCP.DbRelation;
+using IDB.DbEntity;
+using IDB.DbLink;
+using IDB.DbRelation;
 using IDB.Translate.BCP.Helpers;
 using log4net;
-using File = IDB.Translate.BCP.DbEntity.File;
 
 namespace IDB.Translate.BCP
 {
@@ -27,10 +26,10 @@ namespace IDB.Translate.BCP
     {
         private static readonly ILog Log = LogManager.GetLogger("IDBTranslateBCPApp");
 
-        private Dictionary<int, Folder> _folders;
-        private Dictionary<int, DbEntity.File> _files;
-        private Dictionary<int, Item> _items;
-        private Dictionary<int, CustomObject> _customObjects;
+        private Dictionary<long, Folder> _folders;
+        private Dictionary<long, DbEntity.File> _files;
+        private Dictionary<long, Item> _items;
+        private Dictionary<long, CustomObject> _customObjects;
 
         private List<FileFileRelation> _fileFileRelations;
         private List<ItemFileRelation> _itemFileRelations;
@@ -207,7 +206,7 @@ namespace IDB.Translate.BCP
                     SetProgress("Progress Total: Reading intermediate DB", progressTotalText, 0, progressTotal);
                     SetProgress("Reading 'Folders' table ...", progressTaskText, 0, progressTask);
                     _folders = connection.Query(@"SELECT * FROM Folders")
-                        .Select(x => new KeyValuePair<int, Folder>(x.FolderID, Convert.To<Folder>(x)))
+                        .Select(x => new KeyValuePair<long, Folder>(x.FolderID, Convert.To<Folder>(x)))
                         .ToDictionary(t => t.Key, t => t.Value);
                     Log.Debug($"Reading Folders table. Done! Number of folders: {_folders.Count}");
 
@@ -217,7 +216,7 @@ namespace IDB.Translate.BCP
                         ? $@"SELECT * FROM Files Where IsExcluded = 0 OR IsExcluded is NULL ORDER BY {Properties.Settings.Default.CustomFilesOrderByFields}"
                         : @"SELECT * FROM Files Where IsExcluded = 0 OR IsExcluded is NULL ORDER BY FileName, RevisionLabel, Version";
                     _files = connection.Query(filesQuery)
-                        .Select(x => new KeyValuePair<int, DbEntity.File>(x.FileID, Convert.To<DbEntity.File>(x)))
+                        .Select(x => new KeyValuePair<long, DbEntity.File>(x.FileID, Convert.To<DbEntity.File>(x)))
                         .ToDictionary(t => t.Key, t => t.Value);
                     Log.Debug($"Reading Files table. Done! Number of files: {_files.Count}");
 
@@ -227,14 +226,14 @@ namespace IDB.Translate.BCP
                         ? $@"SELECT * FROM Items ORDER BY {Properties.Settings.Default.CustomItemsOrderByFields}"
                         : @"SELECT * FROM Items ORDER BY ItemNumber, RevisionLabel, Version";
                     _items = connection.Query(itemsQuery)
-                        .Select(x => new KeyValuePair<int, Item>(x.ItemID, Convert.To<Item>(x)))
+                        .Select(x => new KeyValuePair<long, Item>(x.ItemID, Convert.To<Item>(x)))
                         .ToDictionary(t => t.Key, t => t.Value);
                     Log.Debug($"Reading Items table. Done! Number of items: {_items.Count}");
 
                     Log.Debug("Reading CustomObjects table ...");
                     SetProgress("Reading 'CustomObjects' table ...", progressTaskText, 45, progressTask);
                     _customObjects = connection.Query(@"SELECT * FROM CustomObjects")
-                        .Select(x => new KeyValuePair<int, CustomObject>(x.CustomObjectID, Convert.To<CustomObject>(x)))
+                        .Select(x => new KeyValuePair<long, CustomObject>(x.CustomObjectID, Convert.To<CustomObject>(x)))
                         .ToDictionary(t => t.Key, t => t.Value);
                     Log.Debug($"Reading CustomObjects table. Done! Number of custom objects: {_items.Count}");
 
@@ -316,7 +315,7 @@ namespace IDB.Translate.BCP
                         {
                             iterationCount++;
 
-                            int? folderId = fileIteration.FolderID;
+                            long? folderId = fileIteration.FolderID;
                             var vaultFullFolderPath = GetFullFolderPath(folderId);
                             var vaultFullFileName = vaultFullFolderPath + "/" + fileIteration.FileName;
                             Debug.WriteLine(vaultFullFileName);
@@ -426,7 +425,7 @@ namespace IDB.Translate.BCP
                 {
                     ProgressStep(++count, progressTaskText, progressTask);
 
-                    int? folderId = folder.FolderID;
+                    long? folderId = folder.FolderID;
                     var vaultFullFolderPath = GetFullFolderPath(folderId);
 
                     var folderObject = bcpService.FileService.SearchFolderByPath(vaultFullFolderPath);
@@ -943,7 +942,7 @@ namespace IDB.Translate.BCP
             }
         }
 
-        private string GetFullFolderPath(int? folderId)
+        private string GetFullFolderPath(long? folderId)
         {
             // check if field 'Path' already contains valid Vault path
             if (_folders.TryGetValue(folderId.Value, out var folder))

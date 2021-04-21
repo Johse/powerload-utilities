@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IDB.Translate.BCP.DbEntity
+namespace IDB.DbEntity
 {
     public class CustomObject : IDbEntity
     {
-        public int CustomObjectID { get; set; }
+        public long CustomObjectID { get; set; }
         public string CustomObjectDefinition { get; set; }
         public string CustomObjectName { get; set; }
         public string Category { get; set; }
