@@ -17,6 +17,7 @@ namespace IDB.Load.BCP.IDB.Content
         internal string comment;
         internal string user;
         internal string date;
+        internal string isHidden;
         internal string stateDefinition;
         internal string stateName;
         internal string classification;
@@ -32,8 +33,8 @@ namespace IDB.Load.BCP.IDB.Content
         internal bool isDependency;
         internal bool isAttachement;
         internal string iterationId;
-        internal string insertAttributes_Original = "insert into Files(FolderID,Filename,LocalFullFileName,RevisionLabel,Version,Category,LifeCycleState,LifeCycleDefinition,RevisionDefinition,CreateUser,CreateDate,Classification,Comment)";
-        internal string insertValues_Original = "values(@FolderId, @FileName, @LocalFullFileName, @RevisionLabel, @Version, @Category, @LifeCycleState, @LifeCycleDefinition, @RevisionDefinition, @CreateUser, @CreateDate, @Classification, @Comment)";
+        internal string insertAttributes_Original = "insert into Files(FolderID,Filename,LocalFullFileName,RevisionLabel,Version,Category,LifeCycleState,LifeCycleDefinition,RevisionDefinition,CreateUser,CreateDate,IsHidden,Classification,Comment)";
+        internal string insertValues_Original = "values(@FolderId, @FileName, @LocalFullFileName, @RevisionLabel, @Version, @Category, @LifeCycleState, @LifeCycleDefinition, @RevisionDefinition, @CreateUser, @CreateDate, @IsHidden, @Classification, @Comment)";
         internal static List<File> files = new List<File>();
         internal void GetAttributes4FileInsert(XmlElement filePath, FilesInfo filesInfo,int parentFolderId)
         {
@@ -41,6 +42,7 @@ namespace IDB.Load.BCP.IDB.Content
             filesInfo.fileName = XmlReaderUtility.GetProperty(filePath, "Name");
             filesInfo.category = XmlReaderUtility.GetProperty(filePath, "Category");
             filesInfo.classification = XmlReaderUtility.GetProperty(filePath, "Classification");
+            filesInfo.isHidden = XmlReaderUtility.GetProperty(filePath, "Hidden");
             var revisionElements = filePath.GetElementsByTagName("Revision");
             foreach (XmlElement revision in revisionElements)
             {
@@ -49,9 +51,7 @@ namespace IDB.Load.BCP.IDB.Content
                 var iterationElements = revision.GetElementsByTagName("Iteration");
                 foreach (XmlElement iteration in iterationElements)
                 {
-
-
-                    filesInfo.version = version + 1;
+	                filesInfo.version = version + 1;
                     filesInfo.udpPart = null;
                     filesInfo.udpTittle = null;
                     filesInfo.udpDescription = null;
@@ -98,11 +98,7 @@ namespace IDB.Load.BCP.IDB.Content
                         Logger.Log.Error("Error during file inserting with LocalPath: " + filesInfo.localFullFilNename + " ,and IterationId: " + filesInfo.iterationId);//+"("+ex.Message+")");
                     }
                 }
-
-
             }
-
-
         }
     }
 }
