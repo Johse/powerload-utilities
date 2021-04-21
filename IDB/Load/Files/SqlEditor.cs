@@ -43,10 +43,10 @@ namespace IDB.Load.Files
             {
                 connection.Open();
 
-                int folderId;
+                long folderId;
                 using (var cmd = new SqlCommand("select max(FolderId) from Folders", connection))
                 {
-                    folderId = (int)cmd.ExecuteScalar();
+                    folderId = (long)cmd.ExecuteScalar();
                 }
 
                 using (var cmd = new SqlCommand(sqlExpression, connection))
