@@ -27,7 +27,7 @@ namespace IDB.Load.BCP.IDB.Content
         internal string itemNumber;
         internal string revisionLabel;
         internal string revisionDefinition;
-        internal int version;
+        internal long version;
         internal string lifecycleState;
         internal string lifecycleDefinition;
         internal string comment;

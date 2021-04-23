@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using System.Xml;
 using IDB.Load.BCP.Utilities;
 using log4net;
-using log4net.Repository.Hierarchy;
 
 namespace IDB.Load.BCP.IDB.Content
 {
@@ -12,7 +11,7 @@ namespace IDB.Load.BCP.IDB.Content
     {
         private static readonly ILog Log = LogManager.GetLogger("IDBLoadBCP");
 
-        internal int fileId;
+        internal long fileId;
         internal string localFullFilNename;
         internal string fileName;
         internal string category;
@@ -29,8 +28,8 @@ namespace IDB.Load.BCP.IDB.Content
         internal string udpPart;
         internal string udpTittle;
         internal string udpDescription;
-        internal int parentId;
-        internal int childId;
+        internal long parentId;
+        internal long childId;
         internal string source;
         internal string resolution;
         internal string refId;
@@ -40,7 +39,7 @@ namespace IDB.Load.BCP.IDB.Content
         internal string insertAttributes_Original = "insert into Files(FolderID,Filename,LocalFullFileName,RevisionLabel,Version,Category,LifeCycleState,LifeCycleDefinition,RevisionDefinition,CreateUser,CreateDate,IsHidden,Classification,Comment)";
         internal string insertValues_Original = "values(@FolderId, @FileName, @LocalFullFileName, @RevisionLabel, @Version, @Category, @LifeCycleState, @LifeCycleDefinition, @RevisionDefinition, @CreateUser, @CreateDate, @IsHidden, @Classification, @Comment)";
         internal static List<File> files = new List<File>();
-        internal void GetAttributes4FileInsert(XmlElement filePath, FilesInfo filesInfo,int parentFolderId)
+        internal void GetAttributes4FileInsert(XmlElement filePath, FilesInfo filesInfo,long parentFolderId)
         {
             version = 0;
             filesInfo.fileName = XmlReaderUtility.GetProperty(filePath, "Name");

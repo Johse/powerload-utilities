@@ -13,12 +13,12 @@ namespace IDB.Load.BCP.IDB.Content
     {
         private static readonly ILog Log = LogManager.GetLogger("IDBLoadBCP");
 
-        internal int parentId;
-        internal int childId;
+        internal long parentId;
+        internal long childId;
         internal string id;
-        internal int idDB;
+        internal long idDB;
         internal string unit;
-        internal int iterationID;
+        internal long iterationID;
         internal static int count;
 
         internal int RelationDataFounder(BackgroundWorker worker, DoWorkEventArgs e)
@@ -85,7 +85,7 @@ namespace IDB.Load.BCP.IDB.Content
             return count;
         }
 
-        private int ChildIdSelection(string childId)
+        private long ChildIdSelection(string childId)
         {
 
             foreach (var item in Item.item4Relations)
@@ -98,7 +98,7 @@ namespace IDB.Load.BCP.IDB.Content
             return 0;
         }
 
-        private int ParentIdSelection(string iterationId,int iterationID)
+        private long ParentIdSelection(string iterationId,int iterationID)
         {
             foreach (var item in Item.item4Relations)
             {
@@ -142,7 +142,7 @@ namespace IDB.Load.BCP.IDB.Content
             return quantity.ToString();
 
         }
-        private void InsertItemItemRelation(int parentIdDB, int childId, int position, string quantity, string unit, string linkType, int instanceCount, string unitsize, string cad)
+        private void InsertItemItemRelation(long parentIdDB, long childId, int position, string quantity, string unit, string linkType, int instanceCount, string unitsize, string cad)
         {
             var sqlExpression = "insert into ItemItemRelations(ParentItemID,ChildItemID,Position,Quantity,Unit,LinkType,InstanceCount,UnitSize,CAD)values(@ParentItemID,@ChildItemID,@Position,@Quantity,@Unit,@LinkType,@InstanceCount,@UnitSize,@CAD)";
             var connectionString = MainForm.InputConnectionString;

@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using System.Xml;
 using IDB.Load.BCP.IDB.Content;
 using log4net;
-using log4net.Repository.Hierarchy;
 
 namespace IDB.Load.BCP.Utilities
 {
@@ -88,7 +87,7 @@ namespace IDB.Load.BCP.Utilities
             }
         }
 
-        private static int ChildIdSelection(string ChildId)//Nach XMLReader transportieren
+        private static long ChildIdSelection(string ChildId)//Nach XMLReader transportieren
         {
 
             foreach (var file in FilesInfo.files)
@@ -225,12 +224,12 @@ namespace IDB.Load.BCP.Utilities
                 }
             }
         }
-        internal static int InsertFile(XmlElement filePath, string insertStatement, FilesInfo fileInfo,int parentFolderId)
+        internal static long InsertFile(XmlElement filePath, string insertStatement, FilesInfo fileInfo,long parentFolderId)
         {
             var connectionString = MainForm.InputConnectionString;
             using (var connection = new SqlConnection(connectionString))
             {
-                int folderId;
+                long folderId;
                 connection.Open();
                 if (XmlReaderUtility.parentFolderControl == false)
                 {
@@ -241,13 +240,13 @@ namespace IDB.Load.BCP.Utilities
                         {
                             using (var command = new SqlCommand("insert into Folders(ParentFolderID,FolderName,Path,IsLibrary,Category,LifecycleState,LifecycleDefinition,CreateUser,CreateDate) values (Null,'$','$',0,'Folder',NULL,NULL,'Administrator',GETDATE());select max(FolderId) from Folders;", connection)) 
                             {
-                                folderId = (int)command.ExecuteScalar();
+                                folderId = (long)command.ExecuteScalar();
 
                             }
                         }
                         else
                         {
-                            folderId = (int)cmd.ExecuteScalar();
+                            folderId = (long)cmd.ExecuteScalar();
                         }
                     }
                 }
@@ -358,12 +357,12 @@ namespace IDB.Load.BCP.Utilities
 
 
                     var id = cmd.ExecuteScalar();
-                    return (int)id;
+                    return (long)id;
                 }
             }
 
         }
-        internal static int getFolderId()
+        internal static long getFolderId()
         {
             var connectionString = MainForm.InputConnectionString;
             var replacedName = XmlReaderUtility.PathIDB.Replace("'", "''");
@@ -375,7 +374,7 @@ namespace IDB.Load.BCP.Utilities
                 using (var cmd = new SqlCommand(sqlExpression, connection))
                 {
                     var id = cmd.ExecuteScalar();
-                    return (int)id;
+                    return (long)id;
                 }
             }
         }

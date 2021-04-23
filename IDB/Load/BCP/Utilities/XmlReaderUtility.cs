@@ -167,7 +167,7 @@ namespace IDB.Load.BCP.Utilities
                 return;
 
             }
-            int parentID=0; 
+            long parentID=0; 
             PathIDB = PathIDB + "/" + GetProperty(pathOfFolder, "Name");
             try
             {

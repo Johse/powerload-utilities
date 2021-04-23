@@ -6,9 +6,9 @@ namespace IDB.Load.BCP.IDB.Content
     {
         string name;
         string value;
-        int version;
+        long version;
         string itemNumber;
-        public ItemUdp(string udpName, string udpValue, string itemNumber, int iterationVersion)
+        public ItemUdp(string udpName, string udpValue, string itemNumber, long iterationVersion)
         {
             name = udpName;
             value = udpValue;

@@ -5,15 +5,13 @@
         string name;
         string value;
         string fullFileName;
-        int fileVersion;
+        long fileVersion;
         internal FileUdp(string udpName, string udpValue, string localFullFileName, int fileVersion)
         {
             name = udpName;
             fullFileName = localFullFileName;
             value = udpValue;
             this.fileVersion = fileVersion;
-
         }
-        
     }
 }
