@@ -3,11 +3,11 @@ using System.Data.SqlClient;
 using System.Windows.Forms;
 using log4net;
 
-namespace IDB.Translate.BCP.Validation
+namespace IDB.Validate.BCP
 {
     internal class Validator
     {
-        private static readonly ILog Log = LogManager.GetLogger("IDBTranslateBCP");
+        private static readonly ILog Log = LogManager.GetLogger("IDBValidateBCP");
 
         internal int GetErrorCount(string connectionString, string tableName)
         {
