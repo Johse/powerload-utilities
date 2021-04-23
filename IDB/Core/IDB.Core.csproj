@@ -61,16 +61,6 @@
     <Compile Include="INI\IniHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\database\Create.IDB.sql">
-      <Link>SQL\Create.IDB.sql</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\database\Validate.IDB.sql">
-      <Link>SQL\Validate.IDB.sql</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="IDB.Core.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

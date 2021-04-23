@@ -66,6 +66,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\..\database\Create.IDB.sql">
+      <Link>SQL\Create.IDB.sql</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="coolorange.ico" />
   </ItemGroup>
   <ItemGroup>
