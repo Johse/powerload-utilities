@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
@@ -18,7 +19,6 @@ using IDB.Core.DbEntity;
 using IDB.Core.DbLink;
 using IDB.Core.DbRelation;
 using IDB.Translate.BCP.Helper;
-using IDB.Translate.BCP.Validation;
 using log4net;
 using File = IDB.Core.DbEntity.File;
 
@@ -55,13 +55,17 @@ namespace IDB.Translate.BCP
             txtConnectionString.Text = Core.Settings.IdbConnectionString;
             txtExportDirectory.Text = Core.Settings.ExportPath;
             var vaultVersion = Core.Settings.VaultVersion;
-            comboBoxVaultVersion.Text = (comboBoxVaultVersion.Items.Contains(vaultVersion)) ? vaultVersion : "2020";
+            comboBoxVaultVersion.Text = comboBoxVaultVersion.Items.Contains(vaultVersion) ? vaultVersion : "2020";
         }
 
         #region UI Events
-        private void BtnExport_Click(object sender, EventArgs e)
+        private void OnBtnExportClick(object sender, EventArgs e)
         {
             if (_exportInProgress)
+                return;
+
+            var message = "Please make sure your package has been validated before the export runs. Do you want to continue?";
+            if (MessageBox.Show(message, "Validation completed?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 return;
 
             _exportInProgress = true;
@@ -69,62 +73,19 @@ namespace IDB.Translate.BCP
             Export();
         }
 
-        private void btnValidate_Click(object sender, EventArgs e)
+        private void OnBtnSelectClick(object sender, EventArgs e)
         {
-            var validator = new Validator();
-            string scriptPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "SQL");
-            string sqlScript = "";
-            try
+            var dialog = new FolderBrowserDialog
             {
-                foreach (string line in System.IO.File.ReadLines(scriptPath + @"\Validate.IDB.sql"))
-                {
-                    if (line.Contains("--Updating"))
-                    {
-                        try
-                        {
-                            validator.Validate(txtConnectionString.Text, sqlScript);
-                        }
-                        catch (System.Data.SqlClient.SqlException loginException)
-                        {
-                            return;
-                        }
-                        sqlScript = "";
-                        continue;
-                    }
-                    sqlScript = sqlScript + "\n" + line;
-
-                }
-            }
-            catch (System.IO.FileNotFoundException exception) 
-            {
-                MessageBox.Show("Validate.IDB.txt was not found on your PC");
-                Log.Error("Validate.IDB.txt was not found.", exception);
-                return;
-            }
-            try
-            {
-                validator.Validate(txtConnectionString.Text, sqlScript);
-            }
-            catch (System.Data.SqlClient.SqlException sqlScriptException) 
-            {
-                Log.Error($"Error in SQL script: {sqlScriptException.Message}", sqlScriptException);
-                return;
-            }
-            var counter = validator.GetErrorCount(txtConnectionString.Text, "Folders") + validator.GetErrorCount(txtConnectionString.Text, "Files") + validator.GetErrorCount(txtConnectionString.Text, "FileFileRelations");
-            MessageBox.Show("There are " + counter + " elements with an error. Details can be found in IDB (Validation_Comment).");
-        }
-
-        private void BtnExportDirectory_Click(object sender, EventArgs e)
-        {
-            var dialog = new FolderBrowserDialog();
-            dialog.SelectedPath = txtExportDirectory.Text;
-            dialog.ShowNewFolderButton = true;
+                SelectedPath = txtExportDirectory.Text, 
+                ShowNewFolderButton = true
+            };
 
             if (dialog.ShowDialog() == DialogResult.OK)
                 txtExportDirectory.Text = dialog.SelectedPath;
         }
 
-        private void BtnClose_Click(object sender, EventArgs e)
+        private void OnBtnCloseClick(object sender, EventArgs e)
         {
             Close();
         }
@@ -279,8 +240,7 @@ namespace IDB.Translate.BCP
             try
             {
                 SetProgress("Progress Total: Initializing BCP Service", progressTotalText, 10, progressTotal);
-                var bcpSvcBuilder = new BcpServiceBuilder();
-                bcpSvcBuilder.Version = GetBcpVersion(bcpVersionText);
+                var bcpSvcBuilder = new BcpServiceBuilder {Version = GetBcpVersion(bcpVersionText)};
                 if (!Directory.Exists(exportDirectory))
                     Directory.CreateDirectory(exportDirectory);
                 bcpSvcBuilder.SetPackageLocation(exportDirectory);
@@ -614,6 +574,7 @@ namespace IDB.Translate.BCP
             }
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private bool ProcessFileFileRelations(IBcpService bcpService,
             IProgress<int> progressTotal, IProgress<string> progressTotalText, IProgress<int> progressTask, IProgress<string> progressTaskText)
         {
@@ -664,6 +625,7 @@ namespace IDB.Translate.BCP
             }
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private bool ProcessItemItemRelations(IBcpService bcpService,
             IProgress<int> progressTotal, IProgress<string> progressTotalText, IProgress<int> progressTask, IProgress<string> progressTaskText)
         {
@@ -783,6 +745,7 @@ namespace IDB.Translate.BCP
             }
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private bool ProcessCustomObjectRelations(IBcpService bcpService,
             IProgress<int> progressTotal, IProgress<string> progressTotalText, IProgress<int> progressTask, IProgress<string> progressTaskText)
         {
@@ -927,8 +890,7 @@ namespace IDB.Translate.BCP
                     while (null != (line = input.ReadLine()))
                     {
                         countLines++;
-                        long countReplacedLine;
-                        var lineReplaced = line.RemoveEscapeSequenceFromXmlString(foundSequences, out countReplacedLine);
+                        var lineReplaced = line.RemoveEscapeSequenceFromXmlString(foundSequences, out var countReplacedLine);
                         countReplaced += countReplacedLine;
                         output.WriteLine(lineReplaced);
                     }
@@ -1003,7 +965,7 @@ namespace IDB.Translate.BCP
             var fi = new FileInfo(thisAssembly.Location + ".log4net");
             log4net.Config.XmlConfigurator.Configure(fi);
 
-            Log.Info($"COOLORANGE {Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}");
+            Log.Info($"powerLoad {Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}");
         }
         #endregion
     }

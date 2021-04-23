@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using IDB.Core.DbEntity;
@@ -23,6 +24,25 @@ namespace IDB.Translate.BCP
             }
 
             return entity;
+        }
+
+        public static Dictionary<string, object> ToFlatDictionary(IDbEntity entity)
+        {
+            var dictionary = new Dictionary<string, object>();
+            var properties = entity.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                if (property.PropertyType.IsEnum && property.Name == "UserDefinedProperties")
+                {
+                    Dictionary<string, object> props = (Dictionary<string, object>)property.GetValue(entity);
+                    foreach (var prop in props)
+                        dictionary["UDP_" + prop.Key] = prop.Value;
+                }
+                else
+                    dictionary[property.Name] = property.GetValue(entity);
+            }
+
+            return dictionary;
         }
     }
 }

@@ -26,10 +26,10 @@ namespace IDB.Discover.Vault
             var fi = new FileInfo(thisAssembly.Location + ".log4net");
             log4net.Config.XmlConfigurator.Configure(fi);
 
-            Log.Info($"COOLORANGE {Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}");
+            Log.Info($"powerLoad {Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}");
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void OnBtnTransferClick(object sender, EventArgs e)
         {
             try
             {
@@ -55,18 +55,18 @@ namespace IDB.Discover.Vault
             }
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void OnBtnCloseClick(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void txtConnectionString_TextChanged(object sender, EventArgs e)
+        private void OnTxtConnectionStringTextChanged(object sender, EventArgs e)
         {
             Settings.IdbConnectionString = txtConnectionString.Text;
             
         }
 
-        private void txtVaultConnection_TextChanged(object sender, EventArgs e)
+        private void OnTxtVaultConnectionTextChanged(object sender, EventArgs e)
         {
             Settings.VaultConnectionString = txtVaultConnection.Text;
         }
