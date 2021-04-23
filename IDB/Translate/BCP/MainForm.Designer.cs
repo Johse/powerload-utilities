@@ -163,10 +163,9 @@
             // 
             // labelProgressTask
             // 
-            this.labelProgressTask.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelProgressTask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgressTask.AutoSize = true;
-            this.labelProgressTask.Location = new System.Drawing.Point(12, 288);
+            this.labelProgressTask.Location = new System.Drawing.Point(12, 320);
             this.labelProgressTask.Name = "labelProgressTask";
             this.labelProgressTask.Size = new System.Drawing.Size(0, 13);
             this.labelProgressTask.TabIndex = 11;
