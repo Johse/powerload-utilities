@@ -3,8 +3,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using IDB.Core.DbTargetVault;
+using IDB.Core.Extensions;
 using log4net;
-using Z.Dapper.Plus;
 
 namespace IDB.Discover.Vault
 {
@@ -42,7 +42,16 @@ namespace IDB.Discover.Vault
                 ORDER BY FO.VaultPath, FI.FileName, E.CreateDate
             ";
 
-            TransferTable<TargetVaultFile>(sql, "TargetVaultFiles");
+            var table = "TargetVaultFiles";
+            Log.Info($"Transferring Vault information to IDB table '{table}'");
+
+            var rows = QueryTable<TargetVaultFile>(sql, table);
+            using (var connection = new SqlConnection(_loadConnectionString))
+            {
+                connection.Open();
+                connection.TruncateTable(table);
+                connection.BulkInsert(table, rows);
+            }
         }
 
         public static void TransferProperties()
@@ -55,7 +64,16 @@ namespace IDB.Discover.Vault
                 ORDER BY E.BaseId,P.FriendlyName
             ";
 
-            TransferTable<TargetVaultProperty>(sql, "TargetVaultProperties");
+            var table = "TargetVaultProperties";
+            Log.Info($"Transferring Vault information to IDB table '{table}'");
+
+            var rows = QueryTable<TargetVaultProperty>(sql, table);
+            using (var connection = new SqlConnection(_loadConnectionString))
+            {
+                connection.Open();
+                connection.TruncateTable(table);
+                connection.BulkInsert(table, rows);
+            }
         }
         public static void TransferLifeCycles()
         {
@@ -70,7 +88,16 @@ namespace IDB.Discover.Vault
                 ORDER BY E.BaseId,LD.DisplayName,LC.DisplayName
             ";
 
-            TransferTable<TargetVaultLifeCycle>(sql, "TargetVaultLifeCycles");
+            var table = "TargetVaultLifeCycles";
+            Log.Info($"Transferring Vault information to IDB table '{table}'");
+
+            var rows = QueryTable<TargetVaultLifeCycle>(sql, table);
+            using (var connection = new SqlConnection(_loadConnectionString))
+            {
+                connection.Open();
+                connection.TruncateTable(table);
+                connection.BulkInsert(table, rows);
+            }
         }
 
         public static void TransferCategories()
@@ -85,7 +112,16 @@ namespace IDB.Discover.Vault
                 ORDER BY E.BaseId,C.DisplayName
             ";
 
-            TransferTable<TargetVaultCategory>(sql, "TargetVaultCategories");
+            var table = "TargetVaultCategories";
+            Log.Info($"Transferring Vault information to IDB table '{table}'");
+
+            var rows = QueryTable<TargetVaultCategory>(sql, table);
+            using (var connection = new SqlConnection(_loadConnectionString))
+            {
+                connection.Open();
+                connection.TruncateTable(table);
+                connection.BulkInsert(table, rows);
+            }
         }
 
         public static void TransferRevisions()
@@ -97,30 +133,28 @@ namespace IDB.Discover.Vault
                 ORDER BY RD.DisplayName, RS.DisplayName, RL.Rank
             ";
 
-            TransferTable<TargetVaultRevision>(sql, "TargetVaultRevisions");
+            var table = "TargetVaultRevisions";
+            Log.Info($"Transferring Vault information to IDB table '{table}'");
+
+            var rows = QueryTable<TargetVaultRevision>(sql, table);
+            using (var connection = new SqlConnection(_loadConnectionString))
+            {
+                connection.Open();
+                connection.TruncateTable(table);
+                connection.BulkInsert(table, rows);
+            }
         }
 
-        public static void TransferTable<T>(string sqlQuery, string loadTable)
+        public static IEnumerable<T> QueryTable<T>(string sqlQuery, string loadTable)
         {
-            Log.Info($"Transferring Vault information to IDB table '{loadTable}'");
             Log.Debug(sqlQuery);
 
-            List<T> files;
             using (var vaultConnection = new SqlConnection(_vaultConnectionString))
             {
-                files = vaultConnection.Query<T>(sqlQuery).ToList();
-                Log.Info($"{files.Count} rows found");
-            }
+                var rows = vaultConnection.Query<T>(sqlQuery).ToList();
+                Log.Info($"{rows.Count} rows found");
 
-            using (var loadConnection = new SqlConnection(_loadConnectionString))
-            {
-                DapperPlusManager.Entity(typeof(T)).Table(loadTable);
-
-                loadConnection.Open();
-                var cmd = new SqlCommand($"TRUNCATE TABLE dbo.{loadTable}", loadConnection);
-                cmd.ExecuteNonQuery();
-
-                loadConnection.BulkInsert(files);
+                return rows;
             }
         }
     }
