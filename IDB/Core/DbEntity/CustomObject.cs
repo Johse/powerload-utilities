@@ -5,6 +5,7 @@ namespace IDB.Core.DbEntity
 {
     public class CustomObject : IDbEntity
     {
+        // ReSharper disable once InconsistentNaming
         public long CustomObjectID { get; set; }
         public string CustomObjectDefinition { get; set; }
         public string CustomObjectName { get; set; }

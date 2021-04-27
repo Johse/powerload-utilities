@@ -5,7 +5,9 @@ namespace IDB.Core.DbEntity
 {
     public class Folder : IDbEntity
     {
+        // ReSharper disable once InconsistentNaming
         public long FolderID { get; set; }
+        // ReSharper disable once InconsistentNaming
         public long? ParentFolderID { get; set; }
         public string FolderName { get; set; }
         public string Path { get; set; }

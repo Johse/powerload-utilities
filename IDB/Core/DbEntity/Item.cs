@@ -5,6 +5,7 @@ namespace IDB.Core.DbEntity
 {
     public class Item : IDbEntity
     {
+        // ReSharper disable once InconsistentNaming
         public long ItemID { get; set; }
         public string ItemNumber { get; set; }
         public string Category { get; set; }
