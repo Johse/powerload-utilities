@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="IDB.Discover.Vault.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="IDBConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Server=(local)\AUTODESKVAULT;Database=Load;Trusted_Connection=True;</Value>
+    </Setting>
+    <Setting Name="ExportDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\TEMP\BCP Package Directory</Value>
+    </Setting>
+    <Setting Name="VaultConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Server=(local)\AUTODESKVAULT;Database=TestVault;Trusted_Connection=True;</Value>
+    </Setting>
+    <Setting Name="KvmSqlDatabaseName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">KnowledgeVaultMaster</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
