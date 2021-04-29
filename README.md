@@ -25,6 +25,7 @@ The powerLoad utilites are:
 * **IDB.Translate.BCP:** Creates a BCP-package from the content of the Intermediate Database.
 
 ### Additions
+To use the powerLoad utilities you need to have the bcpToolkit installed and lisenced. 
 For reviewing the BCP-package that is created from the IDB there is the tool **bcpViewer**, which is part of the bcpToolkit. Please find the description of the bcpViewer on the Product Documentation [coolOrange bcpToolkit](https://www.coolorange.com/wiki/doku.php?id=bcptoolkit).
 
 ## Prerequsites
@@ -199,9 +200,6 @@ This tool uses AutoCAD Core Console. So at least AutoCAD Vanilla must be install
 The folder where the tool is installed, must be configured in the **Trusted Locations** of the AutoCAD Options:
 ![AutoCAD Trusted Locations](Images/pL-TrustedLocations_ACAD.png)
 
-In the configuration file ***IDB.Analyzer.Common.ini*** in the section [IDB.Analyzer] the working directory need to be set.
-* **WorkingDirectory**: The working directory for the utility. The default value is *C:\temp\IDBAnalyze\InventorData*.
-
 In the powerShell file ***IDB.Analyzer.AutoCAD.ps1*** you need to specify the AutoCAD version that is installed insection *Settings* in line:  
 `$accoreconsole = "C:\Program Files\Autodesk\AutoCAD `***2020***`\accoreconsole.exe"`
 
@@ -225,6 +223,22 @@ The IDB.Analyzer.AutoCAD scans:
 The default location for the log file ***IDB.Analyzer.AutoCAD.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'.  
 In the logfile the scan results are listed. Files with an error will get marked with "ERROR", files with a warning with "WARN". 
 
+## IDB.Validate.BCP
+Utility to run the Validation scripts without starting the SQL Management Studio UI.
+
+### Usage
+ 
+Start the tool with double click the file IDB.Validate.BCP to open the dialog.
+![image](Images/pL-DLG-IDB.Validate.BCP.png)
+
+* **IDB Connection String**: SQL Connection String to the server and database of the powerLoad IDB
+
+* **Validate Database**: Runs the SQl script ***Validate.IDB.sql*** and writes back the results into the fields "**Validation_Status**" and "**Validation_Comment**" in the intermediate Database.
+A dialog box appears after the transfer is finished.
+
+### Logging
+The default location for the log file ***IDB.Validate.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+
 ## IDB.Translate.BCP
 Creates a valid BCP-package from the content of the Intermediate Database.
 Therefore all information that should be transferred to Vault must be filled correctly in the according tables of the IDB.
@@ -234,10 +248,9 @@ This utility uses the bcpDevkit to create the BCP-package. Therefore it must be 
 
 ### Configuration
 The default ordering of the files is 'FileName, RevsionsLabel, Version', which means that files are ordered by the value of the RevisionLable, and if there are identical values the next ordering is by Version.
-The default ordering can be overwritten in the config file ***IDB.Translate.BCP.exe.config*** with the attribute "*CustomFilesOrderByFields*".
-For example, if the files should be ordered by the Version only, set:
-
-![IDB.Translate.BCP-order files](Images/pL-IDB.Translate.BCP-orderFiles.png)
+The default ordering can be overwritten in the config file ***IDB.Translate.BCP.ini*** in the section "*[CustomOrderSettings]*".
+For example, if the files should be ordered by the Version only, set:  
+`CustomFilesOrderByFields=FileName, Version` 
 
 ### Usage
 Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens where the needed settings are set and commands are executed:
@@ -254,12 +267,7 @@ Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens 
 The default location for the log file ***IDB.Translate.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
 
-### Validation
-With the command *Validate Database* you can run a SQL script for validating the data in the Intermediate Database. The script that is executed in in the file Validate.IDB.sql.
-In this way you can add own validations to that script file and test them in the SQL Management Studio before. 
-In the script 2 tables are created in the IDB:
-* **Validation_Status**: Is set to 'Error' on the file, folder or file-file-relation when an error is found in the validations script for the file, folder or file-file-relation
-* **Validation_Comment**: Reason or description for the error
+
 
 ## Product Documentation
 
