@@ -18,7 +18,6 @@ The powerLoad utilites are:
 * **powerLoad Intermediate Database (IDB):** SQL database for transforming the data to fit to the target Vault
 * **IDB.Load.Files:** Utility to load files from a Windows folder to the Intermediate Database.
 * **IDB.Load.BCP:** Utility to load files and folders from a BCP-package to the Intermediate Database (IDB).
-* **IDB.Load.Vault:** Sample code to extract data from Vault and fill the Intermediate Database (IDB).
 * **IDB.Discover.Vault:** Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB)
 * **IDB.Analyzer.Inventor:** Scans Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
 * **IDB.Analyzer.AutoCAD:** Scans AutoCAD DWGs files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
@@ -78,8 +77,8 @@ This section explains how to use and fill the Intermediate Database with the inf
 Utility to load files from Windows folders to the Intermediate Database (IDB)
 
 ### Configuration
-The path with the files to import and the connect string to SQL server and database can be set in the dialog of the IDB.Load.Files. The settings will be written back to the configuration file **IDB.Core.ini** when the utility is started. These settings are then the default for the next time any of the powerLoad utilities are started.
-![image](Images/pL-DLG-IDB.Load.Files.png)
+The path with the files to import and the connect string to the SQL server and database can be set in the dialog of the IDB.Load.Files. The settings will be written back to the central configuration file **IDB.Core.ini** when the utility is started. These settings are then the default for the next time any of the powerLoad utilities are started.
+
 In the configuration file ***IDB.Load.Files.Behaviors.ini*** the default behaviours can be set.
 
 The delivery default is: 
@@ -100,30 +99,51 @@ The delivery default is:
 	* CreateUser
 	
 	The elements must not be removed. To not fill the field just delete the value. 
-E.g. < CreateUser >< /CreateUser >
+E.g. `RevisionLabel=`
 
-Please do not rename INI files.
+Please do not rename configration files.
 
 ### Usage
 Start the tool with double click the file IDB.Load.Files.exe.
 In the open dialog specify the ***Path*** and ***SQL Database Connection String*** to import files from the selected folder and sub-folders into the named database.
+
+![image](Images/pL-DLG-IDB.Load.Files.png)
 
 * Start: Start scan and import. The specified path and connect string are written back to the central configuration file IDB.Core.ini.
 * Cancel: Stop the process. After clicking the button all records and unsaved data will be lost.
 * Scan records: File`s counter of entered folder path
 * Import records: Counter of already inserted files
 
-
 ### Logging
-The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Load.Files.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
 
 ## IDB.Load.BCP
 Utility to load files and folders from a BCP-package to the Intermediate Database (IDB).
-This tool is under construction. Until the new version is available use the IDB.Load.BCP from here: https://github.com/coolOrangeLabs/idb-load-bcp
 
-## IDB.Load.Vault
-Sample code to extract data from Vault and fill the Intermediate Database (IDB). The example uses an Excel table to identify the files to be read out.
+### Configuration
+The path to the Vault.xml and the connect string to the SQL server and database can be set in the dialog of the IDB.Load.Files. The settings will be written back to the configuration file **IDB.Core.ini** when the utility is started. These settings are then the default for the next time any of the powerLoad utilities are started.
+
+### Usage
+ 
+Start the tool with double click the file IDB.Load.BCP.exe.
+In the open dialog specify the Path to scan and import and the SQL Database Connection String. 
+
+![image](Images/pL-DLG-IDB.Load.BCP.png)
+
+* Start: Start scan and import. The specified path and connect string are written back to the central configuration file IDB.Core.ini.
+* Cancel: Stop the process. After clicking the button all records and unsaved data will be lost.
+* Scan records: File`s counter of entered folder path
+* Import records: Counter of already inserted files
+
+After starting the process the utility scans the Vault.xml. It can take some time until the import starts.
+
+### Logging
+The default location for the log file ***IDB.Load.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+There you find information about successful inserts and errors.
+
+## Caution
+If you want to load several bcp-packages into 1 Intermediate Database (IDB) you must remove the UNIQUE for the index [IX_Files] in order the tool does not stop when duplicate files are imported.
 
 ## IDB.Analyzer.Inventor
 Utility to scan Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
@@ -148,7 +168,7 @@ The IDB.Analyzer.Inventor scans:
 * Duplicates: Identical file names in different folders
 
 ### Logging
-The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Analyzer.Inventor.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 
 ## IDB.Analyzer.AutoCAD
 Utility to scan AutoCAD files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
@@ -174,7 +194,7 @@ The IDB.Analyzer.AutoCAD scans:
 * Missing references (Xrefs) / Contains missing references
 
 ### Logging
-The default location for the log file IDB.Analyzer.AutoCAD.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Analyzer.AutoCAD.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 
 ## IDB.Translate.BCP
 Creates a valid BCP-package from the content of the Intermediate Database.
@@ -200,6 +220,10 @@ Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens 
 * **BCP Export Directory**: Folder in which the BCP package will be exported.
 * **Validate Database**: Runs the SQL script of file Validate.IDB.sql, located in the sub-folder *SQL*. 
 * **Create BCP Package**: Exports the data from the IDB into a BCP package in the specified folder.
+
+### Logging
+The default location for the log file ***IDB.Translate.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+There you find information about successful inserts and errors.
 
 ### Validation
 With the command *Validate Database* you can run a SQL script for validating the data in the Intermediate Database. The script that is executed in in the file Validate.IDB.sql.
