@@ -107,10 +107,10 @@ In the open dialog specify the ***Path*** and ***SQL Database Connection String*
 
 ![image](Images/pL-DLG-IDB.Load.Files.png)
 
-* Start: Start scan and import. The specified path and connect string are written back to the central configuration file IDB.Core.ini.
-* Cancel: Stop the process. After clicking the button all records and unsaved data will be lost.
-* Scan records: File`s counter of entered folder path
-* Import records: Counter of already inserted files
+* **Start**: Starts scan and import. The specified path and connect string are written back to the central configuration file IDB.Core.ini.
+* **Cancel**: Stops the process. After clicking the button all records and unsaved data will be lost.
+* **Scan records**: File`s counter of entered folder path
+* **Import records**: Counter of already inserted files
 
 ### Logging
 The default location for the log file ***IDB.Load.Files.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
@@ -129,10 +129,10 @@ In the open dialog specify the Path to scan and import and the SQL Database Conn
 
 ![image](Images/pL-DLG-IDB.Load.BCP.png)
 
-* Start: Start scan and import. The specified path and connect string are written back to the central configuration file IDB.Core.ini.
-* Cancel: Stop the process. After clicking the button all records and unsaved data will be lost.
-* Scan records: File`s counter of entered folder path
-* Import records: Counter of already inserted files
+* **Start**: Starts scan and import. The specified path and connect string are written back to the central configuration file IDB.Core.ini.
+* **Cancel**: Stops the process. After clicking the button all records and unsaved data will be lost.
+* **Scan records**: File`s counter of entered folder path
+* **Import records**: Counter of already inserted files
 
 After starting the process the utility scans the Vault.xml. It can take some time until the import starts.
 
@@ -151,10 +151,10 @@ Utility to query Vault for existing files and replace these files in the powerLo
 Start the tool with double click the file Discover.Vault.exe to open the dialog.
 ![image](Images/pL-DLG-IDB.Discover.Vault.png)
 
-* IDB Connection String: SQL Connection String to the server and database of the powerLoad IDB
-* Vault DB Connection String: SQL Connection String to the server and database of the target Vault
+* **IDB Connection String**: SQL Connection String to the server and database of the powerLoad IDB
+* **Vault DB Connection String**: SQL Connection String to the server and database of the target Vault
 
-* Transfer Behaviors from Vault to IDB: Start scan and import. The specified connect strings are written back to the central configuration file IDB.Core.ini.
+* **Transfer Behaviors from Vault to IDB**: Starts scan and import. The specified connect strings are written back to the central configuration file IDB.Core.ini.
 A dialog box appears after the transfer is finished.
 
 ### Logging
@@ -168,9 +168,11 @@ Utility to scan Inventor files for missing references that are listed in the IDB
 This tool uses Inventor Apprentice. At least Inventor View must be installed on the machine where this tool is used.
 
 ### Configuration
-In the configuration file ***IDB.Analyzer.Inventor.exe.config*** the connection to the SQL database must be set.
-* At the setting ***name="ConnectionString"*** the connect string to SQL server and database must be set. Use the login information, that you use when you login with the Microsoft SQL Server Management Studio.
-* At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The default is *C:\temp\IDBAnalyze\InventorData*.
+In the configuration file ***IDB.Core.ini*** the connection to the powerLoad IDB must be set in section [IDB], if not already set by the utility IDB.Load.Files or IDB.Load.BCP.
+
+In the configuration file ***IDB.Analyzer.Common.ini*** there are two settings in the section [IDB.Analyzer] that need to be set.
+* **InventorProjectFile**: Inventor project file (IPJ) which is used for the scan. If not set, the current IPJ file in Inventor is used. We reccommend to set the project file, to avoid untrustworthy behavior.
+* **WorkingDirectory**: The working directory for the utility. The default value is *C:\temp\IDBAnalyze\InventorData*.
 
 Do not rename configuration files!
 
@@ -184,10 +186,11 @@ The IDB.Analyzer.Inventor scans:
 * Duplicates: Identical file names in different folders
 
 ### Logging
-The default location for the log file ***IDB.Analyzer.Inventor.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Analyzer.Inventor.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'.  
+In the logfile the scan results are listed. Files with an error will get marked with "ERROR", files with a warning with "WARN".
 
 ## IDB.Analyzer.AutoCAD
-Utility to scan AutoCAD files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
+Utility to scan AutoCAD files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.  
 
 ### Prerequsite
 This tool uses AutoCAD Core Console. So at least AutoCAD Vanilla must be installed on the machine where this tool is used.
@@ -196,21 +199,31 @@ This tool uses AutoCAD Core Console. So at least AutoCAD Vanilla must be install
 The folder where the tool is installed, must be configured in the **Trusted Locations** of the AutoCAD Options:
 ![AutoCAD Trusted Locations](Images/pL-TrustedLocations_ACAD.png)
 
-In the configuration file ***IDB.Analyzer.AutoCAD.dll.config*** the connection to the SQL database must be set.
-* At the setting ***name="ConnectionString"*** the connect string to SQL server and database must be set. Use the login information, that you use when you login with the Microsoft SQL Server Management Studio.
-* At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The default is *C:\temp\IDBAnalyze\AutoCADData*.
+In the configuration file ***IDB.Analyzer.Common.ini*** in the section [IDB.Analyzer] the working directory need to be set.
+* **WorkingDirectory**: The working directory for the utility. The default value is *C:\temp\IDBAnalyze\InventorData*.
+
+In the powerShell file ***IDB.Analyzer.AutoCAD.ps1*** you need to specify the AutoCAD version that is installed insection *Settings* in line:  
+`$accoreconsole = "C:\Program Files\Autodesk\AutoCAD `***2020***`\accoreconsole.exe"`
+
+If wanted, you also can change the working directory in line:  
+`$workingDirectory = "C:\Temp\IDBAnalyze\AcadXrefAnalysis"`  
+Thre is no need to change the lines:  
+`$scriptfile = "$workingDirectory\IDB.Analyze.AutoCAD.scr"`  
+`$batchfile = "$workingDirectory\IDB.Analyze.AutoCAD.bat"`  
+`$xrefAnalysisMode = "NORMAL"` 
 
 Do not rename configuration files!
 
 ### Usage
-Open the file IDB.Analyzer.AutoCAD.ps1 with Windows PowerShell ISE and run the script. A Windows console will start and the tool scans the AutoCAD files that are listed in the IDB in the field 'LocalFullFileName'.
+Open the file ***IDB.Analyzer.AutoCAD.ps1*** with Windows PowerShell ISE and run the script. A Windows console will start and the tool scans the AutoCAD files that are listed in the IDB in the field 'LocalFullFileName'.
 The IDB.Analyzer.AutoCAD scans:
 * File not exist
 * File invalid (File cannot be opened)
 * Missing references (Xrefs) / Contains missing references
 
 ### Logging
-The default location for the log file ***IDB.Analyzer.AutoCAD.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Analyzer.AutoCAD.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'.  
+In the logfile the scan results are listed. Files with an error will get marked with "ERROR", files with a warning with "WARN". 
 
 ## IDB.Translate.BCP
 Creates a valid BCP-package from the content of the Intermediate Database.
