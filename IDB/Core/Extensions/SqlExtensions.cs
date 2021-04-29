@@ -71,10 +71,10 @@ namespace IDB.Core.Extensions
             }
         }
 
-        public static T SelectEntity<T>(this SqlConnection connection, string sql, object param = null)
+        public static T SelectEntity<T>(this SqlConnection connection, string sql, object param = null) where T : class
         {
             if (connection.State != ConnectionState.Open)
-                return default;
+                return null;
 
             try
             {
@@ -84,7 +84,7 @@ namespace IDB.Core.Extensions
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return default;
+                return null;
             }
         }
 
