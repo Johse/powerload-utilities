@@ -231,7 +231,7 @@ Utility to run the Validation scripts without starting the SQL Management Studio
 Start the tool with double click the file IDB.Validate.BCP to open the dialog.
 ![image](Images/pL-DLG-IDB.Validate.BCP.png)
 
-* **IDB Connection String**: SQL Connection String to the server and database of the powerLoad IDB
+* **IDB SQL Connection String**: SQL Connection String to the server and database of the powerLoad IDB
 
 * **Validate Database**: Runs the SQl script ***Validate.IDB.sql*** and writes back the results into the fields "**Validation_Status**" and "**Validation_Comment**" in the intermediate Database.
 A dialog box appears after the transfer is finished.
@@ -257,10 +257,10 @@ Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens 
 
 ![IDB.Translate.BCP-dialog](Images/pL-DLG-IDBTranslateBCP.png)
 
-* **SQL Database ConnectionString**: Connect string to SQL server and database
+* **IDB SQL ConnectionString**: Connect string to SQL server and intermediate database
 * **Vault Version**: Select version of Vault in wehich will be imported. For Vault 2021 select '2020'.
 * **BCP Export Directory**: Folder in which the BCP package will be exported.
-* **Validate Database**: Runs the SQL script of file Validate.IDB.sql, located in the sub-folder *SQL*. 
+* **Disable Configuration Export**: If active the Vault configuration sections 'Security' and 'Behaviors' are not filled to the generated Vault.xml. We recommend to use this setting, to avoid unintentional overwriting configuration settings in the target Vault.
 * **Create BCP Package**: Exports the data from the IDB into a BCP package in the specified folder.
 
 ### Logging
