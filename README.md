@@ -19,8 +19,10 @@ The powerLoad utilites are:
 * **IDB.Load.Files:** Utility to load files from a Windows folder to the Intermediate Database.
 * **IDB.Load.BCP:** Utility to load files and folders from a BCP-package to the Intermediate Database (IDB).
 * **IDB.Load.Vault:** Sample code to extract data from Vault and fill the Intermediate Database (IDB).
+* **IDB.Discover.Vault:** Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB)
 * **IDB.Analyzer.Inventor:** Scans Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
 * **IDB.Analyzer.AutoCAD:** Scans AutoCAD DWGs files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
+* **IDB.Validate.BCP:** Utility to run the Validation scripts without starting the SQL Management Studio UI.
 * **IDB.Translate.BCP:** Creates a BCP-package from the content of the Intermediate Database.
 
 ### Additions
@@ -76,12 +78,14 @@ This section explains how to use and fill the Intermediate Database with the inf
 Utility to load files from Windows folders to the Intermediate Database (IDB)
 
 ### Configuration
-In the configuration file ***DefaultBehaviors.xml*** the default behaviours can be set.
-![image](https://user-images.githubusercontent.com/62716091/81202972-a05dff00-8fc7-11ea-9a4e-c1ce65170e65.png)
+The path with the files to import and the connect string to SQL server and database can be set in the dialog of the IDB.Load.Files. The settings will be written back to the configuration file **IDB.Core.ini** when the utility is started. These settings are then the default for the next time any of the powerLoad utilities are started.
+![image](Images/pL-DLG-IDB.Load.Files.png)
+In the configuration file ***IDB.Load.Files.Behaviors.ini*** the default behaviours can be set.
 
+The delivery default is: 
 
-* ConnectionString: Connect string to SQL server and database  
-* DataPath: Folderpath that will be scanned. All names of subfolders and files will be transferred to the IDB.
+![image](Images/pL-CFG-IDB.Load.Files.png)
+
 * Folders: Default settings for folders. The following fields in the IDB will be filled with the assigned value for all folders.
 	* Category
 	* CreateUser 
@@ -98,21 +102,17 @@ In the configuration file ***DefaultBehaviors.xml*** the default behaviours can 
 	The elements must not be removed. To not fill the field just delete the value. 
 E.g. < CreateUser >< /CreateUser >
 
-Please do not rename XML files.
+Please do not rename INI files.
 
 ### Usage
 Start the tool with double click the file IDB.Load.Files.exe.
 In the open dialog specify the ***Path*** and ***SQL Database Connection String*** to import files from the selected folder and sub-folders into the named database.
 
-* Save: The specified path and connect string are written back to file DefaultBehaviors.xml.
-* Refresh: Updating the path and connect string from the file DefaultBehaviors.xml.
-* Start: Start scan and import
+* Start: Start scan and import. The specified path and connect string are written back to the central configuration file IDB.Core.ini.
 * Cancel: Stop the process. After clicking the button all records and unsaved data will be lost.
-* Reset: Initialize for next run
 * Scan records: File`s counter of entered folder path
 * Import records: Counter of already inserted files
 
-![image](https://user-images.githubusercontent.com/62716091/81194971-89b2aa80-8fbd-11ea-8374-c282ad0bbc2d.png)
 
 ### Logging
 The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
