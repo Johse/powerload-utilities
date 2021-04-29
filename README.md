@@ -18,16 +18,14 @@ The powerLoad utilites are:
 * **powerLoad Intermediate Database (IDB):** SQL database for transforming the data to fit to the target Vault
 * **IDB.Load.Files:** Utility to load files from a Windows folder to the Intermediate Database.
 * **IDB.Load.BCP:** Utility to load files and folders from a BCP-package to the Intermediate Database (IDB).
-* **IDB.Discover.Vault:** Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB)
+* **IDB.Discover.Vault:** Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB).
 * **IDB.Analyzer.Inventor:** Scans Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
 * **IDB.Analyzer.AutoCAD:** Scans AutoCAD DWGs files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
 * **IDB.Validate.BCP:** Utility to run the Validation scripts without starting the SQL Management Studio UI.
 * **IDB.Translate.BCP:** Creates a BCP-package from the content of the Intermediate Database.
 
 ### Additions
-For validating the BCP package that is created from the IDB there are additional tools:
-* **bcpViewer**, which is part of the bcpToolkit
-* **bcpValidator**, which can be found on https://github.com/coolOrangeLabs/bcpValidator
+For reviewing the BCP-package that is created from the IDB there is the tool **bcpViewer**, which is part of the bcpToolkit. Please find the description of the bcpViewer on the Product Documentation [coolOrange bcpToolkit](https://www.coolorange.com/wiki/doku.php?id=bcptoolkit).
 
 ## Prerequsites
 * Microsoft SQL Server 2014 or newer
@@ -85,10 +83,6 @@ The delivery default is:
 
 ![image](Images/pL-CFG-IDB.Load.Files.png)
 
-* Folders: Default settings for folders. The following fields in the IDB will be filled with the assigned value for all folders.
-	* Category
-	* CreateUser 
-
 * Files: Default settings for files. The following fields in the IDB will be filled with the assigned value for all files.
 	* Category
 	* RevisionDefinition
@@ -97,6 +91,10 @@ The delivery default is:
 	* RevisionLabel
 	* Classification
 	* CreateUser
+
+* Folders: Default settings for folders. The following fields in the IDB will be filled with the assigned value for all folders.
+	* Category
+	* CreateUser 
 	
 	The elements must not be removed. To not fill the field just delete the value. 
 E.g. `RevisionLabel=`
@@ -142,8 +140,26 @@ After starting the process the utility scans the Vault.xml. It can take some tim
 The default location for the log file ***IDB.Load.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
 
-## Caution
+### Caution
 If you want to load several bcp-packages into 1 Intermediate Database (IDB) you must remove the UNIQUE for the index [IX_Files] in order the tool does not stop when duplicate files are imported.
+
+## IDB.Discover.Vault
+Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB).
+
+### Usage
+ 
+Start the tool with double click the file Discover.Vault.exe to open the dialog.
+![image](Images/pL-DLG-IDB.Discover.Vault.png)
+
+* IDB Connection String: SQL Connection String to the server and database of the powerLoad IDB
+* Vault DB Connection String: SQL Connection String to the server and database of the target Vault
+
+* Transfer Behaviors from Vault to IDB: Start scan and import. The specified connect strings are written back to the central configuration file IDB.Core.ini.
+A dialog box appears after the transfer is finished.
+
+### Logging
+The default location for the log file ***IDB.Discover.Vault.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+There you find information about successful inserts and errors.
 
 ## IDB.Analyzer.Inventor
 Utility to scan Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
