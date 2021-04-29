@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
-using IDB.Core.DbTargetVault;
+using IDB.Core.Data.TargetVault;
 using IDB.Core.Extensions;
 using log4net;
 

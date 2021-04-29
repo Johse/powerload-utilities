@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace IDB.Core.DbEntity
+namespace IDB.Core.Data.Interface
 {
-    public interface IDbEntity
+    public interface IUdp
     {
         Dictionary<string, object> UserDefinedProperties { get; set; }
     }

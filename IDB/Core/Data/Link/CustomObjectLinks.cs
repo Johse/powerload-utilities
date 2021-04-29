@@ -1,6 +1,8 @@
-﻿namespace IDB.Core.DbLink
+﻿using IDB.Core.Data.Base;
+
+namespace IDB.Core.Data.Link
 {
-    public class CustomObjectCustomObjectLink
+    public class CustomObjectCustomObjectLink : LinkBase
     {
         // ReSharper disable once InconsistentNaming
         public long ParentCustomObjectID { get; set; }
@@ -8,7 +10,7 @@
         public long ChildCustomObjectID { get; set; }
     }
 
-    public class CustomObjectFolderLink
+    public class CustomObjectFolderLink : LinkBase
     {
         // ReSharper disable once InconsistentNaming
         public long ParentCustomObjectID { get; set; }
@@ -16,7 +18,7 @@
         public long ChildFolderID { get; set; }
     }
 
-    public class CustomObjectFileLink
+    public class CustomObjectFileLink : LinkBase
     {
         // ReSharper disable once InconsistentNaming
         public long ParentCustomObjectID { get; set; }
@@ -24,7 +26,7 @@
         public long ChildFileID { get; set; }
     }
 
-    public class CustomObjectItemLink
+    public class CustomObjectItemLink : LinkBase
     {
         // ReSharper disable once InconsistentNaming
         public long ParentCustomObjectID { get; set; }

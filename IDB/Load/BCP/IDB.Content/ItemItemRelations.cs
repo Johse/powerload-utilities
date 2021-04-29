@@ -5,7 +5,6 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.Xml;
 using log4net;
-using log4net.Repository.Hierarchy;
 
 namespace IDB.Load.BCP.IDB.Content
 {

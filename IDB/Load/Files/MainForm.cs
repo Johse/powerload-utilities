@@ -5,7 +5,6 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using log4net;
-using log4net.Repository.Hierarchy;
 
 namespace IDB.Load.Files
 {

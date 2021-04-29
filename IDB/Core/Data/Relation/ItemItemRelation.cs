@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using IDB.Core.DbEntity;
+using IDB.Core.Data.Base;
 
-namespace IDB.Core.DbRelation
+namespace IDB.Core.Data.Relation
 {
-    public class ItemItemRelation : IDbEntity
+    public class ItemItemRelation : RelationWithUdp
     {
         // ReSharper disable once InconsistentNaming
         public long ParentItemID { get; set; }
@@ -17,6 +17,13 @@ namespace IDB.Core.DbRelation
         public decimal UnitSize { get; set; }
         // ReSharper disable once InconsistentNaming
         public bool CAD { get; set; }
-        public Dictionary<string, object> UserDefinedProperties { get; set; }
+
+        public ItemItemRelation()
+        {
+        }
+
+        public ItemItemRelation(IDictionary<string, object> dapperRow) : base(dapperRow)
+        {
+        }
     }
 }

@@ -8,7 +8,6 @@ using System.Xml;
 using System.Xml.Linq;
 using IDB.Load.BCP.IDB.Content;
 using log4net;
-using log4net.Repository.Hierarchy;
 
 namespace IDB.Load.BCP.Utilities
 {
