@@ -10,10 +10,17 @@ using System.Runtime.CompilerServices;
 using MSSql.COIntermDB.Dapper.DirectAccess.DbEntity;
 using Dapper;
 
+using log4net;
+using BCPBuilderConfig;
+
+
 namespace MSSql.COIntermDB.Dapper.DirectAccess
 {
     public class MSSqlCacheLoader
     {
+        // setup the log file information
+        private static readonly ILog4NetExtender Logger = BCPBuilderConfig.BCPBuilderConfigurationManager.GetExtendedLogger(typeof(MSSqlCacheLoader));
+
         private string _connectionString;
 
         public SqlConnectionStringBuilder SqlConnStrBuilder;
@@ -37,37 +44,48 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
             List<T> vaultEntityList = null;
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
+                try
+                {
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
 
-                // check to see if param is a single parameter
-                // and that parameter is IEnumerable
-                // if so, we need to not call with more than 2000 elements, more than 2000 will cause a SQL exception
-                // don't know what to do if multiple parameters are passed
-                // Such as with Param = "" OR Param = ""
-                // use reflection to identify it if is an anonymous property/value parameters list
-                IEnumerable<T> entities = null;
-                PropertyInfo propertyInfo;
-                if ((param == null) ||
-                        !IsAnonymousSinglePropertyValueOfIEnumerable(param, "TempIDTable", conn, out propertyInfo))
-                {
-                    // run the query without parameters, or with multiple parameters (hoping that they don't exceed 2000)
-                    entities = param == null ? conn.Query<T>(selectQuery, commandTimeout: 600) : conn.Query<T>(selectQuery, param, commandTimeout: 300);
+                    // check to see if param is a single parameter
+                    // and that parameter is IEnumerable
+                    // if so, we need to not call with more than 2000 elements, more than 2000 will cause a SQL exception
+                    // don't know what to do if multiple parameters are passed
+                    // Such as with Param = "" OR Param = ""
+                    // use reflection to identify it if is an anonymous property/value parameters list
+                    IEnumerable<T> entities = null;
+                    PropertyInfo propertyInfo;
+                    if ((param == null) ||
+                            !IsAnonymousSinglePropertyValueOfIEnumerable(param, "TempIDTable", conn, out propertyInfo))
+                    {
+                        // run the query without parameters, or with multiple parameters (hoping that they don't exceed 2000)
+                        entities = param == null ? conn.Query<T>(selectQuery, commandTimeout: 600) : conn.Query<T>(selectQuery, param, commandTimeout: 300);
+                    }
+                    else
+                    {
+                        // get this set of results
+                        // the query MUST use @parm as the parameter string in the query
+                        // therefore, replace @parm with "(SELECT ID FROM ##TempIDTable)"
+                        string sNewQuery = selectQuery.Replace("@parm", "(SELECT ID FROM ##TempIDTable)");
+                        entities = conn.Query<T>(sNewQuery, commandTimeout: 600);
+                    }
+
+                    // create the dictionary
+                    if (entities != null)
+                    {
+                        vaultEntityList = entities.ToList();
+                    }
                 }
-                else
+                catch (Exception exc)
                 {
-                    // get this set of results
-                    // the query MUST use @parm as the parameter string in the query
-                    // therefore, replace @parm with "(SELECT ID FROM ##TempIDTable)"
-                    string sNewQuery = selectQuery.Replace("@parm", "(SELECT ID FROM ##TempIDTable)");
-                    entities = conn.Query<T>(sNewQuery, commandTimeout: 600);
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
                 }
 
-                // create the dictionary
-                if (entities != null)
-                {
-                    vaultEntityList = entities.ToList();
-                }
             }
 
             return vaultEntityList;
@@ -86,14 +104,24 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
             // create the dictionary
             if (vaultEntityList != null)
             {
-                vaultEntityDictionary = vaultEntityList.ToDictionary(en => en.GetId(), en => en);
-
-                // add the zero entity if GetNullEntity returns a value
-                var tempT = new T();
-                var defaultEntity = tempT.GetNullEntity();
-                if (defaultEntity != null)
+                try
                 {
-                    vaultEntityDictionary.Add(0, (T)defaultEntity);
+                    vaultEntityDictionary = vaultEntityList.ToDictionary(en => en.GetId(), en => en);
+
+                    // add the zero entity if GetNullEntity returns a value
+                    var tempT = new T();
+                    var defaultEntity = tempT.GetNullEntity();
+                    if (defaultEntity != null)
+                    {
+                        vaultEntityDictionary.Add(0, (T)defaultEntity);
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
                 }
             }
 
@@ -112,40 +140,50 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
             List<T> vaultEntityList = null;
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
-
-                // check to see if param is a single parameter
-                // and that parameter is IEnumerable
-                // if so, we need to not call with more than 2000 elements, more than 2000 will cause a SQL exception
-                // don't know what to do if multiple parameters are passed
-                // Such as with Param = "" OR Param = ""
-                // use reflection to identify it if is an anonymous property/value parameters list
-                IEnumerable<T> entities = null;
-                PropertyInfo propertyInfo;
-                if ((param == null) ||
-                        !IsAnonymousSinglePropertyValueOfIEnumerable(param, "TempIDTable", conn, out propertyInfo))
+                try
                 {
-                    // run the query without parameters, or with multiple parameters (hoping that they don't exceed 2000)
-                    // entities = param == null ? conn.Query<T>(selectQuery, commandTimeout: 600) : conn.Query<T>(selectQuery, param, commandTimeout: 300);
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
 
-                    entities = param == null ? conn.Query(selectQuery, commandTimeout: 600).Select(x => (T)MSSqlCacheLoader.ConvertToIDbEntityWithIDAndUDPs<T>(x)) :
-                                                    conn.Query<T>(selectQuery, param, commandTimeout: 300).Select(x => (T)MSSqlCacheLoader.ConvertToIDbEntityWithIDAndUDPs<T>(x));
+                    // check to see if param is a single parameter
+                    // and that parameter is IEnumerable
+                    // if so, we need to not call with more than 2000 elements, more than 2000 will cause a SQL exception
+                    // don't know what to do if multiple parameters are passed
+                    // Such as with Param = "" OR Param = ""
+                    // use reflection to identify it if is an anonymous property/value parameters list
+                    IEnumerable<T> entities = null;
+                    PropertyInfo propertyInfo;
+                    if ((param == null) ||
+                            !IsAnonymousSinglePropertyValueOfIEnumerable(param, "TempIDTable", conn, out propertyInfo))
+                    {
+                        // run the query without parameters, or with multiple parameters (hoping that they don't exceed 2000)
+                        // entities = param == null ? conn.Query<T>(selectQuery, commandTimeout: 600) : conn.Query<T>(selectQuery, param, commandTimeout: 300);
 
+                        entities = param == null ? conn.Query(selectQuery, commandTimeout: 600).Select(x => (T)MSSqlCacheLoader.ConvertToIDbEntityWithIDAndUDPs<T>(x)) :
+                                                        conn.Query<T>(selectQuery, param, commandTimeout: 300).Select(x => (T)MSSqlCacheLoader.ConvertToIDbEntityWithIDAndUDPs<T>(x));
+
+                    }
+                    else
+                    {
+                        // get this set of results
+                        // the query MUST use @parm as the parameter string in the query
+                        // therefore, replace @parm with "(SELECT ID FROM ##TempIDTable)"
+                        string sNewQuery = selectQuery.Replace("@parm", "(SELECT ID FROM ##TempIDTable)");
+                        entities = conn.Query<T>(sNewQuery, commandTimeout: 600).Select(x => (T)MSSqlCacheLoader.ConvertToIDbEntityWithIDAndUDPs<T>(x));
+                    }
+
+                    // create the dictionary
+                    if (entities != null)
+                    {
+                        vaultEntityList = entities.ToList();
+                    }
                 }
-                else
+                catch (Exception exc)
                 {
-                    // get this set of results
-                    // the query MUST use @parm as the parameter string in the query
-                    // therefore, replace @parm with "(SELECT ID FROM ##TempIDTable)"
-                    string sNewQuery = selectQuery.Replace("@parm", "(SELECT ID FROM ##TempIDTable)");
-                    entities = conn.Query<T>(sNewQuery, commandTimeout: 600).Select(x => (T)MSSqlCacheLoader.ConvertToIDbEntityWithIDAndUDPs<T>(x));
-                }
+                    Logger.Debug("Error", exc);
 
-                // create the dictionary
-                if (entities != null)
-                {
-                    vaultEntityList = entities.ToList();
+                    // rethrow the exception
+                    throw (exc);
                 }
             }
 
@@ -157,15 +195,25 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
         {
             var entity = new T { UserDefinedProperties = new Dictionary<string, object>() };
 
-            PropertyInfo[] properties = typeof(T).GetProperties();
-            foreach (var element in p)
+            try
             {
-                var property = properties.SingleOrDefault(x => x.Name == element.Key);
-                if (property != default(PropertyInfo))
-                    property.SetValue(entity, element.Value);
+                PropertyInfo[] properties = typeof(T).GetProperties();
+                foreach (var element in p)
+                {
+                    var property = properties.SingleOrDefault(x => x.Name == element.Key);
+                    if (property != default(PropertyInfo))
+                        property.SetValue(entity, element.Value);
 
-                if (element.Key.StartsWith("UDP_"))
-                    entity.UserDefinedProperties.Add(element.Key.Replace("UDP_", "").ToString(), element.Value);
+                    if (element.Key.StartsWith("UDP_"))
+                        entity.UserDefinedProperties.Add(element.Key.Replace("UDP_", "").ToString(), element.Value);
+                }
+            }
+            catch (Exception exc)
+            {
+                Logger.Debug("Error", exc);
+
+                // rethrow the exception
+                throw (exc);
             }
 
             return entity;
@@ -182,20 +230,31 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
         {
             Dictionary<int, T> vaultEntityDictionary = null;
 
-            List<T> vaultEntityList = LoadEntitiesWithUDP<T>(selectQuery, param);
-
-            // create the dictionary
-            if (vaultEntityList != null)
+            try
             {
-                vaultEntityDictionary = vaultEntityList.ToDictionary(en => en.GetId(), en => en);
 
-                // add the zero entity if GetNullEntity returns a value
-                var tempT = new T();
-                var defaultEntity = tempT.GetNullEntity();
-                if (defaultEntity != null)
+                List<T> vaultEntityList = LoadEntitiesWithUDP<T>(selectQuery, param);
+
+                // create the dictionary
+                if (vaultEntityList != null)
                 {
-                    vaultEntityDictionary.Add(0, (T)defaultEntity);
+                    vaultEntityDictionary = vaultEntityList.ToDictionary(en => en.GetId(), en => en);
+
+                    // add the zero entity if GetNullEntity returns a value
+                    var tempT = new T();
+                    var defaultEntity = tempT.GetNullEntity();
+                    if (defaultEntity != null)
+                    {
+                        vaultEntityDictionary.Add(0, (T)defaultEntity);
+                    }
                 }
+            }
+            catch (Exception exc)
+            {
+                Logger.Debug("Error", exc);
+
+                // rethrow the exception
+                throw (exc);
             }
 
             return vaultEntityDictionary;
@@ -220,64 +279,75 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
         {
             bool IsAnonymousEtc = false;
 
-            // set the output values
-            propertyInfo = null;
-            if ((param != null) && IsAnonymousType(param.GetType()))
+            try
             {
-                // get the property info
-                PropertyInfo[] pi = param.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-                // check for 1 property/value pair, name has content, and value is an IEnumerable
-                if ((pi.Count() == 1) && (pi[0].Name != null) && (pi[0].Name.Length > 0))
+                // set the output values
+                propertyInfo = null;
+                if ((param != null) && IsAnonymousType(param.GetType()))
                 {
-                    // set the property info
-                    propertyInfo = pi[0];
+                    // get the property info
+                    PropertyInfo[] pi = param.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-                    // check to see if the parameter value is IEnumerable<object>
-                    object propValue = propertyInfo.GetValue(param, null);
-                    Type type = propValue.GetType();
-                    if (type.HasElementType)
+                    // check for 1 property/value pair, name has content, and value is an IEnumerable
+                    if ((pi.Count() == 1) && (pi[0].Name != null) && (pi[0].Name.Length > 0))
                     {
-                        Type baseType = type.GetElementType();
+                        // set the property info
+                        propertyInfo = pi[0];
 
-                        // only doing our long arrays for now
-                        if (baseType == typeof(long))
+                        // check to see if the parameter value is IEnumerable<object>
+                        object propValue = propertyInfo.GetValue(param, null);
+                        Type type = propValue.GetType();
+                        if (type.HasElementType)
                         {
-                            // Create a datatable with one column, long/bigint ID
-                            DataTable tempDataTable = new DataTable(sTempTableName);
+                            Type baseType = type.GetElementType();
 
-                            // Create Column 1: ID
-                            DataColumn idColumn = new DataColumn();
-                            idColumn.DataType = Type.GetType("System.Int64");
-                            idColumn.ColumnName = "ID";
-                            tempDataTable.Columns.Add(idColumn);
-
-                            // populate the data table
-                            foreach (long nVal in ((long[])propValue))
+                            // only doing our long arrays for now
+                            if (baseType == typeof(long))
                             {
-                                DataRow row = tempDataTable.NewRow();
-                                row[0] = nVal;
-                                tempDataTable.Rows.Add(row);
+                                // Create a datatable with one column, long/bigint ID
+                                DataTable tempDataTable = new DataTable(sTempTableName);
+
+                                // Create Column 1: ID
+                                DataColumn idColumn = new DataColumn();
+                                idColumn.DataType = Type.GetType("System.Int64");
+                                idColumn.ColumnName = "ID";
+                                tempDataTable.Columns.Add(idColumn);
+
+                                // populate the data table
+                                foreach (long nVal in ((long[])propValue))
+                                {
+                                    DataRow row = tempDataTable.NewRow();
+                                    row[0] = nVal;
+                                    tempDataTable.Rows.Add(row);
+                                }
+
+                                // for throughput, set the AcceptChanges
+                                tempDataTable.AcceptChanges();
+
+                                // create the temporary table
+                                SqlCommand cmd = new SqlCommand("create table ##" + sTempTableName + "(ID bigint)", sqlConnection);
+                                cmd.ExecuteNonQuery();
+
+                                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(sqlConnection))
+                                {
+                                    bulkCopy.DestinationTableName = "##" + sTempTableName;
+                                    bulkCopy.WriteToServer(tempDataTable);
+                                }
+
+                                IsAnonymousEtc = true;
                             }
 
-                            // for throughput, set the AcceptChanges
-                            tempDataTable.AcceptChanges();
-
-                            // create the temporary table
-                            SqlCommand cmd = new SqlCommand("create table ##" + sTempTableName + "(ID bigint)", sqlConnection);
-                            cmd.ExecuteNonQuery();
-
-                            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(sqlConnection))
-                            {
-                                bulkCopy.DestinationTableName = "##" + sTempTableName;
-                                bulkCopy.WriteToServer(tempDataTable);
-                            }
-
-                            IsAnonymousEtc = true;
                         }
-
                     }
                 }
+            }
+            catch (Exception exc)
+            {
+                Logger.Debug("Error", exc);
+
+                // rethrow the exception
+                throw (exc);
             }
 
             return (IsAnonymousEtc);
@@ -293,56 +363,66 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
         {
             bool IsAnonymousEtc = false;
 
-            // set the output values
-            propertyInfo = null;
-            valueLists = null;
-            if ((param != null) && IsAnonymousType(param.GetType()))
+            try
             {
-                // get the property info
-                PropertyInfo[] pi = param.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
-
-                // check for 1 property/value pair, name has content, and value is an IEnumerable
-                if ((pi.Count() == 1) && (pi[0].Name != null) && (pi[0].Name.Length > 0))
+                // set the output values
+                propertyInfo = null;
+                valueLists = null;
+                if ((param != null) && IsAnonymousType(param.GetType()))
                 {
-                    // set the property info
-                    propertyInfo = pi[0];
+                    // get the property info
+                    PropertyInfo[] pi = param.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-                    // check to see if the parameter value is IEnumerable<object>
-                    object propValue = propertyInfo.GetValue(param, null);
-                    Type type = propValue.GetType();
-                    if (type.HasElementType)
+                    // check for 1 property/value pair, name has content, and value is an IEnumerable
+                    if ((pi.Count() == 1) && (pi[0].Name != null) && (pi[0].Name.Length > 0))
                     {
-                        Type baseType = type.GetElementType();
+                        // set the property info
+                        propertyInfo = pi[0];
 
-                        // only doing our long arrays for now
-                        if (baseType == typeof(long))
+                        // check to see if the parameter value is IEnumerable<object>
+                        object propValue = propertyInfo.GetValue(param, null);
+                        Type type = propValue.GetType();
+                        if (type.HasElementType)
                         {
-                            // iterate through and create separate holders
-                            List<long> longList = new List<long>();
-                            valueLists = new List<List<long>>();
-                            foreach (long nVal in ((long[])propValue))
-                            {
-                                longList.Add(nVal);
+                            Type baseType = type.GetElementType();
 
-                                // create a new list after 2000
-                                if (longList.Count() >= 2000)
+                            // only doing our long arrays for now
+                            if (baseType == typeof(long))
+                            {
+                                // iterate through and create separate holders
+                                List<long> longList = new List<long>();
+                                valueLists = new List<List<long>>();
+                                foreach (long nVal in ((long[])propValue))
+                                {
+                                    longList.Add(nVal);
+
+                                    // create a new list after 2000
+                                    if (longList.Count() >= 2000)
+                                    {
+                                        valueLists.Add(longList);
+                                        longList = new List<long>();
+                                    }
+                                }
+
+                                // add it to the list
+                                if (longList.Count > 0)
                                 {
                                     valueLists.Add(longList);
-                                    longList = new List<long>();
                                 }
+
+                                IsAnonymousEtc = true;
                             }
 
-                            // add it to the list
-                            if (longList.Count > 0)
-                            {
-                                valueLists.Add(longList);
-                            }
-
-                            IsAnonymousEtc = true;
                         }
-
                     }
                 }
+            }
+            catch (Exception exc)
+            {
+                Logger.Debug("Error", exc);
+
+                // rethrow the exception
+                throw (exc);
             }
 
             return (IsAnonymousEtc);
@@ -353,13 +433,24 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
         {
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
+                try
+                {
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
 
-                var entities = conn.Query<T>(selectQuery, paramaters, commandTimeout: 600);
+                    var entities = conn.Query<T>(selectQuery, paramaters, commandTimeout: 600);
 
-                var entity = entities.Single();
-                return entity;
+                    var entity = entities.Single();
+                    return entity;
+                }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
+                }
+
             }
         }
 
@@ -372,16 +463,26 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
 
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
-
-                var tempT = new T();
-                string selectQuery = string.Format("SELECT COUNT(*) from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'", tempT.GetTableName(), sColumnName);
-                int count = (int)conn.ExecuteScalar(selectQuery, commandTimeout: 600);
-
-                if (count > 0)
+                try
                 {
-                    columnExists = true;
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
+
+                    var tempT = new T();
+                    string selectQuery = string.Format("SELECT COUNT(*) from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'", tempT.GetTableName(), sColumnName);
+                    int count = (int)conn.ExecuteScalar(selectQuery, commandTimeout: 600);
+
+                    if (count > 0)
+                    {
+                        columnExists = true;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
                 }
             }
 
@@ -393,12 +494,22 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
         {
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
+                try
+                {
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
 
-                var tempT = new T();
-                string alterQuery = string.Format("ALTER TABLE {0} ADD [{1}] {2}", tempT.GetTableName(), sColumnName, dbType);
-                conn.ExecuteScalar(alterQuery, commandTimeout: 600);
+                    var tempT = new T();
+                    string alterQuery = string.Format("ALTER TABLE {0} ADD [{1}] {2}", tempT.GetTableName(), sColumnName, dbType);
+                    conn.ExecuteScalar(alterQuery, commandTimeout: 600);
+                }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
+                }
             }
         }
 
@@ -415,10 +526,20 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
             int nInserted = 0;
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
+                try
+                {
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
 
-                nInserted = conn.Execute(insertQuery, ent);
+                    nInserted = conn.Execute(insertQuery, ent);
+                }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
+                }
             }
 
             return (nInserted);
@@ -433,13 +554,23 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
             int nIdentity = 0;
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
+                try
+                {
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
 
-                var tempT = new T();
-                string insertQuery = string.Format("INSERT INTO [{0}] ([Stuff]) VALUES (@Stuff); SELECT CAST(SCOPE_IDENTITY() as int)", tempT.GetTableName());
+                    var tempT = new T();
+                    string insertQuery = string.Format("INSERT INTO [{0}] ([Stuff]) VALUES (@Stuff); SELECT CAST(SCOPE_IDENTITY() as int)", tempT.GetTableName());
 
-                nIdentity = conn.Query<int>(insertQuery, ent).Single();
+                    nIdentity = conn.Query<int>(insertQuery, ent).Single();
+                }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
+                }
             }
 
             return (nIdentity);
@@ -454,12 +585,22 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
             int nIdentity = 0;
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
+                try
+                {
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
 
-                insertQuery += "; SELECT CAST(SCOPE_IDENTITY() as int)";
+                    insertQuery += "; SELECT CAST(SCOPE_IDENTITY() as int)";
 
-                nIdentity = conn.Query<int>(insertQuery, ent).Single();
+                    nIdentity = conn.Query<int>(insertQuery, ent).Single();
+                }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
+                }
             }
 
             return (nIdentity);
@@ -475,10 +616,21 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
             int nUpdated = 0;
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
+                try
+                {
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
 
-                nUpdated = conn.Execute(updateQuery, ent);
+                    nUpdated = conn.Execute(updateQuery, ent);
+                }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
+                }
+
             }
 
             return (nUpdated);
@@ -490,10 +642,20 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
             int nUpdated = 0;
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
+                try
+                {
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
 
-                nUpdated = conn.Execute(updateQuery, param);
+                    nUpdated = conn.Execute(updateQuery, param);
+                }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
+                }
             }
 
             return (nUpdated);
@@ -518,13 +680,23 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
         {
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
+                try
+                {
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
 
-                string selectQuery = string.Format("SELECT COUNT(*) FROM [dbo].[{0}]", sTableName);
-                int count = (int)conn.ExecuteScalar(selectQuery, commandTimeout: 600);
+                    string selectQuery = string.Format("SELECT COUNT(*) FROM [dbo].[{0}]", sTableName);
+                    int count = (int)conn.ExecuteScalar(selectQuery, commandTimeout: 600);
 
-                return (count);
+                    return (count);
+                }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
+                }
             }
         }
 
@@ -542,13 +714,23 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
         {
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
+                try
+                {
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
 
-                string selectQuery = string.Format("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}'", sTableName);
-                int count = (int)conn.ExecuteScalar(selectQuery, commandTimeout: 600);
+                    string selectQuery = string.Format("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}'", sTableName);
+                    int count = (int)conn.ExecuteScalar(selectQuery, commandTimeout: 600);
 
-                return (count);
+                    return (count);
+                }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
+                }
             }
         }
 
@@ -564,15 +746,15 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
             SpaceUsedTableInfo suti = null;
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
-
-                var param = new DynamicParameters();
-                param.Add("@oneresultset", dbType: DbType.Int32, value: 1, direction: ParameterDirection.Input);
-                param.Add("@objname", dbType: DbType.String, value: sTableName, direction: ParameterDirection.Input);
-
                 try
                 {
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
+
+                    var param = new DynamicParameters();
+                    param.Add("@oneresultset", dbType: DbType.Int32, value: 1, direction: ParameterDirection.Input);
+                    param.Add("@objname", dbType: DbType.String, value: sTableName, direction: ParameterDirection.Input);
+
                     var result = conn.Query<SpaceUsedTableInfo>("sp_spaceused", param, commandType: CommandType.StoredProcedure);
 
                     // set the return value
@@ -585,7 +767,13 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
                         suti.numColumns = GetNumberOfColumns(sTableName);
                     }
                 }
-                catch (Exception exc) { }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
+                }
             }
 
             return (suti);
@@ -618,29 +806,39 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
             SpaceUsedDatabaseInfo sudi = null;
             using (var conn = new SqlConnection())
             {
-                conn.ConnectionString = _connectionString;
-                conn.Open();
-
-                SqlCommand cmd = new SqlCommand("sp_spaceused", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@oneresultset", 1));
-
-                using (SqlDataReader rdr = cmd.ExecuteReader())
+                try
                 {
-                    // iterate through results
-                    while (rdr.Read())
-                    {
-                        sudi = new SpaceUsedDatabaseInfo();
-                        sudi.database_name = (string)rdr["database_name"];
-                        sudi.database_size = (string)rdr["database_size"];
-                        sudi.unallocated_space = (string)rdr["unallocated space"];
-                        sudi.reserved = (string)rdr["reserved"];
-                        sudi.data = (string)rdr["data"];
-                        sudi.index_size = (string)rdr["index_size"];
-                        sudi.unused = (string)rdr["unused"];
+                    conn.ConnectionString = _connectionString;
+                    conn.Open();
 
-                        sudi.Convert();
+                    SqlCommand cmd = new SqlCommand("sp_spaceused", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("@oneresultset", 1));
+
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+                        // iterate through results
+                        while (rdr.Read())
+                        {
+                            sudi = new SpaceUsedDatabaseInfo();
+                            sudi.database_name = (string)rdr["database_name"];
+                            sudi.database_size = (string)rdr["database_size"];
+                            sudi.unallocated_space = (string)rdr["unallocated space"];
+                            sudi.reserved = (string)rdr["reserved"];
+                            sudi.data = (string)rdr["data"];
+                            sudi.index_size = (string)rdr["index_size"];
+                            sudi.unused = (string)rdr["unused"];
+
+                            sudi.Convert();
+                        }
                     }
+                }
+                catch (Exception exc)
+                {
+                    Logger.Debug("Error", exc);
+
+                    // rethrow the exception
+                    throw (exc);
                 }
             }
 

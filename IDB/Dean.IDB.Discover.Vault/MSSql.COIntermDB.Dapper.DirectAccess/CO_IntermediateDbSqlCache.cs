@@ -333,6 +333,7 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
             // iterate through the local files and process them for information
             int nLoopCount = 0;
             int nMissing = 0;
+            int nError = 0;
             foreach (MSSql.COIntermDB.Dapper.DirectAccess.DbEntity.File file in this.m_FilesDict.Values)
             {
                 // check to see if the file exists
@@ -343,23 +344,34 @@ namespace MSSql.COIntermDB.Dapper.DirectAccess
                 }
                 else
                 {
-                    file.LocalFileExists = true;
+                    try
+                    {
+                        file.LocalFileCheckSum = GetcheckSum.CalcCRC32(file.LocalFullFileName);
+                        file.LocalFileExists = true;
+                    }
+                    catch (Exception exc)
+                    {
+                        nError++;
+                        Logger.Debug(string.Format("ProcessLocalFileInformation() Error on file ID: {0}", file.FileID));
+                        Logger.Debug("Error", exc);
 
-                    file.LocalFileCheckSum = GetcheckSum.CalcCRC32(file.LocalFullFileName);
+                        // consume the exception
+                        // throw (exc);
+                    }
                 }
 
                 nLoopCount++;
 
                 if ((nLoopCount % 100) == 0)
                 {
-                    Logger.Debug(string.Format("ProcessLocalFileInformation(): {0:n0}/{1:n0} ({2:n0} missing) files to process", nLoopCount, this.m_FilesDict.Count(), nMissing));
+                    Logger.Debug(string.Format("ProcessLocalFileInformation(): {0:n0}/{1:n0}: ({2:n0} missing) ({3:n0} errors)", nLoopCount, this.m_FilesDict.Count(), nMissing, nError));
                 }
 
                 // set the process date
                 file.LocalFileProcessedDate = DateTime.Now;
             }
 
-            Logger.Debug(string.Format("ProcessLocalFileInformation(): {0:n0}/{1:n0} ({2:n0} missing) files to process", nLoopCount, this.m_FilesDict.Count(), nMissing));
+            Logger.Debug(string.Format("ProcessLocalFileInformation(): {0:n0}/{1:n0}: ({2:n0} missing) ({3:n0} errors)", nLoopCount, this.m_FilesDict.Count(), nMissing, nError));
 
             // update the database with the checksum information
             if (bUpdateDatabase)

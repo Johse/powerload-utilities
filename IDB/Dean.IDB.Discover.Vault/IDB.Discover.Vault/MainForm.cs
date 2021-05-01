@@ -104,8 +104,12 @@ namespace IDB.Discover.Vault
         {
             if (InvokeRequired)
             {
-                // create a delegate to handle the text updae
-                UpdateTextDelegate mUpdateTextDelegate = new UpdateTextDelegate(appendRichTextBox);
+                if (mUpdateTextDelegate == null)
+                {
+                    // create a delegate to handle the text update
+                    UpdateTextDelegate mUpdateTextDelegate = new UpdateTextDelegate(appendRichTextBox);
+                }
+
                 BeginInvoke(mUpdateTextDelegate, new object[] { text });
             }
             else
@@ -566,5 +570,34 @@ namespace IDB.Discover.Vault
 
         #endregion modify "Vault.xml" file and adjust the FileIterations as FileIterationRefs
 
+        // method to look at the file 
+        // LocalFullFileName \\talon\rd_data$\inventor\File\00128\00128940.idw
+        // and make an xcopy batch file
+        private void CreateXCopyButton_Click(object sender, EventArgs e)
+        {
+            // create a text file that converts the LocalFullFileName
+            // from "\\talon\rd_data$\" to "C:\Temp\rd_data\"
+            // from "\\Falcon\rddata$\" to "C:\Temp\rddata\"
+
+            // create a list of strings for the content
+            List<string> outputStrings = new List<string>();
+
+            // iterate through each File record
+            foreach (MCDD.DbEntity.File file in mCOIntDbSqlCache.m_FilesDict.Values)
+            {
+                string sTargetFileName = file.LocalFullFileName.Replace(@"\\talon\rd_data$\", @"C:\Temp\rd_data\").Replace(@"\\Falcon\rddata$\", @"C:\Temp\rddata\");
+                string targetPath = Path.GetDirectoryName(sTargetFileName);
+                string outputString = string.Format("XCOPY \"{0}\"\t\"{1}\\\"", file.LocalFullFileName, targetPath);
+
+                outputStrings.Add(outputString);
+            }
+
+            // write to the batch file
+            File.WriteAllLines(@"C:\Temp\RDDataXCopy.txt", outputStrings);
+
+            // display a completed dialog
+            MessageBox.Show(@"View: C:\Temp\RDDataXCopy.txt");
+
+        }
     }
 }
