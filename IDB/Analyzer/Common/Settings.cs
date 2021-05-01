@@ -4,17 +4,18 @@ namespace IDB.Analyzer.Common
 {
     public class Settings
     {
-        private static readonly string _ini;
+        private static readonly string IniFile;
+
         static Settings()
         {
-            _ini = Core.Settings.GetIniFile();
+            IniFile = Core.Settings.GetIniFile();
         }
 
         public static string InventorProjectFile
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("IDB.Analyzer", "InventorProjectFile");
             }
         }
@@ -23,7 +24,7 @@ namespace IDB.Analyzer.Common
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("IDB.Analyzer", "FilestorePath");
             }
         }
@@ -32,7 +33,7 @@ namespace IDB.Analyzer.Common
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("IDB.Analyzer", "WorkingDirectory");
             }
         }
@@ -41,7 +42,7 @@ namespace IDB.Analyzer.Common
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("IDB.Analyzer", "DifferentLoadLocalFilestorePath");
             }
         }

@@ -18,15 +18,15 @@ The powerLoad utilites are:
 * **powerLoad Intermediate Database (IDB):** SQL database for transforming the data to fit to the target Vault
 * **IDB.Load.Files:** Utility to load files from a Windows folder to the Intermediate Database.
 * **IDB.Load.BCP:** Utility to load files and folders from a BCP-package to the Intermediate Database (IDB).
-* **IDB.Load.Vault:** Sample code to extract data from Vault and fill the Intermediate Database (IDB).
+* **IDB.Discover.Vault:** Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB).
 * **IDB.Analyzer.Inventor:** Scans Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
 * **IDB.Analyzer.AutoCAD:** Scans AutoCAD DWGs files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
+* **IDB.Validate.BCP:** Utility to run the Validation scripts without starting the SQL Management Studio UI.
 * **IDB.Translate.BCP:** Creates a BCP-package from the content of the Intermediate Database.
 
 ### Additions
-For validating the BCP package that is created from the IDB there are additional tools:
-* **bcpViewer**, which is part of the bcpToolkit
-* **bcpValidator**, which can be found on https://github.com/coolOrangeLabs/bcpValidator
+To use the powerLoad utilities you need to have the bcpToolkit installed and lisenced. 
+For reviewing the BCP-package that is created from the IDB there is the tool **bcpViewer**, which is part of the bcpToolkit. Please find the description of the bcpViewer on the Product Documentation [coolOrange bcpToolkit](https://www.coolorange.com/wiki/doku.php?id=bcptoolkit).
 
 ## Prerequsites
 * Microsoft SQL Server 2014 or newer
@@ -76,15 +76,13 @@ This section explains how to use and fill the Intermediate Database with the inf
 Utility to load files from Windows folders to the Intermediate Database (IDB)
 
 ### Configuration
-In the configuration file ***DefaultBehaviors.xml*** the default behaviours can be set.
-![image](https://user-images.githubusercontent.com/62716091/81202972-a05dff00-8fc7-11ea-9a4e-c1ce65170e65.png)
+The path with the files to import and the connect string to the SQL server and database can be set in the dialog of the IDB.Load.Files. The settings will be written back to the central configuration file **IDB.Core.ini** when the utility is started. These settings are then the default for the next time any of the powerLoad utilities are started.
 
+In the configuration file ***IDB.Load.Files.Behaviors.ini*** the default behaviours can be set.
 
-* ConnectionString: Connect string to SQL server and database  
-* DataPath: Folderpath that will be scanned. All names of subfolders and files will be transferred to the IDB.
-* Folders: Default settings for folders. The following fields in the IDB will be filled with the assigned value for all folders.
-	* Category
-	* CreateUser 
+The delivery default is: 
+
+![image](Images/pL-CFG-IDB.Load.Files.png)
 
 * Files: Default settings for files. The following fields in the IDB will be filled with the assigned value for all files.
 	* Category
@@ -94,36 +92,75 @@ In the configuration file ***DefaultBehaviors.xml*** the default behaviours can 
 	* RevisionLabel
 	* Classification
 	* CreateUser
+
+* Folders: Default settings for folders. The following fields in the IDB will be filled with the assigned value for all folders.
+	* Category
+	* CreateUser 
 	
 	The elements must not be removed. To not fill the field just delete the value. 
-E.g. < CreateUser >< /CreateUser >
+E.g. `RevisionLabel=`
 
-Please do not rename XML files.
+Please do not rename configration files.
 
 ### Usage
 Start the tool with double click the file IDB.Load.Files.exe.
 In the open dialog specify the ***Path*** and ***SQL Database Connection String*** to import files from the selected folder and sub-folders into the named database.
 
-* Save: The specified path and connect string are written back to file DefaultBehaviors.xml.
-* Refresh: Updating the path and connect string from the file DefaultBehaviors.xml.
-* Start: Start scan and import
-* Cancel: Stop the process. After clicking the button all records and unsaved data will be lost.
-* Reset: Initialize for next run
-* Scan records: File`s counter of entered folder path
-* Import records: Counter of already inserted files
+![image](Images/pL-DLG-IDB.Load.Files.png)
 
-![image](https://user-images.githubusercontent.com/62716091/81194971-89b2aa80-8fbd-11ea-8374-c282ad0bbc2d.png)
+* **Start**: Starts scan and import. The specified path and connect string are written back to the central configuration file IDB.Core.ini.
+* **Cancel**: Stops the process. After clicking the button all records and unsaved data will be lost.
+* **Scan records**: File`s counter of entered folder path
+* **Import records**: Counter of already inserted files
 
 ### Logging
-The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Load.Files.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
 
 ## IDB.Load.BCP
 Utility to load files and folders from a BCP-package to the Intermediate Database (IDB).
-This tool is under construction. Until the new version is available use the IDB.Load.BCP from here: https://github.com/coolOrangeLabs/idb-load-bcp
 
-## IDB.Load.Vault
-Sample code to extract data from Vault and fill the Intermediate Database (IDB). The example uses an Excel table to identify the files to be read out.
+### Configuration
+The path to the Vault.xml and the connect string to the SQL server and database can be set in the dialog of the IDB.Load.Files. The settings will be written back to the configuration file **IDB.Core.ini** when the utility is started. These settings are then the default for the next time any of the powerLoad utilities are started.
+
+### Usage
+ 
+Start the tool with double click the file IDB.Load.BCP.exe.
+In the open dialog specify the Path to scan and import and the SQL Database Connection String. 
+
+![image](Images/pL-DLG-IDB.Load.BCP.png)
+
+* **Start**: Starts scan and import. The specified path and connect string are written back to the central configuration file IDB.Core.ini.
+* **Cancel**: Stops the process. After clicking the button all records and unsaved data will be lost.
+* **Scan records**: File`s counter of entered folder path
+* **Import records**: Counter of already inserted files
+
+After starting the process the utility scans the Vault.xml. It can take some time until the import starts.
+
+### Logging
+The default location for the log file ***IDB.Load.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+There you find information about successful inserts and errors.
+
+### Caution
+If you want to load several bcp-packages into 1 Intermediate Database (IDB) you must remove the UNIQUE for the index [IX_Files] in order the tool does not stop when duplicate files are imported.
+
+## IDB.Discover.Vault
+Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB).
+
+### Usage
+ 
+Start the tool with double click the file Discover.Vault.exe to open the dialog.
+![image](Images/pL-DLG-IDB.Discover.Vault.png)
+
+* **IDB Connection String**: SQL Connection String to the server and database of the powerLoad IDB
+* **Vault DB Connection String**: SQL Connection String to the server and database of the target Vault
+
+* **Transfer Behaviors from Vault to IDB**: Starts scan and import. The specified connect strings are written back to the central configuration file IDB.Core.ini.
+A dialog box appears after the transfer is finished.
+
+### Logging
+The default location for the log file ***IDB.Discover.Vault.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+There you find information about successful inserts and errors.
 
 ## IDB.Analyzer.Inventor
 Utility to scan Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
@@ -132,9 +169,11 @@ Utility to scan Inventor files for missing references that are listed in the IDB
 This tool uses Inventor Apprentice. At least Inventor View must be installed on the machine where this tool is used.
 
 ### Configuration
-In the configuration file ***IDB.Analyzer.Inventor.exe.config*** the connection to the SQL database must be set.
-* At the setting ***name="ConnectionString"*** the connect string to SQL server and database must be set. Use the login information, that you use when you login with the Microsoft SQL Server Management Studio.
-* At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The default is *C:\temp\IDBAnalyze\InventorData*.
+In the configuration file ***IDB.Core.ini*** the connection to the powerLoad IDB must be set in section [IDB], if not already set by the utility IDB.Load.Files or IDB.Load.BCP.
+
+In the configuration file ***IDB.Analyzer.Common.ini*** there are two settings in the section [IDB.Analyzer] that need to be set.
+* **InventorProjectFile**: Inventor project file (IPJ) which is used for the scan. If not set, the current IPJ file in Inventor is used. We reccommend to set the project file, to avoid untrustworthy behavior.
+* **WorkingDirectory**: The working directory for the utility. The default value is *C:\temp\IDBAnalyze\InventorData*.
 
 Do not rename configuration files!
 
@@ -148,10 +187,11 @@ The IDB.Analyzer.Inventor scans:
 * Duplicates: Identical file names in different folders
 
 ### Logging
-The default location for the log file IDB.Load.Files.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Analyzer.Inventor.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'.  
+In the logfile the scan results are listed. Files with an error will get marked with "ERROR", files with a warning with "WARN".
 
 ## IDB.Analyzer.AutoCAD
-Utility to scan AutoCAD files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
+Utility to scan AutoCAD files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.  
 
 ### Prerequsite
 This tool uses AutoCAD Core Console. So at least AutoCAD Vanilla must be installed on the machine where this tool is used.
@@ -160,21 +200,44 @@ This tool uses AutoCAD Core Console. So at least AutoCAD Vanilla must be install
 The folder where the tool is installed, must be configured in the **Trusted Locations** of the AutoCAD Options:
 ![AutoCAD Trusted Locations](Images/pL-TrustedLocations_ACAD.png)
 
-In the configuration file ***IDB.Analyzer.AutoCAD.dll.config*** the connection to the SQL database must be set.
-* At the setting ***name="ConnectionString"*** the connect string to SQL server and database must be set. Use the login information, that you use when you login with the Microsoft SQL Server Management Studio.
-* At the setting ***name="WorkingDirectory*** the working directory can be modified if needed. The default is *C:\temp\IDBAnalyze\AutoCADData*.
+In the powerShell file ***IDB.Analyzer.AutoCAD.ps1*** you need to specify the AutoCAD version that is installed insection *Settings* in line:  
+`$accoreconsole = "C:\Program Files\Autodesk\AutoCAD `***2020***`\accoreconsole.exe"`
+
+If wanted, you also can change the working directory in line:  
+`$workingDirectory = "C:\Temp\IDBAnalyze\AcadXrefAnalysis"`  
+Thre is no need to change the lines:  
+`$scriptfile = "$workingDirectory\IDB.Analyze.AutoCAD.scr"`  
+`$batchfile = "$workingDirectory\IDB.Analyze.AutoCAD.bat"`  
+`$xrefAnalysisMode = "NORMAL"` 
 
 Do not rename configuration files!
 
 ### Usage
-Open the file IDB.Analyzer.AutoCAD.ps1 with Windows PowerShell ISE and run the script. A Windows console will start and the tool scans the AutoCAD files that are listed in the IDB in the field 'LocalFullFileName'.
+Open the file ***IDB.Analyzer.AutoCAD.ps1*** with Windows PowerShell ISE and run the script. A Windows console will start and the tool scans the AutoCAD files that are listed in the IDB in the field 'LocalFullFileName'.
 The IDB.Analyzer.AutoCAD scans:
 * File not exist
 * File invalid (File cannot be opened)
 * Missing references (Xrefs) / Contains missing references
 
 ### Logging
-The default location for the log file IDB.Analyzer.AutoCAD.log is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Analyzer.AutoCAD.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'.  
+In the logfile the scan results are listed. Files with an error will get marked with "ERROR", files with a warning with "WARN". 
+
+## IDB.Validate.BCP
+Utility to run the Validation scripts without starting the SQL Management Studio UI.
+
+### Usage
+ 
+Start the tool with double click the file IDB.Validate.BCP to open the dialog.
+![image](Images/pL-DLG-IDB.Validate.BCP.png)
+
+* **IDB SQL Connection String**: SQL Connection String to the server and database of the powerLoad IDB
+
+* **Validate Database**: Runs the SQl script ***Validate.IDB.sql*** and writes back the results into the fields "**Validation_Status**" and "**Validation_Comment**" in the intermediate Database.
+A dialog box appears after the transfer is finished.
+
+### Logging
+The default location for the log file ***IDB.Validate.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 
 ## IDB.Translate.BCP
 Creates a valid BCP-package from the content of the Intermediate Database.
@@ -185,28 +248,26 @@ This utility uses the bcpDevkit to create the BCP-package. Therefore it must be 
 
 ### Configuration
 The default ordering of the files is 'FileName, RevsionsLabel, Version', which means that files are ordered by the value of the RevisionLable, and if there are identical values the next ordering is by Version.
-The default ordering can be overwritten in the config file ***IDB.Translate.BCP.exe.config*** with the attribute "*CustomFilesOrderByFields*".
-For example, if the files should be ordered by the Version only, set:
-
-![IDB.Translate.BCP-order files](Images/pL-IDB.Translate.BCP-orderFiles.png)
+The default ordering can be overwritten in the config file ***IDB.Translate.BCP.ini*** in the section "*[CustomOrderSettings]*".
+For example, if the files should be ordered by the Version only, set:  
+`CustomFilesOrderByFields=FileName, Version` 
 
 ### Usage
 Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens where the needed settings are set and commands are executed:
 
 ![IDB.Translate.BCP-dialog](Images/pL-DLG-IDBTranslateBCP.png)
 
-* **SQL Database ConnectionString**: Connect string to SQL server and database
+* **IDB SQL ConnectionString**: Connect string to SQL server and intermediate database
 * **Vault Version**: Select version of Vault in wehich will be imported. For Vault 2021 select '2020'.
 * **BCP Export Directory**: Folder in which the BCP package will be exported.
-* **Validate Database**: Runs the SQL script of file Validate.IDB.sql, located in the sub-folder *SQL*. 
+* **Disable Configuration Export**: If active the Vault configuration sections 'Security' and 'Behaviors' are not filled to the generated Vault.xml. We recommend to use this setting, to avoid unintentional overwriting configuration settings in the target Vault.
 * **Create BCP Package**: Exports the data from the IDB into a BCP package in the specified folder.
 
-### Validation
-With the command *Validate Database* you can run a SQL script for validating the data in the Intermediate Database. The script that is executed in in the file Validate.IDB.sql.
-In this way you can add own validations to that script file and test them in the SQL Management Studio before. 
-In the script 2 tables are created in the IDB:
-* **Validation_Status**: Is set to 'Error' on the file, folder or file-file-relation when an error is found in the validations script for the file, folder or file-file-relation
-* **Validation_Comment**: Reason or description for the error
+### Logging
+The default location for the log file ***IDB.Translate.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+There you find information about successful inserts and errors.
+
+
 
 ## Product Documentation
 

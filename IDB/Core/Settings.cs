@@ -11,26 +11,26 @@ namespace IDB.Core
             var assembly = Assembly.GetCallingAssembly();
             var directory = Path.GetDirectoryName(assembly.Location);
             var fileName = Path.GetFileNameWithoutExtension(assembly.Location);
-            var path = Path.Combine(directory, fileName) + additionalName + ".ini";
+            var path = Path.Combine(directory ?? string.Empty, fileName) + additionalName + ".ini";
             return path;
         }
 
-        private static readonly string _ini;
+        private static readonly string IniFile;
         static Settings()
         {
-            _ini = GetIniFile();
+            IniFile = GetIniFile();
         }
 
         public static string IdbConnectionString
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("IDB", "ConnectionString");
             }
             set
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 ini.WriteValue("IDB", "ConnectionString", value);
             }
         }
@@ -39,12 +39,12 @@ namespace IDB.Core
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("IDB", "ImportPath");
             }
             set
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 ini.WriteValue("IDB", "ImportPath", value);
             }
         }
@@ -53,12 +53,12 @@ namespace IDB.Core
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("IDB", "ExportPath");
             }
             set
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 ini.WriteValue("IDB", "ExportPath", value);
             }
         }
@@ -67,12 +67,12 @@ namespace IDB.Core
         {
             get
             {
-                var ini = new IniHandler(GetIniFile());
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("Vault", "ConnectionString");
             }
             set
             {
-                var ini = new IniHandler(GetIniFile());
+                var ini = new IniHandler(IniFile);
                 ini.WriteValue("Vault", "ConnectionString", value);
             }
         }
@@ -81,12 +81,12 @@ namespace IDB.Core
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("Vault", "Version");
             }
             set
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 ini.WriteValue("Vault", "Version", value);
             }
         }

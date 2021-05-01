@@ -4,17 +4,18 @@ namespace IDB.Translate.BCP
 {
     public class Settings
     {
-        private static readonly string _ini;
+        private static readonly string IniFile;
+
         static Settings()
         {
-            _ini = Core.Settings.GetIniFile();
+            IniFile = Core.Settings.GetIniFile();
         }
 
         public static string CustomFilesOrderByFields
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("CustomOrderSettings", "CustomFilesOrderByFields");
             }
         }
@@ -23,7 +24,7 @@ namespace IDB.Translate.BCP
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("CustomOrderSettings", "CustomItemsOrderByFields");
             }
         }

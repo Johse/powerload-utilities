@@ -4,17 +4,18 @@ namespace IDB.Load.Files
 {
     public class Settings
     {
-        private static readonly string _ini;
+        private static readonly string IniFile;
+
         static Settings()
         {
-            _ini = Core.Settings.GetIniFile(".Behaviors");
+            IniFile = Core.Settings.GetIniFile(".Behaviors");
         }
 
         public static string FileCategory
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("Files", "Category");
             }
         }
@@ -23,7 +24,7 @@ namespace IDB.Load.Files
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("Files", "RevisionDefinition");
             }
         }
@@ -32,7 +33,7 @@ namespace IDB.Load.Files
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("Files", "LifeCycleState");
             }
         }
@@ -41,7 +42,7 @@ namespace IDB.Load.Files
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("Files", "LifeCycleDefinition");
             }
         }
@@ -50,7 +51,7 @@ namespace IDB.Load.Files
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("Files", "RevisionLabel");
             }
         }
@@ -59,7 +60,7 @@ namespace IDB.Load.Files
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("Files", "Classification");
             }
         }
@@ -68,7 +69,7 @@ namespace IDB.Load.Files
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("Files", "CreateUser");
             }
         }
@@ -77,7 +78,7 @@ namespace IDB.Load.Files
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("Folders", "Category");
             }
         }
@@ -86,7 +87,7 @@ namespace IDB.Load.Files
         {
             get
             {
-                var ini = new IniHandler(_ini);
+                var ini = new IniHandler(IniFile);
                 return ini.ReadValue("Folders", "CreateUser");
             }
         }

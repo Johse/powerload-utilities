@@ -56,7 +56,6 @@
     <Compile Include="..\..\Core\Properties\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
-    <Compile Include="Convert.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Helper\UnitsHelper.cs" />
     <Compile Include="Settings.cs" />

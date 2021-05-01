@@ -32,7 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="bcpDevKit, Version=20.0.2.24381, Culture=neutral, PublicKeyToken=167b9cea318222fc, processorArchitecture=MSIL" />
+    <Reference Include="bcpDevKit, Version=20.0.5.27983, Culture=neutral, PublicKeyToken=167b9cea318222fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ReferenceAssemblies\bcpDevKit.dll</HintPath>
+    </Reference>
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.2.0.30\lib\net461\Dapper.dll</HintPath>
     </Reference>

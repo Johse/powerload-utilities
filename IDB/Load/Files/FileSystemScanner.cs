@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using log4net;
-using log4net.Repository.Hierarchy;
 
 namespace IDB.Load.Files
 {

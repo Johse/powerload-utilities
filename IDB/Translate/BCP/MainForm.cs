@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
@@ -15,12 +14,12 @@ using bcpDevKit.Entities.General;
 using bcpDevKit.Entities.Items;
 using bcpDevKit.Entities.Vault;
 using Dapper;
-using IDB.Core.DbEntity;
-using IDB.Core.DbLink;
-using IDB.Core.DbRelation;
+using IDB.Core.Data.Entity;
+using IDB.Core.Data.Link;
+using IDB.Core.Data.Relation;
 using IDB.Translate.BCP.Helper;
 using log4net;
-using File = IDB.Core.DbEntity.File;
+using File = IDB.Core.Data.Entity.File;
 
 namespace IDB.Translate.BCP
 {
@@ -176,7 +175,7 @@ namespace IDB.Translate.BCP
                     SetProgress("Progress Total: Reading intermediate DB", progressTotalText, 0, progressTotal);
                     SetProgress("Reading 'Folders' table ...", progressTaskText, 0, progressTask);
                     _folders = connection.Query(@"SELECT * FROM Folders")
-                        .Select(x => new KeyValuePair<long, Folder>(x.FolderID, Convert.To<Folder>(x)))
+                        .Select(x => new KeyValuePair<long, Folder>(x.FolderID, new Folder(x)))
                         .ToDictionary(t => t.Key, t => t.Value);
                     Log.Debug($"Reading Folders table. Done! Number of folders: {_folders.Count}");
 
@@ -186,7 +185,7 @@ namespace IDB.Translate.BCP
                         ? $@"SELECT * FROM Files Where IsExcluded = 0 OR IsExcluded is NULL ORDER BY {Settings.CustomFilesOrderByFields}"
                         : @"SELECT * FROM Files Where IsExcluded = 0 OR IsExcluded is NULL ORDER BY FileName, RevisionLabel, Version";
                     _files = connection.Query(filesQuery)
-                        .Select(x => new KeyValuePair<long, File>(x.FileID, Convert.To<File>(x)))
+                        .Select(x => new KeyValuePair<long, File>(x.FileID, new File(x)))
                         .ToDictionary(t => t.Key, t => t.Value);
                     Log.Debug($"Reading Files table. Done! Number of files: {_files.Count}");
 
@@ -196,14 +195,14 @@ namespace IDB.Translate.BCP
                         ? $@"SELECT * FROM Items ORDER BY {Settings.CustomItemsOrderByFields}"
                         : @"SELECT * FROM Items ORDER BY ItemNumber, RevisionLabel, Version";
                     _items = connection.Query(itemsQuery)
-                        .Select(x => new KeyValuePair<long, Item>(x.ItemID, Convert.To<Item>(x)))
+                        .Select(x => new KeyValuePair<long, Item>(x.ItemID, new Item(x)))
                         .ToDictionary(t => t.Key, t => t.Value);
                     Log.Debug($"Reading Items table. Done! Number of items: {_items.Count}");
 
                     Log.Debug("Reading CustomObjects table ...");
                     SetProgress("Reading 'CustomObjects' table ...", progressTaskText, 45, progressTask);
                     _customObjects = connection.Query(@"SELECT * FROM CustomObjects")
-                        .Select(x => new KeyValuePair<long, CustomObject>(x.CustomObjectID, Convert.To<CustomObject>(x)))
+                        .Select(x => new KeyValuePair<long, CustomObject>(x.CustomObjectID, new CustomObject(x)))
                         .ToDictionary(t => t.Key, t => t.Value);
                     Log.Debug($"Reading CustomObjects table. Done! Number of custom objects: {_items.Count}");
 
@@ -213,8 +212,7 @@ namespace IDB.Translate.BCP
                     SetProgress("Reading 'ItemFileRelations' table ...", progressTaskText, 70, progressTask);
                     _itemFileRelations = connection.Query<ItemFileRelation>(@"SELECT * FROM ItemFileRelations").ToList();
                     SetProgress("Reading 'ItemItemRelations' table ...", progressTaskText, 80, progressTask);
-                    _itemItemRelations = connection.Query(@"SELECT * FROM ItemItemRelations")
-                        .Select(Convert.To<ItemItemRelation>).Cast<ItemItemRelation>().ToList();
+                    _itemItemRelations = connection.Query(@"SELECT * FROM ItemItemRelations").Select(x => new ItemItemRelation(x)).ToList();
 
                     SetProgress("Reading 'CustomObjectCustomObjectLinks' table ...", progressTaskText, 90, progressTask);
                     _customObjectCustomObjectLinks = connection.Query<CustomObjectCustomObjectLink>(@"SELECT * FROM CustomObjectCustomObjectLinks").ToList();

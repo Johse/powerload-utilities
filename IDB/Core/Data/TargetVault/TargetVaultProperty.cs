@@ -1,4 +1,4 @@
-﻿namespace IDB.Core.DbTargetVault
+﻿namespace IDB.Core.Data.TargetVault
 {
     public class TargetVaultProperty
     {

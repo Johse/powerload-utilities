@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
-using IDB.Core.DbEntity;
+using IDB.Core.Data.Base;
 
-namespace IDB.Core.DbRelation
+namespace IDB.Core.Data.Relation
 {
-    public class ItemItemRelation : IDbEntity
+    public class ItemItemRelation : RelationWithUdp
     {
+        // ReSharper disable once InconsistentNaming
         public long ParentItemID { get; set; }
+        // ReSharper disable once InconsistentNaming
         public long ChildItemID { get; set; }
         public int Position { get; set; }
         public decimal Quantity { get; set; }
@@ -13,7 +15,15 @@ namespace IDB.Core.DbRelation
         public string LinkType { get; set; }
         public int InstanceCount { get; set; }
         public decimal UnitSize { get; set; }
+        // ReSharper disable once InconsistentNaming
         public bool CAD { get; set; }
-        public Dictionary<string, object> UserDefinedProperties { get; set; }
+
+        public ItemItemRelation()
+        {
+        }
+
+        public ItemItemRelation(IDictionary<string, object> dapperRow) : base(dapperRow)
+        {
+        }
     }
 }
