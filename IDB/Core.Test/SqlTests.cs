@@ -21,8 +21,6 @@ namespace IDB.Core.Test
                 connection.Open();
                 var sql = "SELECT TOP 1 * FROM Folders WHERE Path = @Path";
                 var folder = connection.SelectEntity<Folder>(sql, new { Path = "$/Designs/Projects/" });
-
-
             }
         }
 
