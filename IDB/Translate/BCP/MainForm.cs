@@ -339,7 +339,7 @@ namespace IDB.Translate.BCP
                                 Log.DebugFormat("Iteration {0} has no LifecycleDefinition or state", iterationCount);
                             }
                             fileObject.LatestIteration.Comment = fileIteration.Comment;
-
+                            fileObject.LatestIteration.ContentSource = fileIteration.ContentSource;
                             fileObject.Category = fileIteration.Category;
                             fileObject.Classification = fileIteration.Classification;
 
