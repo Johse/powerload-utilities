@@ -36,91 +36,95 @@ namespace IDB.Load.BCP
         private static readonly HashSet<string> FileUdps = new HashSet<string>();
         private static readonly Dictionary<string, File> IterationIds = new Dictionary<string, File>();
 
-        static async Task Main(string[] args)
+
+        static void Main(string[] args)
         {
-            InitializeLogging();
-
-            string xmlFullFileName;
-
-            if (args.Length > 0)
+            Task.Run(async () =>
             {
-                if (args.Length != 2)
+                InitializeLogging();
+
+                string xmlFullFileName;
+
+                if (args.Length > 0)
                 {
-                    Log.Error("The first argument must be a SQL server connection string the second the BCP package path!");
+                    if (args.Length != 2)
+                    {
+                        Log.Error("The first argument must be a SQL server connection string the second the BCP package path!");
+                        Console.WriteLine("Press any key to close this window");
+                        Console.ReadLine();
+                        return;
+                    }
+                    _connectionString = args[0];
+                    xmlFullFileName = Path.Combine(args[1], "Vault.xml");
+                }
+                else
+                {
+                    _connectionString = Settings.IdbConnectionString;
+                    xmlFullFileName = Path.Combine(Settings.ImportPath, "Vault.xml");
+                }
+
+                if (!IsValidConnectionString(_connectionString))
+                {
+                    Log.Error($"Cannot connect to SQL Server '{_connectionString}'!");
                     Console.WriteLine("Press any key to close this window");
                     Console.ReadLine();
                     return;
                 }
-                _connectionString = args[0];
-                xmlFullFileName = Path.Combine(args[1], "Vault.xml");
-            }
-            else
-            {
-                _connectionString = Settings.IdbConnectionString;
-                xmlFullFileName = Path.Combine(Settings.ImportPath, "Vault.xml");
-            }
 
-            if (!IsValidConnectionString(_connectionString))
-            {
-                Log.Error($"Cannot connect to SQL Server '{_connectionString}'!");
-                Console.WriteLine("Press any key to close this window");
-                Console.ReadLine();
-                return;
-            }
-
-            if (!System.IO.File.Exists(xmlFullFileName))
-            {
-                Log.Error($"The file '{xmlFullFileName}' does not exist!");
-                Console.WriteLine("Press any key to close this window");
-                Console.ReadLine();
-                return;
-            }
-
-            var folderTask = ReadIdbFolders();
-            var fileTask = ReadIdbFiles();
-            var relationTask = ReadIdbFileFileRelations();
-            var parseTask = ParseVaultXml(xmlFullFileName);
-
-            await Task.WhenAll(folderTask, fileTask, relationTask, parseTask);
-
-            Core.VaultBcp.Vault vault = parseTask.Result;
-
-            if (vault == null)
-                throw new ApplicationException("BCP file cannot be parsed");
-
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                Log.Info("Adding UDP columns...");
-                AddUdpColumns(connection, vault.Behaviors, FileUdps, "File");
-                AddUdpColumns(connection, vault.Behaviors, FolderUdps, "Folder");
-
-                var rootFolder = GetExistingFolder("$");
-                if (rootFolder == null)
+                if (!System.IO.File.Exists(xmlFullFileName))
                 {
-                    rootFolder = new Folder();
-                    rootFolder.Insert(connection);
-                    _processedFolders++;
-                    Log.Info("Insert root: " + rootFolder.Path);
+                    Log.Error($"The file '{xmlFullFileName}' does not exist!");
+                    Console.WriteLine("Press any key to close this window");
+                    Console.ReadLine();
+                    return;
                 }
-                else
-                    Log.Warn("Existing root: " + rootFolder.Path);
 
-                foreach (var bcpFile in vault.Root.Files)
-                    ProcessFile(connection, rootFolder, bcpFile);
+                var folderTask = ReadIdbFolders();
+                var fileTask = ReadIdbFiles();
+                var relationTask = ReadIdbFileFileRelations();
+                var parseTask = ParseVaultXml(xmlFullFileName);
 
-                foreach (var bcpFolder in vault.Root.Folders)
-                    ProcessFolder(connection, rootFolder, bcpFolder);
+                await Task.WhenAll(folderTask, fileTask, relationTask, parseTask);
 
-                ProcessFileAssocs(connection, vault.Root.Files);
-                ProcessFolderAssosc(connection, vault.Root.Folders);
-            }
+                Core.VaultBcp.Vault vault = parseTask.Result;
 
-            Log.Info("Import finished!");
-            Console.WriteLine("Press any key to close this window");
-            Console.ReadLine();
+                if (vault == null)
+                    throw new ApplicationException("BCP file cannot be parsed");
+
+
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    Log.Info("Adding UDP columns...");
+                    AddUdpColumns(connection, vault.Behaviors, FileUdps, "File");
+                    AddUdpColumns(connection, vault.Behaviors, FolderUdps, "Folder");
+
+                    var rootFolder = GetExistingFolder("$");
+                    if (rootFolder == null)
+                    {
+                        rootFolder = new Folder();
+                        rootFolder.Insert(connection);
+                        _processedFolders++;
+                        Log.Info("Insert root: " + rootFolder.Path);
+                    }
+                    else
+                        Log.Warn("Existing root: " + rootFolder.Path);
+
+                    foreach (var bcpFile in vault.Root.Files)
+                        ProcessFile(connection, rootFolder, bcpFile);
+
+                    foreach (var bcpFolder in vault.Root.Folders)
+                        ProcessFolder(connection, rootFolder, bcpFolder);
+
+                    ProcessFileAssocs(connection, vault.Root.Files);
+                    ProcessFolderAssosc(connection, vault.Root.Folders);
+                }
+
+                Log.Info("Import finished!");
+                Console.WriteLine("Press any key to close this window");
+                Console.ReadLine();
+            }).GetAwaiter().GetResult();
         }
 
         private static void InitializeLogging()
