@@ -40,7 +40,7 @@ namespace IDB.Core.Data.Entity
         public void Insert(SqlConnection connection)
         {
             var entity = this.GetDapperEntity<Folder>(nameof(ItemID));
-            ItemID = connection.InsertEntity(entity);
+            ItemID = connection.InsertEntityAndReturnId(entity);
         }
 
         public void Update(SqlConnection connection)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Dapper;
 
 namespace IDB.Core.DapperHelper
@@ -7,19 +8,21 @@ namespace IDB.Core.DapperHelper
     public class DapperEntity
     {
         public readonly string TableName;
-        public readonly string IdColumn;
+        public readonly List<string> IdColumns;
         private readonly List<Tuple<string, string, object>> _tuples;
 
-        public DapperEntity(string tableName, string idColumn)
+        public DapperEntity(string tableName, List<string> idColumns)
         {
             TableName = tableName;
-            IdColumn = idColumn;
+            IdColumns = idColumns;
             _tuples = new List<Tuple<string, string, object>>();
         }
 
         public void Add(string columnName, object value)
         {
-            _tuples.Add(new Tuple<string, string, object>(columnName, columnName.Replace(" ", "_"), value));
+            var rgx = new Regex("[^a-zA-Z0-9_]");
+            _tuples.Add(new Tuple<string, string, object>(columnName, rgx.Replace(columnName, ""), value));
+            //_tuples.Add(new Tuple<string, string, object>(columnName, columnName.Replace(" ", "_"), value));
         }
 
         public DynamicParameters DynamicParameters

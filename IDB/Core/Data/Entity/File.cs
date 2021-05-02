@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using Dapper;
 using IDB.Core.Data.Base;
 using IDB.Core.Data.Interface;
 using IDB.Core.Extensions;
@@ -26,6 +27,7 @@ namespace IDB.Core.Data.Entity
         public string Comment { get; set; }
         public string CreateUser { get; set; }
         public DateTime CreateDate { get; set; }
+        public string ContentSource { get; set; }
         public bool IsHidden { get; set; }
 		public bool IsExcluded { get; set; }
         public int? VaultChecksum { get; set; }
@@ -41,16 +43,47 @@ namespace IDB.Core.Data.Entity
         {
         }
 
+        public File(Folder folder, VaultBcp.File bcpFile, VaultBcp.File.Revision bcpRevision, VaultBcp.File.Revision.Iteration bcpIteration, int version)
+        {
+            LocalFullFileName = bcpIteration.LocalPath;
+            FolderID = folder.FolderID;
+            FileName = bcpFile.Name;
+            Category = bcpFile.Category;
+            Classification = bcpFile.Classification;
+            RevisionLabel = bcpRevision.Label;
+            RevisionDefinition = bcpRevision.Definition;
+            Version = version;
+            LifecycleState = bcpIteration.State?.Name;
+            LifecycleDefinition = bcpIteration.State?.Definition;
+            Comment = bcpIteration.Comment;
+            CreateUser = bcpIteration.Created.User;
+            CreateDate = bcpIteration.Created.Date;
+            ContentSource = bcpIteration.ContentSource;
+            IsHidden = bcpFile.Hidden?.ToUpper() == "TRUE";
+            Tag = bcpIteration.Id;
+
+            foreach (var bcpUdp in bcpIteration.UDPs)
+                UserDefinedProperties.Add(bcpUdp.Name, bcpUdp.Value);
+
+            if (System.IO.File.Exists(LocalFullFileName))
+                LocalFileChecksum = Core.File.Checksum.CalcChecksum(LocalFullFileName);
+        }
+
         public void Insert(SqlConnection connection)
         {
             var entity = this.GetDapperEntity<File>(nameof(FileID));
-            FileID = connection.InsertEntity(entity);
+            FileID = connection.InsertEntityAndReturnId(entity);
         }
 
         public void Update(SqlConnection connection)
         {
             var entity = this.GetDapperEntity<File>(nameof(FileID));
             connection.UpdateEntity(entity);
+        }
+
+        public static IEnumerable<dynamic> GetAllFiles(SqlConnection connection, string sql = @"SELECT * FROM Files")
+        {
+            return connection.Query(sql);
         }
     }
 }

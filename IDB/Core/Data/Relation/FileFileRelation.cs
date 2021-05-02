@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
+using Dapper;
 using IDB.Core.Data.Base;
 using IDB.Core.Data.Interface;
+using IDB.Core.Extensions;
 
 namespace IDB.Core.Data.Relation
 {
@@ -25,14 +27,32 @@ namespace IDB.Core.Data.Relation
         {
         }
 
+        public FileFileRelation(long parentFileId, long childFileId, bool isAttachment, bool isDependency, string source, string refId)
+        {
+            ParentFileID = parentFileId;
+            ChildFileID = childFileId;
+            IsAttachment = isAttachment;
+            IsDependency = isDependency;
+            NeedsResolution = isDependency;
+            Source = source;
+            RefId = refId;
+        }
+
         public void Insert(SqlConnection connection)
         {
-            throw new System.NotImplementedException();
+            var entity = this.GetDapperEntity<FileFileRelation>(new[] { nameof(ParentFileID), nameof(ChildFileID) });
+            connection.InsertEntity(entity);
         }
 
         public void Update(SqlConnection connection)
         {
-            throw new System.NotImplementedException();
+            var entity = this.GetDapperEntity<FileFileRelation>(new[] {nameof(ParentFileID), nameof(ChildFileID)});
+            connection.UpdateEntity(entity);
+        }
+
+        public static IEnumerable<dynamic> GetAllFileFileRelations(SqlConnection connection, string sql = @"SELECT * FROM FileFileRelations")
+        {
+            return connection.Query(sql);
         }
     }
 }

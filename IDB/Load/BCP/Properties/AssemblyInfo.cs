@@ -5,8 +5,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("IDB.Load.BCP")]
-[assembly: AssemblyDescription("Utility to load files and folders from a BCP-package to the Intermediate Database (IDB)")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyProduct("IDB.Load.BCP")]
+
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
@@ -14,4 +15,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f05c8e0e-c860-45cd-be2f-3f37838a75b1")]
+[assembly: Guid("4bd44982-4930-44b3-bcb4-c72a347dacf0")]

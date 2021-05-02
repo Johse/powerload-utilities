@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using IDB.Core.DapperHelper;
 using IDB.Core.Data.Interface;
 
@@ -8,8 +9,13 @@ namespace IDB.Core.Extensions
     {
         public static DapperEntity GetDapperEntity<T>(this IUdp entity, string idColumn)
         {
+            return GetDapperEntity<T>(entity, new[] {idColumn});
+        }
+    
+        public static DapperEntity GetDapperEntity<T>(this IUdp entity, string[] idColumns)
+        {
             var tableName = typeof(T).Name + "s";
-            var dapperEntity = new DapperEntity(tableName, idColumn);
+            var dapperEntity = new DapperEntity(tableName, new List<string>(idColumns));
 
             var properties = typeof(T).GetProperties();
             foreach (PropertyInfo property in properties)

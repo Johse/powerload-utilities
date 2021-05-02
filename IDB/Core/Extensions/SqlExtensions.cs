@@ -12,7 +12,7 @@ namespace IDB.Core.Extensions
 {
     public static class SqlExtensions
     {
-        public static long InsertEntity(this SqlConnection connection, DapperEntity dapperEntity)
+        public static long InsertEntityAndReturnId(this SqlConnection connection, DapperEntity dapperEntity)
         {
             if (connection.State != ConnectionState.Open)
                 return -1;
@@ -23,12 +23,12 @@ namespace IDB.Core.Extensions
                 sb.Append($"INSERT INTO [dbo].[{dapperEntity.TableName}]");
                 sb.Append("(");
                 sb.Append(string.Join(", ", dapperEntity.ColumnsAndParams
-                    .Where(p => !p.ParamName.Equals(dapperEntity.IdColumn))
+                    .Where(p => !dapperEntity.IdColumns.Contains(p.ParamName))
                     .OrderBy(p => p.ColumnName)
                     .Select(p => $"[{p.ColumnName}]")));
                 sb.Append(") VALUES (");
                 sb.Append(string.Join(", ", dapperEntity.ColumnsAndParams
-                    .Where(p => !p.ParamName.Equals(dapperEntity.IdColumn))
+                    .Where(p => !dapperEntity.IdColumns.Contains(p.ParamName))
                     .OrderBy(p => p.ColumnName)
                     .Select(p => $"@{p.ParamName}")));
                 sb.Append(")");
@@ -45,6 +45,36 @@ namespace IDB.Core.Extensions
             }
         }
 
+        public static bool InsertEntity(this SqlConnection connection, DapperEntity dapperEntity)
+        {
+            if (connection.State != ConnectionState.Open)
+                return false;
+
+            try
+            {
+                var sb = new StringBuilder();
+                sb.Append($"INSERT INTO [dbo].[{dapperEntity.TableName}]");
+                sb.Append("(");
+                sb.Append(string.Join(", ", dapperEntity.ColumnsAndParams
+                    .OrderBy(p => p.ColumnName)
+                    .Select(p => $"[{p.ColumnName}]")));
+                sb.Append(") VALUES (");
+                sb.Append(string.Join(", ", dapperEntity.ColumnsAndParams
+                    .OrderBy(p => p.ColumnName)
+                    .Select(p => $"@{p.ParamName}")));
+                sb.Append(")");
+                var sql = sb.ToString();
+
+                connection.Execute(sql, dapperEntity.DynamicParameters);
+                return true;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
         public static bool UpdateEntity(this SqlConnection connection, DapperEntity dapperEntity)
         {
             if (connection.State != ConnectionState.Open)
@@ -55,10 +85,15 @@ namespace IDB.Core.Extensions
                 var sb = new StringBuilder();
                 sb.Append($"UPDATE [dbo].[{dapperEntity.TableName}] SET ");
                 sb.Append(string.Join(", ", dapperEntity.ColumnsAndParams
-                    .Where(p => !p.ParamName.Equals(dapperEntity.IdColumn))
+                    .Where(p => !dapperEntity.IdColumns.Contains(p.ParamName))
                     .OrderBy(p => p.ColumnName)
                     .Select(p => $"[{p.ColumnName}] = @{p.ParamName}")));
-                sb.Append($" WHERE [{dapperEntity.IdColumn}] = @{dapperEntity.IdColumn}");
+                
+                var where = new List<string>();
+                foreach (var idColumn in dapperEntity.IdColumns)
+                    where.Add($"[{idColumn}] = @{idColumn}");
+                sb.Append($" WHERE {string.Join(" AND ", where)}");
+
                 var sql = sb.ToString();
 
                 connection.Execute(sql, dapperEntity.DynamicParameters);

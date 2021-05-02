@@ -69,6 +69,7 @@
     <Compile Include="Data\TargetVault\TargetVaultRevision.cs" />
     <Compile Include="DapperHelper\ColumnAttribute.cs" />
     <Compile Include="DapperHelper\DapperEntity.cs" />
+    <Compile Include="VaultBcp\Vault.cs" />
     <Compile Include="Extensions\DapperExtensions.cs" />
     <Compile Include="Extensions\SqlExtensions.cs" />
     <Compile Include="File\Checksum.cs" />

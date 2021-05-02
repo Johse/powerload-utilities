@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
+using Dapper;
 using IDB.Core.Data.Base;
 using IDB.Core.Data.Interface;
 using IDB.Core.Extensions;
@@ -27,22 +29,53 @@ namespace IDB.Core.Data.Entity
 
         public Folder()
         {
+            FolderName = "$";
+            Path = "$";
+            CreateDate = DateTime.Now;
         }
 
         public Folder(IDictionary<string, object> dapperRow) : base(dapperRow)
         {
         }
 
+        public Folder(Folder parent, VaultBcp.Folder bcpFolder)
+        {
+            if (parent == null)
+                throw new ArgumentNullException(nameof(parent));
+
+            if (bcpFolder == null)
+                throw new ArgumentNullException(nameof(bcpFolder));
+
+            FolderName = bcpFolder.Name;
+            Path = parent.Path + "/" + bcpFolder.Name;
+            IsLibrary = bcpFolder.IsLibrary?.ToUpper() == "TRUE";
+            Category = bcpFolder.Category;
+            LifecycleState = bcpFolder.State?.Name;
+            LifecycleDefinition = bcpFolder.State?.Definition;
+            CreateUser = bcpFolder.Created.User;
+            CreateDate = bcpFolder.Created.Date;
+        }
+
         public void Insert(SqlConnection connection)
         {
             var entity = this.GetDapperEntity<Folder>(nameof(FolderID));
-            FolderID = connection.InsertEntity(entity);
+            FolderID = connection.InsertEntityAndReturnId(entity);
         }
 
         public void Update(SqlConnection connection)
         {
             var entity = this.GetDapperEntity<Folder>(nameof(FolderID));
             connection.UpdateEntity(entity);
+        }
+
+        //public static Folder GetFolderByPath(SqlConnection connection, string path)
+        //{
+        //    return connection.SelectEntity<Folder>("SELECT * FROM Folders WHERE Path = @Path", new {Path = path});
+        //}
+
+        public static IEnumerable<dynamic> GetAllFolders(SqlConnection connection, string sql = @"SELECT * FROM Folders")
+        {
+            return connection.Query(sql);
         }
     }
 }
