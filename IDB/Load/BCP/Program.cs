@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using Dapper;
 using IDB.Core;
 using IDB.Core.Data.Relation;
+using IDB.Core.Data.Unique;
 using log4net;
 using File = IDB.Core.Data.Entity.File;
 using Folder = IDB.Core.Data.Entity.Folder;
@@ -43,25 +44,31 @@ namespace IDB.Load.BCP
             {
                 InitializeLogging();
 
-                string xmlFullFileName;
-
+                string directory;
                 if (args.Length > 0)
                 {
                     if (args.Length != 2)
                     {
-                        Log.Error("The first argument must be a SQL server connection string the second the BCP package path!");
+                        Log.Error(
+                            "The first argument must be a SQL server connection string the second the BCP package path!");
                         Console.WriteLine("Press any key to close this window");
                         Console.ReadLine();
                         return;
                     }
+
                     _connectionString = args[0];
-                    xmlFullFileName = Path.Combine(args[1], "Vault.xml");
+                    directory = args[1];
                 }
                 else
                 {
                     _connectionString = Settings.IdbConnectionString;
-                    xmlFullFileName = Path.Combine(Settings.ImportPath, "Vault.xml");
+                    directory = Settings.ImportPath;
                 }
+
+                Log.Info($"Connection String: {_connectionString}");
+                Log.Info($"Import Directory: {directory}");
+
+                var xmlFullFileName = Path.Combine(directory, "Vault.xml");
 
                 if (!IsValidConnectionString(_connectionString))
                 {
@@ -91,7 +98,6 @@ namespace IDB.Load.BCP
                 if (vault == null)
                     throw new ApplicationException("BCP file cannot be parsed");
 
-
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     connection.Open();
@@ -100,12 +106,12 @@ namespace IDB.Load.BCP
                     AddUdpColumns(connection, vault.Behaviors, FileUdps, "File");
                     AddUdpColumns(connection, vault.Behaviors, FolderUdps, "Folder");
 
+                    _processedFolders++;
                     var rootFolder = GetExistingFolder("$");
                     if (rootFolder == null)
                     {
                         rootFolder = new Folder();
                         rootFolder.Insert(connection);
-                        _processedFolders++;
                         Log.Info("Insert root: " + rootFolder.Path);
                     }
                     else

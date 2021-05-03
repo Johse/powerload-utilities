@@ -7,7 +7,7 @@ using log4net;
 
 namespace IDB.Analyzer.Inventor.Helper
 {
-    class ApprenticeServerWrapper
+    public class ApprenticeServerWrapper
     {
         private static readonly ILog Log = LogManager.GetLogger("IDBAnalyzeInventor");
 
