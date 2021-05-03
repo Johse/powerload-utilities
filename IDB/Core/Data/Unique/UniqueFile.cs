@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IDB.Load.BCP
+namespace IDB.Core.Data.Unique
 {
     public class UniqueFile
     {
@@ -28,12 +28,21 @@ namespace IDB.Load.BCP
     {
         public bool Equals(UniqueFile x, UniqueFile y)
         {
-            return y != null && x != null && x.FileName == y.FileName && x.FolderId == y.FolderId && x.CreateDate.Ticks == y.CreateDate.Ticks;
+            if (x == null || y == null) return false;
+            if (object.ReferenceEquals(x, y)) return true;
+            return x.FileName == y.FileName && x.FolderId == y.FolderId && x.CreateDate.ToString("G") == y.CreateDate.ToString("G");
         }
 
         public int GetHashCode(UniqueFile obj)
         {
-            return $"{obj.FileName}{obj.FolderId}{obj.CreateDate.Ticks}".GetHashCode();
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + obj.FileName.GetHashCode();
+                hash = hash * 23 + obj.FolderId.GetHashCode();
+                hash = hash * 23 + obj.CreateDate.ToString("G").GetHashCode();
+                return hash;
+            }
         }
     }
 }

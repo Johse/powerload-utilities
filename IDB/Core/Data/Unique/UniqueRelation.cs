@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace IDB.Load.BCP
+namespace IDB.Core.Data.Unique
 {
     public class UniqueRelation
     {
