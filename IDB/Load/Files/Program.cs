@@ -187,7 +187,7 @@ namespace IDB.Load.Files
             _processedIterations++;
 
             var fileName = Path.GetFileName(fullFileName);
-            var createdDate = System.IO.File.GetLastWriteTimeUtc(fullFileName);
+            var createdDate = System.IO.File.GetCreationTimeUtc(fullFileName);
 
             var file = GetExistingFile(fileName, parentFolder.FolderID, createdDate);
             if (file == null)
