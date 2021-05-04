@@ -39,6 +39,8 @@ namespace IDB.Discover.Vault
             this.btnTransfer = new System.Windows.Forms.Button();
             this.txtVaultConnection = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtKnowledgeVaultConnectionString = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -68,10 +70,10 @@ namespace IDB.Discover.Vault
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnClose.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.Location = new System.Drawing.Point(322, 197);
+            this.btnClose.Location = new System.Drawing.Point(322, 267);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(150, 32);
-            this.btnClose.TabIndex = 5;
+            this.btnClose.TabIndex = 7;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.OnBtnCloseClick);
@@ -92,10 +94,10 @@ namespace IDB.Discover.Vault
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnTransfer.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnTransfer.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTransfer.Location = new System.Drawing.Point(12, 128);
+            this.btnTransfer.Location = new System.Drawing.Point(12, 179);
             this.btnTransfer.Name = "btnTransfer";
             this.btnTransfer.Size = new System.Drawing.Size(460, 32);
-            this.btnTransfer.TabIndex = 4;
+            this.btnTransfer.TabIndex = 6;
             this.btnTransfer.Text = "Transfer Behaviors from Vault to IDB";
             this.btnTransfer.UseVisualStyleBackColor = true;
             this.btnTransfer.Click += new System.EventHandler(this.OnBtnTransferClick);
@@ -122,12 +124,36 @@ namespace IDB.Discover.Vault
             this.label2.TabIndex = 2;
             this.label2.Text = "Vault DB Connection String";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(12, 97);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(251, 15);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "Knowledge Vault Master DB Connection String";
+            // 
+            // txtKnowledgeVaultConnectionString
+            // 
+            this.txtKnowledgeVaultConnectionString.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtKnowledgeVaultConnectionString.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtKnowledgeVaultConnectionString.Location = new System.Drawing.Point(12, 115);
+            this.txtKnowledgeVaultConnectionString.Name = "txtKnowledgeVaultConnectionString";
+            this.txtKnowledgeVaultConnectionString.Size = new System.Drawing.Size(460, 23);
+            this.txtKnowledgeVaultConnectionString.TabIndex = 5;
+            this.txtKnowledgeVaultConnectionString.Text = "Server=(local)\\AUTODESKVAULT;Database=Vault;Trusted_Connection=True;";
+            this.txtKnowledgeVaultConnectionString.TextChanged += new System.EventHandler(this.OnTxtKnowledgeVaultConnectionStringTextChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(484, 241);
+            this.ClientSize = new System.Drawing.Size(484, 311);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.txtKnowledgeVaultConnectionString);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtVaultConnection);
             this.Controls.Add(this.btnTransfer);
@@ -153,6 +179,8 @@ namespace IDB.Discover.Vault
         private Button btnTransfer;
         private TextBox txtVaultConnection;
         private Label label2;
+        private Label label3;
+        private TextBox txtKnowledgeVaultConnectionString;
     }
 }
 

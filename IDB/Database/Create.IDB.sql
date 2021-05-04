@@ -468,6 +468,18 @@ CREATE TABLE [dbo].[TargetVaultRevisions](
 	[RevisionLabel] [nvarchar](50) NOT NULL
 ) ON [PRIMARY]
 GO
+/****** Object:  Table [dbo].[TargetVaultUsers]    Script Date: 04.05.2021 09:35:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TargetVaultUsers](
+	[UserName] [nvarchar](255) NOT NULL,
+	[SuperUser] [bit] NOT NULL,
+	[AuthType] [int] NOT NULL,
+	[Active] [bit] NOT NULL
+) ON [PRIMARY]
+GO
 SET ANSI_PADDING ON
 GO
 /****** Object:  Index [IX_CustomObjects]    Script Date: 29.04.2021 08:33:32 ******/

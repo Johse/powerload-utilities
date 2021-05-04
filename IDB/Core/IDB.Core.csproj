@@ -66,6 +66,7 @@
     <Compile Include="Data\TargetVault\TargetVaultFile.cs" />
     <Compile Include="Data\TargetVault\TargetVaultLifeCycle.cs" />
     <Compile Include="Data\TargetVault\TargetVaultProperty.cs" />
+    <Compile Include="Data\TargetVault\TargetVaultUser.cs" />
     <Compile Include="Data\TargetVault\TargetVaultRevision.cs" />
     <Compile Include="DapperHelper\ColumnAttribute.cs" />
     <Compile Include="DapperHelper\DapperEntity.cs" />

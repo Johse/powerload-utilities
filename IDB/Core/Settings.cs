@@ -90,5 +90,19 @@ namespace IDB.Core
                 ini.WriteValue("Vault", "Version", value);
             }
         }
+
+        public static string KnowledgeVaultConnectionString
+        {
+            get
+            {
+                var ini = new IniHandler(IniFile);
+                return ini.ReadValue("KnowledgeVaultMaster", "ConnectionString");
+            }
+            set
+            {
+                var ini = new IniHandler(IniFile);
+                ini.WriteValue("KnowledgeVaultMaster", "ConnectionString", value);
+            }
+        }
     }
 }

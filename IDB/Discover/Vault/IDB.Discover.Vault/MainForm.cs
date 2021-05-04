@@ -18,6 +18,7 @@ namespace IDB.Discover.Vault
 
             txtConnectionString.Text = Settings.IdbConnectionString;
             txtVaultConnection.Text = Settings.VaultConnectionString;
+            txtKnowledgeVaultConnectionString.Text = Settings.KnowledgeVaultConnectionString;
         }
 
         private void InitializeLogging()
@@ -35,7 +36,8 @@ namespace IDB.Discover.Vault
             {
                 string loadConnectionString = txtConnectionString.Text;
                 string vaultConnectionString = txtVaultConnection.Text;
-                VaultDbExtractor.Transfer(vaultConnectionString, loadConnectionString);
+                string knowledgeVaultConnectionString = txtVaultConnection.Text;
+                VaultDbExtractor.Transfer(vaultConnectionString, knowledgeVaultConnectionString, loadConnectionString);
 
                 Log.Info("Successfully transferred target Vault behaviors to IDB");
                 MessageBox.Show(
@@ -69,6 +71,11 @@ namespace IDB.Discover.Vault
         private void OnTxtVaultConnectionTextChanged(object sender, EventArgs e)
         {
             Settings.VaultConnectionString = txtVaultConnection.Text;
+        }
+
+        private void OnTxtKnowledgeVaultConnectionStringTextChanged(object sender, EventArgs e)
+        {
+            Settings.KnowledgeVaultConnectionString = txtKnowledgeVaultConnectionString.Text;
         }
     }
 }
