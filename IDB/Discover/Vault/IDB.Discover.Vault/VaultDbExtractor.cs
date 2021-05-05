@@ -171,7 +171,7 @@ namespace IDB.Discover.Vault
             await Task.Run(() =>
             {
                 var sql = @"
-                SELECT [UserGroupName] as UserName, [SuperUser], [AuthType], [Active] FROM [KnowledgeVaultMaster].[dbo].[UserGroup] WHERE IsGroup = 0";
+                SELECT [UserGroupName] as UserName, [AuthType], [Active] FROM [KnowledgeVaultMaster].[dbo].[UserGroup] WHERE IsGroup = 0";
 
                 var table = "TargetVaultUsers";
                 Log.Info($"Transferring Vault information to IDB table '{table}'");

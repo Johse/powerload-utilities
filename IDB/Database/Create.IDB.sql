@@ -475,7 +475,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TargetVaultUsers](
 	[UserName] [nvarchar](255) NOT NULL,
-	[SuperUser] [bit] NOT NULL,
 	[AuthType] [int] NOT NULL,
 	[Active] [bit] NOT NULL
 ) ON [PRIMARY]
