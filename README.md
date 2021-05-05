@@ -241,14 +241,25 @@ In the logfile the scan results are listed. Files with an error will get marked 
 Utility to run the Validation scripts without starting the SQL Management Studio UI.
 
 ### Usage
- 
 Start the tool with double click the file IDB.Validate.BCP to open the dialog.
 ![image](Images/pL-DLG-IDB.Validate.BCP.png)
 
 * **IDB SQL Connection String**: SQL Connection String to the server and database of the powerLoad IDB
 
-* **Validate Database**: Runs the SQl script ***Validate.IDB.sql*** and writes back the results into the fields "**Validation_Status**" and "**Validation_Comment**" in the intermediate Database.
-A dialog box appears after the transfer is finished.
+* **Validate Database**: Runs the SQl script ***Validate.IDB.sql*** and writes back the results into the fields "**Validation_Status**" and "**Validation_Comment**" in the intermediate Database. 
+A dialog box appears after the transfer is finished, telling whether errors were found.
+
+#### Validations
+##### Validations for Folders
+* User-Validation: 
+* Duplicate-Folder-Validation:
+* Mandotary-Data-Validation:
+* Validation for endless loop:
+* LifecycleDefinition-Validation: Validation whether LifecycleDefinition does exist in target Vault
+* LifecycleState-Validation: Validation whether LifecycleState does exist in target Vault for assigned LifecycleDefinition
+* UDP-Validation:
+
+##### Validations for Files
 
 ### Logging
 The default location for the log file ***IDB.Validate.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
