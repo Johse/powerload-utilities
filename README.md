@@ -249,17 +249,34 @@ Start the tool with double click the file IDB.Validate.BCP to open the dialog.
 * **Validate Database**: Runs the SQl script ***Validate.IDB.sql*** and writes back the results into the fields "**Validation_Status**" and "**Validation_Comment**" in the intermediate Database. 
 A dialog box appears after the transfer is finished, telling whether errors were found.
 
-#### Validations
-##### Validations for Folders
-* User-Validation: 
-* Duplicate-Folder-Validation:
-* Mandotary-Data-Validation:
-* Validation for endless loop:
-* LifecycleDefinition-Validation: Validation whether LifecycleDefinition does exist in target Vault
-* LifecycleState-Validation: Validation whether LifecycleState does exist in target Vault for assigned LifecycleDefinition
-* UDP-Validation:
+### Validations
+In the SQl script file ***Validate.IDB.sql*** there are alredy a lot of validations to prove the data in the IDB that a valid BCP-package can be created.
+Use these SQL scripts a samples and extend them to your needs.
+The following validations are delivered in the ***Validate.IDB.sql***:
 
-##### Validations for Files
+#### Validations for Folders
+* User-Validation: Checks whether the user in field 'CreateUser' exists in the snapshot oi the target Vault (TargetVaultUsers).
+* Duplicate-Folder-Validation: Search for duplicate foldres.
+* Mandotary-Data-Validation: Checks whether mandatury fields like FolderName, Category and CreateDate are filled
+* Validation for endless loop: Check for cyclic references that would end up in an endless loop
+* Category-Validation: Validation whether Categorys do exist in target Vault
+* LifecycleDefinition-Validation: Validation whether LifecycleDefinitions do exist in target Vault
+* LifecycleState-Validation: Validation whether LifecycleStates do exist in target Vault for assigned LifecycleDefinition
+* UDP-Validation: Validation whether UPDs do exist in target
+
+#### Validations for Files
+* User-Validation: Checks whether the user in field 'CreateUser' exists in the snapshot oi the target Vault (TargetVaultUsers).
+* Mandotary-Data-Validation: Checks whether mandatury fields like FolderName, Category and CreateDate are filled
+* Filename-Validation: Checks whether full filename is longer than 260 characters
+* Category-Validation: Validation whether Categorys do exist in target Vault
+* LifecycleDefinition-Validation: Validation whether LifecycleDefinitions do exist in target Vault
+* LifecycleState-Validation: Validation whether LifecycleStates do exist in target Vault for assigned LifecycleDefinition
+* RevisionDefinition-Validation: Validation whether RevisionDefinitions do exist in target Vault
+* UDP-Validation: Validation whether UPDs do exist in target
+
+#### Validations for FileFileRelation
+* Dependency/Attachment-Validation: Checks whether FileFileRelation  either field 'IsDependency' or 'IsAttachment' is set to 'True', but both do not have the same value.
+* RefId-Validation: check whether RefId IS NOT filled, when 'IsDependency' is 'true'
 
 ### Logging
 The default location for the log file ***IDB.Validate.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
