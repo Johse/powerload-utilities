@@ -18,7 +18,7 @@ The powerLoad utilites are:
 * **powerLoad Intermediate Database (IDB):** SQL database for transforming the data to fit to the target Vault
 * **IDB.Load.Files:** Utility to load files from a Windows folder to the Intermediate Database.
 * **IDB.Load.BCP:** Utility to load files and folders from a BCP-package to the Intermediate Database (IDB).
-* **IDB.Discover.Vault:** Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB).
+* **IDB.Discover.Vault:** Utility to copy a snapshot of the target Vault configuration to the powerLoad Intermediate Database (IDB).
 * **IDB.Analyzer.Inventor:** Scans Inventor files for missing references that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
 * **IDB.Analyzer.AutoCAD:** Scans AutoCAD DWGs files for missing Xrefs that are listed in the IDB in the field 'LocalFullFileName'. Additionally the RefID from the reference is extracted and written back to the IDB.
 * **IDB.Validate.BCP:** Utility to run the Validation scripts without starting the SQL Management Studio UI.
@@ -71,13 +71,32 @@ This section explains how to use and fill the Intermediate Database with the inf
 ### DB Structure
 ![Database Schema](Images/DB_Schema.png)
 
+## IDB.Core.ini
+The IDB.Core.ini is the central configuration file with common settings for the utilites with 3 sections.  
+* **[IDB]**: Section for the intermeadate database (IDB) 
+	* **ConnectionString**: SQL Connection String to the server and database of the powerLoad IDB  
+		Default: `ConnectionString=Server=(local)\AUTODESKVAULT;Database=Load;Trusted_Connection=True;` 
+	* **ImportPath**: The path with the sub-folders and files to import into the intermeadate Database  
+		Default: `ImportPath=C:\TEMP\Source Directory` 
+	* **ExortPath**: Folder in which the BCP package will be exported.  
+		Default: `C:\TEMP\VaultBCP\Target Directory` 
+* **[Vault]**: Section for the target Vault database 
+	* **Connection String**: SQL Connection String to the server and database of the target Vault  
+		Default: `ConnectionString=Server=(local)\AUTODESKVAULT;Database=Vault;Trusted_Connection=True;`
+* **[KnowledgeVaultMaster]**: Section for the Knowledge Vault Master database
+	* **Connection String**: SQL Connection String to the server and Knowledge Vault Master database of the target Vault  
+		Default: `ConnectionString=Server=(local)\AUTODESKVAULT;Database=KnowledgeVaultMaster;Trusted_Connection=True;`
    
 ## IDB.Load.Files
 Utility to load files from Windows folders to the Intermediate Database (IDB)
 
 ### Configuration
-The path with the files to import and the connect string to the SQL server and database can be set in the dialog of the IDB.Load.Files. The settings will be written back to the central configuration file **IDB.Core.ini** when the utility is started. These settings are then the default for the next time any of the powerLoad utilities are started.
+#### General Settings
+The settings to use the utility are set in the central configuration file **IDB.Core.ini** in section [IDB]: 
+ConnectionString: SQL Connection String to the server and database of the powerLoad IDB 
+ImportPath: The path with the sub-folders and files to import into the intermeadate Database
 
+#### Import Behavior Settings
 In the configuration file ***IDB.Load.Files.Behaviors.ini*** the default behaviours can be set.
 
 The delivery default is: 
@@ -104,14 +123,11 @@ Please do not rename configration files.
 
 ### Usage
 Start the tool with double click the file IDB.Load.Files.exe.
-In the open dialog specify the ***Path*** and ***SQL Database Connection String*** to import files from the selected folder and sub-folders into the named database.
+In the Windows command line window you can see the progress of the import.
+Incase one of the parameters is not set correctly the utility will stop and show an error message in the command line window.
 
 ![image](Images/pL-DLG-IDB.Load.Files.png)
 
-* **Start**: Starts scan and import. The specified path and connect string are written back to the central configuration file IDB.Core.ini.
-* **Cancel**: Stops the process. After clicking the button all records and unsaved data will be lost.
-* **Scan records**: File`s counter of entered folder path
-* **Import records**: Counter of already inserted files
 
 ### Logging
 The default location for the log file ***IDB.Load.Files.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
@@ -145,18 +161,20 @@ There you find information about successful inserts and errors.
 If you want to load several bcp-packages into 1 Intermediate Database (IDB) you must remove the UNIQUE for the index [IX_Files] in order the tool does not stop when duplicate files are imported.
 
 ## IDB.Discover.Vault
-Utility to query Vault for existing files and replace these files in the powerLoad Intermediate Database (IDB).
+Utility to query the target Vault and copy a snapshot of the target Vault configuration to the powerLoad Intermediate Database (IDB), that can be used for the validations. If the configuration of the target Vault changes the IDB.Discover.Vault must be run again.
 
 ### Usage
  
 Start the tool with double click the file Discover.Vault.exe to open the dialog.
 ![image](Images/pL-DLG-IDB.Discover.Vault.png)
 
-* **IDB Connection String**: SQL Connection String to the server and database of the powerLoad IDB
+* **IDB Connection String**: SQL Connection String to the server and database of the powerLoad IDB 
 * **Vault DB Connection String**: SQL Connection String to the server and database of the target Vault
+* **Knowledge Vault Master DB Connection String**: SQL Connection String to the server and Knowledge Vault Master database of the target Vault
 
-* **Transfer Behaviors from Vault to IDB**: Starts scan and import. The specified connect strings are written back to the central configuration file IDB.Core.ini.
-A dialog box appears after the transfer is finished.
+* **Transfer Behaviors from Vault to IDB**: Starts to query the target Vault configuration and imports the found behaviors, users and files to the tables 'TargetVaultCategories', 'TargetVaultFiles', 'TargetVaultLifeCycles', 'TargetVaultProperties', 'TargetVaultRevisions' and 'TargetVaultUsers'.  
+The specified connection strings are written back to the central configuration file IDB.Core.ini. 
+A dialog box appears after the transfer is finished with the message "Successfully transferred target Vault behaviors to IDB". 
 
 ### Logging
 The default location for the log file ***IDB.Discover.Vault.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
