@@ -319,9 +319,17 @@ namespace IDB.Load.Files
 
             if (extension.Equals(".dwg"))
             {
-                if (Analyzer.Inventor.Helper.ApprenticeServerWrapper.Instance.IsInventorFile(fullFileName))
-                    return "Inventor";
-                return "AutoCAD";
+                try
+                {
+                    if (Analyzer.Inventor.Helper.ApprenticeServerWrapper.Instance.IsInventorFile(fullFileName))
+                        return "Inventor";
+                    return "AutoCAD";
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                    return null;
+                }
             }
 
             if (new[] { ".dwt" }.Contains(extension))
