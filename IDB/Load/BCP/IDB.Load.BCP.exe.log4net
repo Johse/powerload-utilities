@@ -8,7 +8,7 @@
   </appender>
   <appender name="RollingFileAppender" type="log4net.Appender.RollingFileAppender,log4net">
     <file type="log4net.Util.PatternString" value="${LOCALAPPDATA}\coolOrange\powerLoad\IDB.Load.BCP.log" />
-    <param name="AppendToFile" value="false" />
+    <param name="AppendToFile" value="true" />
     <param name="RollingStyle" value="Size" />
     <param name="MaximumFileSize" value="20mb" />
     <param name="MaxSizeRollBackups" value="20" />
