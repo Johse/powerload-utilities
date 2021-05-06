@@ -233,7 +233,7 @@ namespace IDB.Load.Files
                     CreateDate = Directory.GetCreationTime(directory),
                     Category = Settings.FolderCategory,
                     CreateUser = Settings.FolderCreateUser,
-                    FolderName = Path.GetDirectoryName(directory),
+                    FolderName = new DirectoryInfo(directory).Name,
                     IsLibrary = false,
                     LifecycleDefinition = null,
                     LifecycleState = null,
