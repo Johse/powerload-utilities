@@ -143,7 +143,7 @@ namespace IDB.Discover.Vault
             this.txtKnowledgeVaultConnectionString.Name = "txtKnowledgeVaultConnectionString";
             this.txtKnowledgeVaultConnectionString.Size = new System.Drawing.Size(460, 23);
             this.txtKnowledgeVaultConnectionString.TabIndex = 5;
-            this.txtKnowledgeVaultConnectionString.Text = "Server=(local)\\AUTODESKVAULT;Database=Vault;Trusted_Connection=True;";
+            this.txtKnowledgeVaultConnectionString.Text = "Server=(local)\\AUTODESKVAULT;Database=KnowledgeVaultMaster;Trusted_Connection=True;";
             this.txtKnowledgeVaultConnectionString.TextChanged += new System.EventHandler(this.OnTxtKnowledgeVaultConnectionStringTextChanged);
             // 
             // MainForm
