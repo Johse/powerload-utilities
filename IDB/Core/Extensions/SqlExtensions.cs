@@ -19,6 +19,8 @@ namespace IDB.Core.Extensions
 
             try
             {
+                SqlMapper.AddTypeMap(typeof(DateTime), DbType.DateTime2);
+
                 var sb = new StringBuilder();
                 sb.Append($"INSERT INTO [dbo].[{dapperEntity.TableName}]");
                 sb.Append("(");
@@ -52,6 +54,8 @@ namespace IDB.Core.Extensions
 
             try
             {
+                SqlMapper.AddTypeMap(typeof(DateTime), DbType.DateTime2);
+
                 var sb = new StringBuilder();
                 sb.Append($"INSERT INTO [dbo].[{dapperEntity.TableName}]");
                 sb.Append("(");
@@ -82,6 +86,8 @@ namespace IDB.Core.Extensions
 
             try
             {
+                SqlMapper.AddTypeMap(typeof(DateTime), DbType.DateTime2);
+
                 var sb = new StringBuilder();
                 sb.Append($"UPDATE [dbo].[{dapperEntity.TableName}] SET ");
                 sb.Append(string.Join(", ", dapperEntity.ColumnsAndParams

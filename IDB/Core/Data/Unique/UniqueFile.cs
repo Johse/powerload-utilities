@@ -30,7 +30,8 @@ namespace IDB.Core.Data.Unique
         {
             if (x == null || y == null) return false;
             if (object.ReferenceEquals(x, y)) return true;
-            return x.FileName == y.FileName && x.FolderId == y.FolderId && x.CreateDate.ToString("G") == y.CreateDate.ToString("G");
+
+            return x.FileName == y.FileName && x.FolderId == y.FolderId && x.CreateDate == y.CreateDate;
         }
 
         public int GetHashCode(UniqueFile obj)
@@ -40,7 +41,7 @@ namespace IDB.Core.Data.Unique
                 int hash = 17;
                 hash = hash * 23 + obj.FileName.GetHashCode();
                 hash = hash * 23 + obj.FolderId.GetHashCode();
-                hash = hash * 23 + obj.CreateDate.ToString("G").GetHashCode();
+                hash = hash * 23 + obj.CreateDate.GetHashCode();
                 return hash;
             }
         }
