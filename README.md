@@ -127,6 +127,7 @@ In the Windows command line window you can see the progress of the import.
 
 ![image](Images/pL-DLG-IDB.Load.Files.png)
 
+Files of a second run with the same filename in the same folder will be skipped with a warining. In the log files these files can be found with the tag "WARN".  
 Incase one of the parameters is not set correctly the utility will stop and show an error message in the command line window.
 
 ### Logging
@@ -146,15 +147,12 @@ Start the tool with double click the file IDB.Load.BCP.exe.
 In the Windows command line window you can see the progress of the import.
 ![image](Images/pL-DLG-IDB.Load.BCP.png)
 
-After starting the process the utility scans the Vault.xml. It can take some time until the import starts.  
+After starting the process the utility scans the Vault.xml. If the utility is run again, identical files and folders will be skipped with a warining. In the log files these files can be found with the tag "WARN".  
 Incase one of the parameters is not set correctly the utility will stop and show an error message in the command line window.
 
 ### Logging
 The default location for the log file ***IDB.Load.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
-
-### Caution
-If you want to load several bcp-packages into 1 Intermediate Database (IDB) you must remove the UNIQUE for the index [IX_Files] in order the tool does not stop when duplicate files are imported.
 
 ## IDB.Discover.Vault
 Utility to query the target Vault and copy a snapshot of the target Vault configuration to the powerLoad Intermediate Database (IDB), that can be used for the validations. If the configuration of the target Vault changes the IDB.Discover.Vault must be run again.
