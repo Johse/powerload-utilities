@@ -78,7 +78,7 @@ The IDB.Core.ini is the central configuration file with common settings for the 
 		Default: `ConnectionString=Server=(local)\AUTODESKVAULT;Database=Load;Trusted_Connection=True;` 
 	* **ImportPath**: The path with the sub-folders and files to import into the intermeadate Database  
 		Default: `ImportPath=C:\TEMP\Source Directory` 
-	* **ExortPath**: Folder in which the BCP package will be exported.  
+	* **ExportPath**: Folder in which the BCP package will be exported.  
 		Default: `C:\TEMP\VaultBCP\Target Directory` 
 * **[Vault]**: Section for the target Vault database 
 	* **Connection String**: SQL Connection String to the server and database of the target Vault  
@@ -212,7 +212,7 @@ This tool uses AutoCAD Core Console. So at least AutoCAD Vanilla must be install
 The folder where the tool is installed, must be configured in the **Trusted Locations** of the AutoCAD Options:
 ![AutoCAD Trusted Locations](Images/pL-TrustedLocations_ACAD.png)
 
-In the powerShell file ***IDB.Analyzer.AutoCAD.ps1*** you need to specify the AutoCAD version that is installed insection *Settings* in line:  
+In the powerShell file ***IDB.Analyzer.AutoCAD.ps1*** you need to specify the AutoCAD version that is installed in section *Settings* in line:  
 `$accoreconsole = "C:\Program Files\Autodesk\AutoCAD `***2020***`\accoreconsole.exe"`
 
 If wanted, you also can change the working directory in line:  
