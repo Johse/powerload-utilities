@@ -131,7 +131,7 @@ Files of a second run with the same filename in the same folder will be skipped 
 Incase one of the parameters is not set correctly the utility will stop and show an error message in the command line window.
 
 ### Logging
-The default location for the log file ***IDB.Load.Files.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Load.Files.log*** is '*%LocalAppData%\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
 
 ## IDB.Load.BCP
@@ -151,7 +151,7 @@ After starting the process the utility scans the Vault.xml. If the utility is ru
 Incase one of the parameters is not set correctly the utility will stop and show an error message in the command line window.
 
 ### Logging
-The default location for the log file ***IDB.Load.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Load.BCP.log*** is '*%LocalAppData%\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
 
 ## IDB.Discover.Vault
@@ -171,7 +171,7 @@ The specified connection strings are written back to the central configuration f
 A dialog box appears after the transfer is finished with the message "Successfully transferred target Vault behaviors to IDB". 
 
 ### Logging
-The default location for the log file ***IDB.Discover.Vault.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Discover.Vault.log*** is '*%LocalAppData%\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
 
 ## IDB.Analyzer.Inventor
@@ -199,7 +199,7 @@ The IDB.Analyzer.Inventor scans:
 * Duplicates: Identical file names in different folders
 
 ### Logging
-The default location for the log file ***IDB.Analyzer.Inventor.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'.  
+The default location for the log file ***IDB.Analyzer.Inventor.log*** is '*%LocalAppData%\coolOrange\powerLoad*'.  
 In the logfile the scan results are listed. Files with an error will get marked with "ERROR", files with a warning with "WARN".
 
 ## IDB.Analyzer.AutoCAD
@@ -232,7 +232,7 @@ The IDB.Analyzer.AutoCAD scans:
 * Missing references (Xrefs) / Contains missing references
 
 ### Logging
-The default location for the log file ***IDB.Analyzer.AutoCAD.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'.  
+The default location for the log file ***IDB.Analyzer.AutoCAD.log*** is '*%LocalAppData%\coolOrange\powerLoad*'.  
 In the logfile the scan results are listed. Files with an error will get marked with "ERROR", files with a warning with "WARN". 
 
 ## IDB.Validate.BCP
@@ -277,7 +277,7 @@ The following validations are delivered in the ***Validate.IDB.sql***:
 * RefId-Validation: check whether RefId IS NOT filled, when 'IsDependency' is 'true'
 
 ### Logging
-The default location for the log file ***IDB.Validate.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Validate.BCP.log*** is '*%LocalAppData%\coolOrange\powerLoad*'. 
 
 ## IDB.Translate.BCP
 Creates a valid BCP-package from the content of the Intermediate Database.
@@ -304,7 +304,7 @@ Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens 
 * **Create BCP Package**: Exports the data from the IDB into a BCP package in the specified folder.
 
 ### Logging
-The default location for the log file ***IDB.Translate.BCP.log*** is '*C:\Users\coolOrange\AppData\Local\coolOrange\powerLoad*'. 
+The default location for the log file ***IDB.Translate.BCP.log*** is '*%LocalAppData%\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
 
 
