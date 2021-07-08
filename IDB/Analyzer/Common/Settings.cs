@@ -46,5 +46,34 @@ namespace IDB.Analyzer.Common
                 return ini.ReadValue("IDB.Analyzer", "DifferentLoadLocalFilestorePath");
             }
         }
+
+        protected static bool GetINIBooleanValue(string iniSettingString)
+        {
+            var ini = new IniHandler(IniFile);
+
+            string sValue = ini.ReadValue("IDB.Analyzer", iniSettingString);
+
+            bool bValue = string.Compare("true", sValue.Trim(), true) == 0 ? true : false;
+
+            return (bValue);
+        }
+
+
+        public static bool UseFullFilePathNameForComparison
+        {
+            get
+            {
+                return (GetINIBooleanValue("UseFullFilePathNameForComparison"));
+            }
+        }
+
+        public static bool CreateNewFileRelationships
+        {
+            get
+            {
+                return (GetINIBooleanValue("CreateNewFileRelationships"));
+            }
+        }
+
     }
 }
