@@ -8,6 +8,8 @@ using IDB.Analyzer.Common.Helper;
 using IDB.Analyzer.Inventor.Helper;
 using log4net;
 using System.IO;
+using System.Xml.Serialization;
+
 
 using FileInfo = System.IO.FileInfo;
 
@@ -40,16 +42,23 @@ namespace IDB.Analyzer.Inventor
             Log.InfoFormat("Mode: {0}", runMode);
             if (DataHandler.Instance.GetData(fromDb: (runMode != RunMode.OFFLINE && runMode != RunMode.IMPORT)))
             {
+                // initialize the IDBAnalyzed flag for the content
+                DataHandler.Instance.InitializeIDBAnalyzed();
+
+                // process the content
                 if (runMode != RunMode.EXPORT && runMode != RunMode.IMPORT)
                 {
+                    // create the ProcessingStatistics object to manage results
+                    ProcessingStatistics procStats = new ProcessingStatistics();
+
                     // choose the type of processing, comparing full file path, or just the filename
                     if (bUseFullFilePathNameForComparison)
                     {
-                        AnalyzeReferencesUsingFullFilename();
+                        AnalyzeReferencesUsingFullFilename(ref procStats);
                     }
                     else
                     {
-                        AnalyzeReferencesUsingFilename();
+                        AnalyzeReferencesUsingFilename(ref procStats);
                     }
                 }
 
@@ -90,7 +99,7 @@ namespace IDB.Analyzer.Inventor
             Log.Info(msg);
         }
 
-        private static void AnalyzeReferencesUsingFullFilename()
+        private static void AnalyzeReferencesUsingFullFilename(ref ProcessingStatistics procStats)
         {
             Console.WriteLine("Analyzing Inventor references ...");
             Log.Info("Analyzing Inventor references ...");
@@ -192,7 +201,7 @@ namespace IDB.Analyzer.Inventor
             Log.Info("Analyzing Inventor references. Done!");
         }
 
-        private static void AnalyzeReferencesUsingFilename()
+        private static void AnalyzeReferencesUsingFilename(ref ProcessingStatistics processStatistics)
         {
             Console.WriteLine("Analyzing Inventor references ...");
             Log.Info("Analyzing Inventor references ...");
@@ -204,34 +213,53 @@ namespace IDB.Analyzer.Inventor
                 return;
             }
 
-            int counter = 1;
-            var totalCount = DataHandler.Instance.FilesById.Count;
+            // set the number to process
+            processStatistics.NumberToProcess = DataHandler.Instance.FilesById.Count;
 
             foreach (var fileEntry in DataHandler.Instance.FilesById)
             {
-                var lc = counter++;
-                var filename = fileEntry.Value.LocalFullFileName.GetReplacedFilename();
-                var msg = $"\r{lc}/{totalCount}: Analyzing references for {filename}";
-                Console.Write(msg.PadRight(Console.BufferWidth, ' '));
+                // increment the counter
+                processStatistics.TotalProcessed++;
 
-                if (!ApprenticeServerWrapper.Instance.IsInventorFile(filename))
-                    continue;
+                var filename = fileEntry.Value.LocalFullFileName.GetReplacedFilename();
+                var msg = $"\r{processStatistics.TotalProcessed}/{processStatistics.NumberToProcess}: Analyzing references for {filename}";
+                Console.Write(msg.PadRight(Console.BufferWidth, ' '));
 
                 if (!System.IO.File.Exists(filename))
                 {
-                    Log.InfoFormat("File ({0}) '{1}' doesn't exist!", lc, filename);
+                    processStatistics.MissingLocalFiles++;
+                    Log.InfoFormat("File ({0}) '{1}' doesn't exist!", processStatistics.TotalProcessed, filename);
+
+                    // set the record for the database
+                    fileEntry.Value.IDBAnalyzeNotes = ApprenticeServerWrapper.AddOrNewComment(fileEntry.Value.IDBAnalyzeNotes, "Local file missing");
+
                     continue;
                 }
 
+                if (!ApprenticeServerWrapper.Instance.IsInventorFile(filename))
+                {
+                    processStatistics.NonInventorFiles++;
+
+                    // set the record for the database
+                    fileEntry.Value.IDBAnalyzeNotes = ApprenticeServerWrapper.AddOrNewComment(fileEntry.Value.IDBAnalyzeNotes, "Non Inventor file");
+
+                    continue;
+                }
+
+
                 if (UserCancelRequest)
                 {
+                    processStatistics.UserCanceledProcess = true;
                     Log.Info("Cancelled by user!");
                     break;
                 }
 
                 try
                 {
-                    Log.InfoFormat("Analyzing references for file '{0}': {1}/{2}", filename, lc, totalCount);
+                    // increment the counter
+                    processStatistics.TotalInventor++;
+
+                    Log.InfoFormat("Analyzing references for file '{0}': {1}/{2}", filename, processStatistics.TotalProcessed, processStatistics.NumberToProcess);
 
                     var fileRelationsByName = new Dictionary<string, FileFileRelation>(StringComparer.OrdinalIgnoreCase);
 
@@ -246,44 +274,110 @@ namespace IDB.Analyzer.Inventor
                     }
 
                     if (!ApprenticeServerWrapper.Instance.OpenDocument(filename))
+                    {
+                        processStatistics.InventorFailedToOpen++;
+
+                        // set the record for the database
+                        fileEntry.Value.IDBAnalyzeNotes = ApprenticeServerWrapper.AddOrNewComment(fileEntry.Value.IDBAnalyzeNotes, "Inventor failed to open");
+
                         continue;
+                    }
 
                     var addedReferences = new List<string>();
                     var unknownReferences = new List<string>();
-                    ApprenticeServerWrapper.Instance.CollectReferenceInformationByFilename(fileEntry.Key, fileRelationsByName, addedReferences, unknownReferences);
+                    ApprenticeServerWrapper.Instance.CollectReferenceInformationByFilename(fileEntry.Value, fileRelationsByName, addedReferences, unknownReferences, ref processStatistics);
+
                     if (addedReferences.Any())
                     {
+                        processStatistics.NumberWithAddedReferences++;
+
                         Log.ErrorFormat("File '{0}' has references that need to be added!", filename);
-                        foreach (var missingReference in addedReferences)
-                            Log.ErrorFormat("Added file reference: {0}", missingReference);
+                        foreach (var addedReference in addedReferences)
+                            Log.ErrorFormat("Added file reference: {0}", addedReference);
                     }
+
                     if (unknownReferences.Any())
                     {
+                        processStatistics.NumberWithMissingReferences++;
+
                         Log.ErrorFormat("File '{0}' has unknown references!", filename);
                         foreach (var unknownReference in unknownReferences)
                             Log.ErrorFormat("Unknown reference: {0}", unknownReference);
                     }
 
-                    var missingOleReferences = new List<string>();
+                    var oleIndexIssuesReferences = new List<string>();
+                    var addedOleReferences = new List<string>();
                     var unknownOleReferences = new List<string>();
-                    ApprenticeServerWrapper.Instance.CollectOleReferenceInformationByFilename(fileEntry.Key, fileRelationsByName, missingOleReferences, unknownOleReferences);
-                    if (missingOleReferences.Any())
+                    ApprenticeServerWrapper.Instance.CollectOleReferenceInformationByFilename(fileEntry.Value, fileRelationsByName, oleIndexIssuesReferences, addedOleReferences, unknownOleReferences, ref processStatistics);
+                    if (oleIndexIssuesReferences.Any())
                     {
-                        Log.ErrorFormat("File '{0}' has missing OLE references!", filename);
-                        foreach (var missingReference in missingOleReferences)
-                            Log.ErrorFormat("Missing OLE reference: {0}", missingReference);
+                        processStatistics.NumberWithOLEIndexIssueReferences++;
+
+                        Log.ErrorFormat("File '{0}' has OLE references Index issues!", filename);
+                        foreach (var oleIndexReference in oleIndexIssuesReferences)
+                            Log.ErrorFormat("OLE references Index issues: {0}", oleIndexReference);
                     }
+
+                    if (addedOleReferences.Any())
+                    {
+                        processStatistics.NumberWithAddedOLEReferences++;
+
+                        Log.ErrorFormat("File '{0}' has OLE references that need to be added!", filename);
+                        foreach (var addedReference in addedOleReferences)
+                            Log.ErrorFormat("OLE reference added: {0}", addedReference);
+                    }
+
+
                     if (unknownOleReferences.Any())
                     {
+                        processStatistics.NumberWithMissingOLEReferences++;
+
                         Log.ErrorFormat("File '{0}' has unknown OLE references!", filename);
                         foreach (var unknownOleReference in unknownOleReferences)
                             Log.ErrorFormat("Unknown OLE reference: {0}", unknownOleReference);
                     }
+
+                    // parse through and identify issues that may exist with records that did not get processed
+
+                    // get the relationship records that have not been processed
+                    // this may indicate that thes records should not be in the IDB FileFileRelations table
+                    List<FileFileRelation> dependencyRecords = fileRelationsByName.Values.Where(ffr => (!ffr.IsAttachment && ffr.IsDependency && !ffr.IDBAnalyzed)).ToList();
+                    dependencyRecords.ForEach(ffr => ffr.IDBAnalyzeNotes = ApprenticeServerWrapper.AddOrNewComment(fileEntry.Value.IDBAnalyzeNotes, "Dependency Not Found During Analyze"));
+                    if (dependencyRecords.Any())
+                    {
+                        fileEntry.Value.HasRelationshipIssues = true;
+                        fileEntry.Value.IDBAnalyzeNotes = ApprenticeServerWrapper.AddOrNewComment(fileEntry.Value.IDBAnalyzeNotes, string.Format("{0} Dependencies Not Found During Analyze", dependencyRecords.Count()));
+                    }
+
+                    List<FileFileRelation> oleRecords = fileRelationsByName.Values.Where(ffr => (!ffr.IsAttachment && !ffr.IsDependency && !ffr.IDBAnalyzed)).ToList();
+                    oleRecords.ForEach(ffr => ffr.IDBAnalyzeNotes = ApprenticeServerWrapper.AddOrNewComment(fileEntry.Value.IDBAnalyzeNotes, "OLE Dependency Not Found During Analyze"));
+                    if (oleRecords.Any())
+                    {
+                        fileEntry.Value.HasRelationshipIssues = true;
+                        fileEntry.Value.IDBAnalyzeNotes = ApprenticeServerWrapper.AddOrNewComment(fileEntry.Value.IDBAnalyzeNotes, string.Format("{0} OLE Dependencies Not Found During Analyze", oleRecords.Count()));
+                    }
+
+                    // make a catch all for any issues that may not have been fully
+                    // documented, but were caught by the process
+                    // user may need to compound query in MSSQMS the Files and FileFileRelations table to identify what the issues were
+                    // as they may be recorded in the FileFileRelation records
+                    if (fileEntry.Value.HasRelationshipIssues)
+                    {
+                        fileEntry.Value.IDBAnalyzeNotes = ApprenticeServerWrapper.AddOrNewComment(fileEntry.Value.IDBAnalyzeNotes, "Has relationship issues");
+                    }
+
                 }
                 catch (Exception ex)
                 {
+                    processStatistics.ExceptionsProcessed++;
+
+                    // set the record for the database
+                    fileEntry.Value.IDBAnalyzeNotes = ApprenticeServerWrapper.AddOrNewComment(fileEntry.Value.IDBAnalyzeNotes, "Exception in process");
+                    fileEntry.Value.IDBAnalyzeNotes = ApprenticeServerWrapper.AddOrNewComment(fileEntry.Value.IDBAnalyzeNotes, ex.Message);
+
                     msg = $"\nError processing references for Inventor file '{filename}'";
                     Console.WriteLine(msg);
+
                     Log.Error($"Error processing references for Inventor file '{filename}'", ex);
                 }
                 finally
@@ -291,11 +385,20 @@ namespace IDB.Analyzer.Inventor
                     ApprenticeServerWrapper.Instance.CloseDocument();
                 }
             }
+
+            // have the ProcessStatistics report on issues
+            Console.WriteLine(Environment.NewLine);
+            processStatistics.LogAndReportStatistics();
+            Console.WriteLine(Environment.NewLine);
+
             Console.WriteLine("\nAnalyzing Inventor references. Done!");
             Log.Info("Analyzing Inventor references. Done!");
         }
 
 
         #endregion
+
     }
+
+
 }

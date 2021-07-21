@@ -48,6 +48,14 @@ namespace IDB.Analyzer.Common
             };
         }
 
+        // method to initialize the File.IDBAnalyzed and FileFileRelation.IDBAnalyzed to false
+        public void InitializeIDBAnalyzed()
+        {
+            FilesById.Values.ToList().ForEach(fi => fi.IDBAnalyzed = false);
+            FilesById.Values.ToList().ForEach(fi => fi.HasRelationshipIssues = false);
+            AllFileRelations.ForEach(ffr => ffr.IDBAnalyzed = false);
+        }
+
         public bool GetData(bool fromDb)
         {
             return fromDb
@@ -113,7 +121,12 @@ namespace IDB.Analyzer.Common
 
                     Console.Write("Reading 'FileFileRelations' table ...");
                     Log.Info("Reading 'FileFileRelations' table ...");
-                    AllFileRelations = connection.Query<FileFileRelation>(@"SELECT * FROM FileFileRelations WHERE IsDependency = '1'").ToList();
+
+                    // NOTE: Dean Brisson changed this!!!
+                    // AllFileRelations = connection.Query<FileFileRelation>(@"SELECT * FROM FileFileRelations WHERE IsDependency = '1'").ToList();
+                    AllFileRelations = connection.Query<FileFileRelation>(@"SELECT * FROM FileFileRelations").ToList();
+
+
                     Console.WriteLine($"\rReading 'FileFileRelations' table. Done: ({AllFileRelations.Count}) file/file relations".PadRight(ConsoleBufferWidth, ' '));
                     Log.InfoFormat("Reading 'FileFileRelations' table. Done: ({0}) file/file relations", AllFileRelations.Count);
 
@@ -163,12 +176,24 @@ namespace IDB.Analyzer.Common
                     Console.WriteLine("Open intermediate database");
                     connection.Open();
 
+                    // verify that new Analyze columns are in the database
+                    VerifyOrAddAnalyzeColumns(connection);
+
+                    Console.Write("Updating existing rows in 'Files' table ...");
+                    Log.Info("Updating existing rows in 'Files' table ...");
+                    var updateQuery = "UPDATE Files " +
+                        "SET IDBAnalyzeNotes = @IDBAnalyzeNotes WHERE FileID = @FileID";
+                    var result = connection.Execute(updateQuery, FilesById.Values);
+                    Console.WriteLine($"\rUpdating existing rows in 'Files' table. Done! Result: {result})".PadRight(ConsoleBufferWidth, ' '));
+                    Log.InfoFormat("Updating existing rows in 'Files' table. Done! Result: {0})", result);
+
+
                     Console.Write("Updating existing rows in 'FileFileRelations' table ...");
                     Log.Info("Updating existing rows in 'FileFileRelations' table ...");
-                    var updateQuery = "UPDATE FileFileRelations " +
-                        "SET IsAttachment = @IsAttachment, IsDependency = @IsDependency, NeedsResolution = @NeedsResolution, Source = @Source, RefId = @RefId " +
+                    updateQuery = "UPDATE FileFileRelations " +
+                        "SET IsAttachment = @IsAttachment, IsDependency = @IsDependency, NeedsResolution = @NeedsResolution, Source = @Source, RefId = @RefId, IDBAnalyzeNotes = @IDBAnalyzeNotes " +
                         "WHERE ParentFileID = @ParentFileID AND ChildFileID = @ChildFileID";
-                    var result = connection.Execute(updateQuery, AllFileRelations);
+                    result = connection.Execute(updateQuery, AllFileRelations);
                     Console.WriteLine($"\rUpdating existing rows in 'FileFileRelations' table. Done! Result: {result})".PadRight(ConsoleBufferWidth, ' '));
                     Log.InfoFormat("Updating existing rows in 'FileFileRelations' table. Done! Result: {0})", result);
 
@@ -191,6 +216,50 @@ namespace IDB.Analyzer.Common
                 return false;
             }
         }
+
+        // verify that new Analyze columns are in the database
+        private void VerifyOrAddAnalyzeColumns(SqlConnection connection)
+        {
+            // check to see if Files has IDBAnalyzeNotes
+            VerifyOrAddColumn(connection, "Files", "IDBAnalyzeNotes");
+
+            // check to see if FileFileRelations has IDBAnalyzeNotes
+            VerifyOrAddColumn(connection, "FileFileRelations", "IDBAnalyzeNotes");
+        }
+
+        // verify that new Analyze columns are in the database
+        private void VerifyOrAddColumn(SqlConnection connection, string sTableName, string sColumnName)
+        {
+            if (!TableColumnExists(connection, sTableName, sColumnName))
+            {
+                Log.Info($"Adding column {sColumnName} to table {sTableName}");
+
+                // add the columns if needed
+                string type = "nvarchar(MAX)";
+                connection.Execute($"ALTER Table {sTableName} ADD {sColumnName} {type}");
+            }
+        }
+
+        // check to see if a column in the table exists
+        private bool TableColumnExists(SqlConnection connection, string sTableName, string sColumnName)
+        {
+            bool columnExists = false;
+
+            string selectQuery = string.Format("SELECT COUNT(*) from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'", sTableName, sColumnName);
+            int count = (int)connection.ExecuteScalar(selectQuery, commandTimeout: 600);
+
+            if (count > 0)
+            {
+                columnExists = true;
+            }
+
+            return (columnExists);
+        }
+
+
+
+
+
 
         private void BuildAndInitializeWorkingLists()
         {
