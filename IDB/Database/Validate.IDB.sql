@@ -95,16 +95,22 @@ PRINT CHAR(13)+'Files with filename longer than 260 characters:'
 UPDATE Files SET Validation_Status = 'ERROR', Validation_Comment = CONCAT('Full filename is longer than 260 characters: ', LEN (CONCAT(fo.Path, '/', f.FileName)), '; ', f.Validation_Comment) FROM Files f INNER JOIN Folders fo on fo.FolderID = f.FolderID WHERE LEN (CONCAT(fo.Path, '/', f.FileName)) > 260
 -- Category does not exist in target Vault
 PRINT CHAR(13)+'Files with invalid Category:'
-UPDATE Files SET Validation_Status = 'ERROR', Validation_Comment = CONCAT('Invalid Category; ', Validation_Comment) WHERE Category NOT IN (SELECT Category FROM TargetVaultCategories WHERE EntityClassID = 'FILE')
+UPDATE Files SET Validation_Status = 'ERROR', Validation_Comment = CONCAT('Invalid Category; ', Category, Validation_Comment) WHERE Category NOT IN (SELECT Category FROM TargetVaultCategories WHERE EntityClassID = 'FILE')
 -- LifecycleDefinition does not exist in target Vault
 PRINT CHAR(13)+'Files with invalid LifecycleDefinition:'
-UPDATE Files SET Validation_Status = 'ERROR', Validation_Comment = CONCAT('Invalid LifecycleDefinition; ', Validation_Comment) WHERE LifecycleDefinition NOT IN (SELECT LifeCycleDefinition FROM TargetVaultLifeCycles WHERE EntityClassID = 'FILE')
+UPDATE Files SET Validation_Status = 'ERROR', Validation_Comment = CONCAT('Invalid LifecycleDefinition; ', LifecycleDefinition, Validation_Comment) WHERE LifecycleDefinition NOT IN (SELECT LifeCycleDefinition FROM TargetVaultLifeCycles WHERE EntityClassID = 'FILE')
 -- LifecycleState does not exist in target Vault for assigned LifecycleDefinition
 PRINT CHAR(13)+'Files with invalid LifecycleState:'
 UPDATE Files SET Validation_Status = 'ERROR', Validation_Comment = CONCAT('Invalid LifecycleState; ', Validation_Comment) WHERE CONCAT(LifecycleDefinition, LifecycleState) NOT IN (SELECT CONCAT(LifeCycleDefinition, LifeCycleState) FROM TargetVaultLifeCycles WHERE EntityClassID = 'FILE') AND LifecycleDefinition IS NOT NULL 
 -- RevisionDefinition does not exsist in target Vault
 PRINT CHAR(13)+'Files with invalid RevisionDefinition:'
-UPDATE Files SET Validation_Status = 'ERROR', Validation_Comment = CONCAT('Invalid RevisionDefinition; ', Validation_Comment) WHERE RevisionDefinition NOT IN (SELECT RevisionDefinition FROM TargetVaultRevisions) 
+UPDATE Files SET Validation_Status = 'ERROR', Validation_Comment = CONCAT('Invalid RevisionDefinition; ', RevisionDefinition, Validation_Comment) WHERE RevisionDefinition NOT IN (SELECT RevisionDefinition FROM TargetVaultRevisions) 
+-- Inventor IDW were Classification is not 'DesignDocument'
+PRINT CHAR(13)+'IDWs with invalid Classification:'
+UPDATE Files SET Validation_Status = 'ERROR', Validation_Comment = CONCAT('Invalid Classification; ', Validation_Comment) WHERE Classification <>'DesignDocument' and FileName like '%.idw'
+-- Inventor DWG were Classification is not 'DesignDocument'
+PRINT CHAR(13)+'DWGs with invalid Classification:'
+UPDATE Files SET Validation_Status = 'ERROR', Validation_Comment = CONCAT('Invalid Classification; ', Validation_Comment) WHERE Classification <>'DesignDocument' and FileName like '%.dwg' and ContentSource = 'Inventor'
 -- Identifying UDPs that are used, but not present in target Vault 
 PRINT CHAR(13)++'Files UDPs that are not present in target Vault:'
 DECLARE @FILE_column_name nvarchar(100)
