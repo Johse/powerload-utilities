@@ -23,6 +23,7 @@ namespace IDB.Load.Files
         private static long _processedFolders;
         private static long _processedIterations;
         private static string _rootDirectory;
+        private const int MAX_PATH = 260;
 
         private static Dictionary<string, Folder> _existingFolders;
         private static Dictionary<UniqueFile, File> _existingFiles;
@@ -185,6 +186,11 @@ namespace IDB.Load.Files
         private static void ProcessFile(SqlConnection connection, Folder parentFolder, string fullFileName)
         {
             _processedIterations++;
+            if (fullFileName.Length > MAX_PATH)
+			{
+                Log.Warn($"Skipping File. Path is longer than {MAX_PATH} characters. {fullFileName}");
+                return;
+            }
 
             var fileName = Path.GetFileName(fullFileName);
             var createdDate = System.IO.File.GetCreationTimeUtc(fullFileName);
@@ -221,8 +227,6 @@ namespace IDB.Load.Files
 
         private static void ProcessFolder(SqlConnection connection, Folder parentFolder, string directory)
         {
-            _processedFolders++;
-
             var path = GetVaultFolderFromLocalFolder(directory);
             var folder = GetExistingFolder(path);
             if (folder == null)
