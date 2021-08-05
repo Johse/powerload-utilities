@@ -37,6 +37,7 @@ For reviewing the BCP-package that is created from the IDB there is the tool **b
 Download the ZIP powerLoad_v\<version number\>.zip from the Assets section from https://github.com/coolOrangeLabs/powerload-utilities/releases/latest.
 
 Extract the ZIP to a folder 'powerLoad' e.g. '*C:\coolOrange\powerLoad*' on the machine, where the bcpToolkit is installed.
+We recommend to install the powerLoad utilities on the server and on a Vault client machine and using the utility at the machine, hat fits to the needs.
 
 
 ## Description
@@ -89,6 +90,9 @@ The IDB.Core.ini is the central configuration file with common settings for the 
    
 ## IDB.Load.Files
 Command line utility to load files from Windows folders to the Intermediate Database (IDB)
+
+### Prerequsite
+This tool uses Inventor Apprentice to indentify whether DWG files are AutoCAD DWG files or Inventor DWG files. At least Inventor View must be installed on the machine where this tool is used, when the field 'ContentSource' needs to be filled during the import.
 
 ### Configuration
 #### General Settings
