@@ -204,8 +204,8 @@ namespace IDB.Load.Files
                     FileName = fileName,
                     CreateDate = createdDate,
                     LocalFullFileName = fullFileName,
-                    LocalFileChecksum = Core.File.Checksum.CalcChecksum(fullFileName),
-                    Category = Settings.FileCategory,
+					LocalFileChecksum = Core.File.Checksum.CalcChecksum(fullFileName),
+					Category = Settings.FileCategory,
                     Classification = Settings.FileClassification,
                     Comment = "",
                     ContentSource = GetContentSource(fullFileName),
@@ -288,15 +288,22 @@ namespace IDB.Load.Files
 
         private static IEnumerable<string> GetFiles(string directory)
         {
-            return Directory.GetFiles(directory).Where(d => 
-                !d.EndsWith("bak"));
+            return Directory.EnumerateFiles(directory).Except(GetFiles(directory, Settings.ExcludeFiles));
         }
 
         private static IEnumerable<string> GetDirectories(string directory)
         {
-            return Directory.GetDirectories(directory).Where(d => 
-                !d.EndsWith("_V") && 
-                !d.EndsWith("OldVersions"));
+            return Directory.EnumerateDirectories(directory).Except(GetDirectories(directory,Settings.ExcludeFolders));
+        }
+
+        private static IEnumerable<string> GetFiles(string sourceFolder, string filters)
+        {
+            return filters.Split('|').SelectMany(filter => System.IO.Directory.EnumerateFiles(sourceFolder, filter));
+        }
+
+        private static IEnumerable<string> GetDirectories(string sourceFolder, string filters)
+        {
+            return filters.Split('|').SelectMany(filter => System.IO.Directory.EnumerateDirectories(sourceFolder, filter));
         }
 
         private static string GetContentSource(string fullFileName)

@@ -91,5 +91,21 @@ namespace IDB.Load.Files
                 return ini.ReadValue("Folders", "CreateUser");
             }
         }
+        public static string ExcludeFiles
+        {
+            get
+            {
+                var ini = new IniHandler(IniFile);
+                return ini.ReadValue("Exclude", "ExcludeFiles");
+            }
+        }
+        public static string ExcludeFolders
+        {
+            get
+            {
+                var ini = new IniHandler(IniFile);
+                return ini.ReadValue("Exclude", "ExcludeFolders");
+            }
+        }
     }
 }
