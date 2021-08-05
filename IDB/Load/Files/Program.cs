@@ -338,6 +338,7 @@ namespace IDB.Load.Files
                 }
                 catch (Exception ex)
                 {
+                    Log.Error("Inventor Apprentice is not installed. The field 'ContentSource' cannot be set for file.");
                     Log.Error(ex.Message);
                     return null;
                 }
