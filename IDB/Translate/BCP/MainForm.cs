@@ -309,7 +309,7 @@ namespace IDB.Translate.BCP
                                     if (fileObject.LatestIteration.LocalPath == fileIteration.LocalFullFileName)
                                     {
                                         // workaround for issue #46: if the new iteration has the same local name FileRevision.AddIteration() does not create a new iteration
-                                        var tempLocalFullFileName = fileIteration.LocalFullFileName + "_temp";
+                                        var tempLocalFullFileName = fileIteration.LocalFullFileName + "_temp" + iterationCount;
                                         var addedIteration = fileObject.LatestRevision.AddIteration(tempLocalFullFileName);
                                         addedIteration.LocalPath = fileIteration.LocalFullFileName;
                                     }
