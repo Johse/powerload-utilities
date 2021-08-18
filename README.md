@@ -291,7 +291,7 @@ Therefore all information that should be transferred to Vault must be filled cor
 This utility uses the bcpDevkit to create the BCP-package. Therefore it must be installed on the same machine, where the bcpToolkit is installed and licenced.
 
 ### Configuration
-The default ordering of the files is 'FileName, RevsionsLabel, Version', which means that files are ordered by the value of the RevisionLable, and if there are identical values the next ordering is by Version.
+The default ordering of the files is 'FileName, RevisionLabel, Version', which means that files are ordered by the value of the RevisionLable, and if there are identical values the next ordering is by Version.
 The default ordering can be overwritten in the config file ***IDB.Translate.BCP.ini*** in the section "*[CustomOrderSettings]*".
 For example, if the files should be ordered by the Version only, set:  
 `CustomFilesOrderByFields=FileName, Version` 
