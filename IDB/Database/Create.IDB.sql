@@ -209,7 +209,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Files](
-	[LocalFullFileName] [nvarchar](256) NULL,
+	[LocalFullFileName] [nvarchar](260) NULL,
 	[LocalFileChecksum] [int] NULL,
 	[FileID] [bigint] IDENTITY(1,1) NOT NULL,
 	[FolderID] [bigint] NOT NULL,
