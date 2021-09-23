@@ -349,8 +349,22 @@ namespace IDB.Load.BCP
                     {
                         foreach (var bcpAssociation in bcpIteration.Associations)
                         {
-                            var parentFile = IterationIds[bcpIteration.Id];
-                            var childFile = IterationIds[bcpAssociation.ChildId];
+                            //var parentFile = IterationIds[bcpIteration.Id];
+                            IterationIds.TryGetValue(bcpIteration.Id, out var parentFile);
+                            if (parentFile == null)
+                            {
+                                Log.Error($"Cannot find parent file with ID {bcpIteration.Id} - {bcpFile.Name}. FileFileRelation has not been created!");
+                                continue;
+                            }
+
+                            //var childFile = IterationIds[bcpAssociation.ChildId];
+                            IterationIds.TryGetValue(bcpAssociation.ChildId, out var childFile);
+                            if (childFile == null)
+                            {
+                                Log.Error($"Cannot find child file with ID {bcpAssociation.ChildId} - {bcpFile.Name}. FileFileRelation has not been created!");
+                                continue;
+                            }
+
                             var isAttachment = bcpAssociation.Type == "Attachment";
                             var isDependency = bcpAssociation.Type == "Dependency";
 
