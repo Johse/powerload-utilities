@@ -311,7 +311,15 @@ Start the tool with double click the file IDB.Translate.BCP.exe. A dialog opens 
 The default location for the log file ***IDB.Translate.BCP.log*** is '*%LocalAppData%\coolOrange\powerLoad*'. 
 There you find information about successful inserts and errors.
 
-
+## Logging Settings
+The default location for the log files is '*%LocalAppData%\coolOrange\powerLoad*'. 
+The size and the number of the log file and how detailed the logging is written can be set in the files with  extension log4net. 
+To increase the size of the logfile increase the value of line:  
+`<param name="MaximumFileSize" value="20mb" />`  
+To increase the number of the logfile before they are overwritten increase the value of line:  
+`<param name="MaxSizeRollBackups" value="20" />`  
+To get more detailed information into the logfile change the value of the level value to "**DEBUG**" or "**ALL**":  
+`<level value="INFO" />`
 
 ## Product Documentation
 
