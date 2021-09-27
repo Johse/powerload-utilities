@@ -319,7 +319,9 @@ To increase the size of the logfile increase the value of line:
 To increase the number of the logfile before they are overwritten increase the value of line:  
 `<param name="MaxSizeRollBackups" value="20" />`  
 To get more detailed information into the logfile change the value of the level value to "**DEBUG**" or "**ALL**":  
-`<level value="INFO" />`
+`<level value="INFO" />` 
+
+**Note:** With setting "DEBUG" or "ALL" the log-files are getting very big and the performance decreases. Therefore use these settings only for analysis when running into issues. 
 
 ## Product Documentation
 
