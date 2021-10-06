@@ -318,7 +318,18 @@ namespace IDB.Translate.BCP
                                 }
                             }
 
-							var createUser = fileIteration.CreateUser;
+                            // From: Dean Brisson
+                            // this will update the "fileObject.LatestIteration.Modified" to the actual last modified date of the local file
+                            // we also convert it to UTC so that it is correct in the Vault database as GMT
+                            // bcpDevKit uses the current time as last Modified file
+                            // discuss with coolOrange if we should have this in bcpDevKit, here, or IDB.Analyze.Inventor
+                            // also, LocalPath should be absolute in IDB
+                            if (System.IO.File.Exists(fileObject.LatestIteration.LocalPath))
+                            {
+                                fileObject.LatestIteration.SetModifiedDate(System.IO.File.GetLastWriteTimeUtc(fileObject.LatestIteration.LocalPath)); 
+                            }
+
+                            var createUser = fileIteration.CreateUser;
                             if (string.IsNullOrEmpty(fileIteration.CreateUser))
                                 createUser = "cO";
                             Log.DebugFormat("Adding 'Created' element: User: {0}, Date: {1}", createUser, fileIteration.CreateDate);
