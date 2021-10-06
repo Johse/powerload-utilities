@@ -179,10 +179,11 @@ namespace IDB.Analyzer.Common
                     // verify that new Analyze columns are in the database
                     VerifyOrAddAnalyzeColumns(connection);
 
+                    // map UDP_Application_Version to "UDP_Application Version" with space
                     Console.Write("Updating existing rows in 'Files' table ...");
                     Log.Info("Updating existing rows in 'Files' table ...");
                     var updateQuery = "UPDATE Files " +
-                        "SET IDBAnalyzeNotes = @IDBAnalyzeNotes WHERE FileID = @FileID";
+                        "SET IDBAnalyzeNotes = @IDBAnalyzeNotes, [UDP_Application Version] = @UDP_Application_Version WHERE FileID = @FileID";
                     var result = connection.Execute(updateQuery, FilesById.Values);
                     Console.WriteLine($"\rUpdating existing rows in 'Files' table. Done! Result: {result})".PadRight(ConsoleBufferWidth, ' '));
                     Log.InfoFormat("Updating existing rows in 'Files' table. Done! Result: {0})", result);
@@ -223,6 +224,10 @@ namespace IDB.Analyzer.Common
             // check to see if Files has IDBAnalyzeNotes
             VerifyOrAddColumn(connection, "Files", "IDBAnalyzeNotes");
 
+            // check to see if Files has UDP_Application Version
+            VerifyOrAddColumn(connection, "Files", "UDP_Application Version");
+
+
             // check to see if FileFileRelations has IDBAnalyzeNotes
             VerifyOrAddColumn(connection, "FileFileRelations", "IDBAnalyzeNotes");
         }
@@ -235,8 +240,9 @@ namespace IDB.Analyzer.Common
                 Log.Info($"Adding column {sColumnName} to table {sTableName}");
 
                 // add the columns if needed
+                // Note: added brackets for [{sColumnName}] because we may have columns that have spaces in there names
                 string type = "nvarchar(MAX)";
-                connection.Execute($"ALTER Table {sTableName} ADD {sColumnName} {type}");
+                connection.Execute($"ALTER Table {sTableName} ADD [{sColumnName}] {type}");
             }
         }
 

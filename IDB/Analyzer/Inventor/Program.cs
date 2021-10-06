@@ -33,6 +33,8 @@ namespace IDB.Analyzer.Inventor
             // Initialize Inventor helper class
             ApprenticeServerWrapper.Instance.SetProjectFile(Common.Settings.InventorProjectFile);
             ApprenticeServerWrapper.Instance.SetCreateNewFileRelationships(Common.Settings.CreateNewFileRelationships);
+            ApprenticeServerWrapper.Instance.SetParseLastUpdatedAppVersion(Common.Settings.ParseLastUpdatedAppVersion);
+
 
             // identify if we should use full path or filenames for building the relationships
             bool bUseFullFilePathNameForComparison = Common.Settings.UseFullFilePathNameForComparison;
@@ -282,6 +284,9 @@ namespace IDB.Analyzer.Inventor
 
                         continue;
                     }
+
+                    // get the Application Version for the document
+                    ApprenticeServerWrapper.Instance.QueryAndSetLastUpdatedAppVersion(fileEntry.Value);
 
                     var addedReferences = new List<string>();
                     var unknownReferences = new List<string>();

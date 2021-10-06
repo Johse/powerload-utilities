@@ -20,6 +20,7 @@ namespace IDB.Analyzer.Inventor.Helper
         private ApprenticeServerDocument InvDoc { get; set; }
 
         private bool CreateNewFileRelationships { get; set; }
+        private bool ParseLastUpdatedAppVersion { get; set; }
 
         private ApprenticeServerWrapper()
         {
@@ -38,6 +39,12 @@ namespace IDB.Analyzer.Inventor.Helper
         {
             CreateNewFileRelationships = bValue;
         }
+
+        public void SetParseLastUpdatedAppVersion(bool bValue)
+        {
+            ParseLastUpdatedAppVersion = bValue;
+        }
+
 
         public void SetProjectFile(string invProjectFile)
         {
@@ -202,8 +209,26 @@ namespace IDB.Analyzer.Inventor.Helper
             }
         }
 
+        public void QueryAndSetLastUpdatedAppVersion(Common.Db.File parentFileRecord)
+        {
+            if (ParseLastUpdatedAppVersion)
+            {
+                if (InvDoc == null)
+                    throw new Exception("CollectReferenceInformationByFilename(): No document open in Apprentice");
+
+                // ask inventor for the version that last saved this file
+                // Design Tracking Properties	{32853F0F-3444-11D1-9E93-0060B03C1CA6}
+                PropertySet designTrackingPropertySet = InvDoc.PropertySets["{32853F0F-3444-11D1-9E93-0060B03C1CA6}"];
+                Property lastUpdatedWith = designTrackingPropertySet["Last Updated With"];
+
+                // set the 
+                parentFileRecord.UDP_Application_Version = lastUpdatedWith.Value;
+            }
+        }
+
+
         public void CollectReferenceInformationByFilename(Common.Db.File parentFileRecord, Dictionary<string, FileFileRelation> fileRelations,
-                                                            List<string> addedReferences, List<string> unknownReferences, ref ProcessingStatistics processStatistics)
+                                                        List<string> addedReferences, List<string> unknownReferences, ref ProcessingStatistics processStatistics)
         {
             if (InvDoc == null)
                 throw new Exception("CollectReferenceInformationByFilename(): No document open in Apprentice");
