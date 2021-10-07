@@ -16,7 +16,7 @@ THE USAGE OF THIS SAMPLE IS AT YOUR OWN RISK AND **THERE IS NO SUPPORT** RELATED
 The dataLoader.ps1 script is a PowerShell script template to tranfer values from a CSV file to mapped user defined properties in Vault. The necessary mappings the must be extended by yourself.
 
 ### Additions
-To use the dataLoader.ps1 script powerVault needs to be installed. powerVault is part of powerJobs and powerEvents, but can also be downloaded from the [coolOrange download side] (https://www.coolorange.com/download-our-trial-version/).
+To use the dataLoader.ps1 script powerVault needs to be installed. powerVault is part of powerJobs and powerEvents, but can also be downloaded from the [coolOrange download side](https://www.coolorange.com/download-our-trial-version/).
 
 ## Prerequsites
 * Windows 10
