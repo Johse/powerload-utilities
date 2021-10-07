@@ -24,7 +24,8 @@ To use the dataLoader.ps1 script powerVault needs to be installed. powerVault is
 * coolOrange powerVault
 
 ## Download and Installation
-To download the ZIP click on the dataLoader.ps1 file in GitHub. The script is displayed in the editor view. Then select the Raw-Tab like shown in image dataLoader-raw-tab.png.
+To download the ZIP click on the dataLoader.ps1 file in GitHub. The script is displayed in the editor view. Then select the Raw-Tab like shown in this image: ![dataLoader-raw-tab](dataLoader-raw-tab.png).
+
 There you can either select all and copy the script into the clipboard to insert into an empty text file. Or you can download the file with the command "Save Page As" if your browser provides it.
 
 Copy the downloaded ps1 file to a machine, where powerVault is installed.
