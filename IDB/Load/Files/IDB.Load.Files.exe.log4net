@@ -11,7 +11,7 @@
     <param name="AppendToFile" value="true" />
     <param name="RollingStyle" value="Size" />
     <param name="MaximumFileSize" value="20mb" />
-    <param name="MaxSizeRollBackups" value="20" />
+    <param name="MaxSizeRollBackups" value="25" />
     <param name="StaticLogFileName" value="true" />
     <layout type="log4net.Layout.PatternLayout">
       <conversionPattern value="%date{dd.MM.yyyy HH:mm:ss} %-5level: %message%newline" />
