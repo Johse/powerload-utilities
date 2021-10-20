@@ -21,7 +21,7 @@ UPDATE FileFileRelations SET Validation_Status = NULL WHERE Validation_Status IS
 -- Folder validations
 PRINT CHAR(13)+'Folder validations...'
 -- User does not exist in target Vault
-PRINT 'Folders that do not exist in Vault:'
+PRINT 'User for folders that do not exist in Vault:'
 UPDATE Folders SET Validation_Status = 'ERROR', Validation_Comment = CONCAT('User ''', CreateUser, ''' does not exist in Vault; ', Validation_Comment) WHERE CreateUser NOT IN (SELECT UserName FROM TargetVaultUsers)
 -- Duplicate folders
 PRINT CHAR(13)+'Duplicate folders:'
