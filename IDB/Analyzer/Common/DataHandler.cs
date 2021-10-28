@@ -224,8 +224,8 @@ namespace IDB.Analyzer.Common
             // check to see if Files has IDBAnalyzeNotes
             VerifyOrAddColumn(connection, "Files", "IDBAnalyzeNotes");
 
-            // check to see if Files has UDP_Application Version
-            VerifyOrAddColumn(connection, "Files", "UDP_Application Version");
+            // check to see if Files has ApplicationVersion
+            VerifyOrAddColumn(connection, "Files", "ApplicationVersion");
 
 
             // check to see if FileFileRelations has IDBAnalyzeNotes

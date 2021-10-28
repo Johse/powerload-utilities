@@ -84,7 +84,7 @@ namespace IDB.Analyzer.Common
 
         // identifies if we are to identify the application version that created the file
         // IE, the "Last Updated With" property from the "Design Tracking Properties" property set in Inventor
-        // if yes, we will also make sure the "UDP_Application Version" columns exists in IDB
+        // if yes, we will also make sure the "ApplicationVersion" columns exists in IDB
         // before populating that property
         public static bool ParseLastUpdatedAppVersion
         {
