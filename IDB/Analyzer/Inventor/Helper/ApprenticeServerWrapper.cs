@@ -209,20 +209,27 @@ namespace IDB.Analyzer.Inventor.Helper
             }
         }
 
-        public void QueryAndSetLastUpdatedAppVersion(Common.Db.File parentFileRecord)
+        public void QueryAndRecordLastUpdatedAppVersion(Common.Db.File parentFileRecord)
         {
             if (ParseLastUpdatedAppVersion)
             {
                 if (InvDoc == null)
                     throw new Exception("CollectReferenceInformationByFilename(): No document open in Apprentice");
 
-                // ask inventor for the version that last saved this file
-                // Design Tracking Properties	{32853F0F-3444-11D1-9E93-0060B03C1CA6}
-                PropertySet designTrackingPropertySet = InvDoc.PropertySets["{32853F0F-3444-11D1-9E93-0060B03C1CA6}"];
-                Property lastUpdatedWith = designTrackingPropertySet["Last Updated With"];
+                // Note: the original approach of getting the last updated with does not work for all files
+                // many times, asking the iProperty will return a null or blank string
+                //{
+                //    // ask inventor for the version that last saved this file
+                //    // Design Tracking Properties	{32853F0F-3444-11D1-9E93-0060B03C1CA6}
+                //    PropertySet designTrackingPropertySet = InvDoc.PropertySets["{32853F0F-3444-11D1-9E93-0060B03C1CA6}"];
+                //    Property lastUpdatedWith = designTrackingPropertySet["Last Updated With"];
 
-                // set the 
-                parentFileRecord.UDP_Application_Version = lastUpdatedWith.Value;
+                //    // set the 
+                //    parentFileRecord.ApplicationVersion = lastUpdatedWith.Value;
+                //}
+
+
+                parentFileRecord.ApplicationVersion = InvDoc.SoftwareVersionSaved.DisplayName;
             }
         }
 

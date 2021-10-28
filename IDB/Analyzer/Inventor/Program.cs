@@ -286,7 +286,7 @@ namespace IDB.Analyzer.Inventor
                     }
 
                     // get the Application Version for the document
-                    ApprenticeServerWrapper.Instance.QueryAndSetLastUpdatedAppVersion(fileEntry.Value);
+                    ApprenticeServerWrapper.Instance.QueryAndRecordLastUpdatedAppVersion(fileEntry.Value);
 
                     var addedReferences = new List<string>();
                     var unknownReferences = new List<string>();

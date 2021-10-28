@@ -179,11 +179,11 @@ namespace IDB.Analyzer.Common
                     // verify that new Analyze columns are in the database
                     VerifyOrAddAnalyzeColumns(connection);
 
-                    // map UDP_Application_Version to "UDP_Application Version" with space
+                    // update Analyze notes and application version
                     Console.Write("Updating existing rows in 'Files' table ...");
                     Log.Info("Updating existing rows in 'Files' table ...");
                     var updateQuery = "UPDATE Files " +
-                        "SET IDBAnalyzeNotes = @IDBAnalyzeNotes, [UDP_Application Version] = @UDP_Application_Version WHERE FileID = @FileID";
+                        "SET IDBAnalyzeNotes = @IDBAnalyzeNotes, ApplicationVersion = @ApplicationVersion WHERE FileID = @FileID";
                     var result = connection.Execute(updateQuery, FilesById.Values);
                     Console.WriteLine($"\rUpdating existing rows in 'Files' table. Done! Result: {result})".PadRight(ConsoleBufferWidth, ' '));
                     Log.InfoFormat("Updating existing rows in 'Files' table. Done! Result: {0})", result);
