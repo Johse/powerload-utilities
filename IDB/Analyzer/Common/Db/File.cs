@@ -16,6 +16,9 @@ namespace IDB.Analyzer.Common.Db
         [XmlElement]
         public string IDBAnalyzeNotes { get; set; }
 
+        [XmlElement] 
+        public string Classification { get; set; }
+
         // Don't use [UDP_Application Version] as it will populate that in the Vault.xml file
         // and will cause a property compliance issue in Vault once data is loaded
         // we are using this property only to report information to the customer

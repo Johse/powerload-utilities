@@ -233,6 +233,53 @@ namespace IDB.Analyzer.Inventor.Helper
             }
         }
 
+        public void QueryAndRecordFileClassification(Common.Db.File parentFileRecord)
+        {
+            if (InvDoc == null)
+                throw new Exception("QueryAndRecordFileClassification(): No document open in Apprentice");
+            switch (InvDoc.DocumentType)
+            {
+                case DocumentTypeEnum.kAssemblyDocumentObject:
+                {
+                    if (InvDoc.ComponentDefinition is AssemblyComponentDefinition assemblyComponentDefinition)
+                    {
+                        if (assemblyComponentDefinition.IsiAssemblyMember)
+                            parentFileRecord.Classification = "Configuration Member";
+                        if (assemblyComponentDefinition.IsiAssemblyFactory)
+                            parentFileRecord.Classification = "Configuration Factory";
+                    }
+                    break;
+                }
+                case DocumentTypeEnum.kPartDocumentObject:
+                {
+                    if (InvDoc.ComponentDefinition is PartComponentDefinition partComponentDefinition)
+                    {
+                        if (partComponentDefinition.IsiPartMember)
+                            parentFileRecord.Classification = "Configuration Member";
+                        else if (partComponentDefinition.IsiPartFactory)
+                            parentFileRecord.Classification = "Configuration Factory";
+                        else
+                            parentFileRecord.Classification = "Design Document";
+                    }
+                    else if (InvDoc.IsSubstitutePart)
+                    {
+                        parentFileRecord.Classification = "DesignSubstitute";
+                    }
+                    break;
+                }
+                case DocumentTypeEnum.kPresentationDocumentObject:
+                case DocumentTypeEnum.kDrawingDocumentObject:
+                {
+                    parentFileRecord.Classification = "Design Document";
+                    break;
+                }
+                case DocumentTypeEnum.kUnknownDocumentObject:
+                    break;
+                default:
+                    break;
+            }
+        }
+
 
         public void CollectReferenceInformationByFilename(Common.Db.File parentFileRecord, Dictionary<string, FileFileRelation> fileRelations,
                                                         List<string> addedReferences, List<string> unknownReferences, ref ProcessingStatistics processStatistics)

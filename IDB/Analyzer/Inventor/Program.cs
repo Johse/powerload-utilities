@@ -62,6 +62,7 @@ namespace IDB.Analyzer.Inventor
                     {
                         AnalyzeReferencesUsingFilename(ref procStats);
                     }
+
                 }
 
                 // write the data to the IDB
@@ -287,6 +288,9 @@ namespace IDB.Analyzer.Inventor
 
                     // get the Application Version for the document
                     ApprenticeServerWrapper.Instance.QueryAndRecordLastUpdatedAppVersion(fileEntry.Value);
+                    
+                    //get the Classification for the document
+                    ApprenticeServerWrapper.Instance.QueryAndRecordFileClassification(fileEntry.Value);
 
                     var addedReferences = new List<string>();
                     var unknownReferences = new List<string>();
