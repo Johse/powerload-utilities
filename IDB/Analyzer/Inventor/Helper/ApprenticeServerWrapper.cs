@@ -258,8 +258,6 @@ namespace IDB.Analyzer.Inventor.Helper
                             parentFileRecord.Classification = "Configuration Member";
                         else if (partComponentDefinition.IsiPartFactory)
                             parentFileRecord.Classification = "Configuration Factory";
-                        else
-                            parentFileRecord.Classification = "Design Document";
                     }
                     else if (InvDoc.IsSubstitutePart)
                     {
@@ -274,9 +272,14 @@ namespace IDB.Analyzer.Inventor.Helper
                     break;
                 }
                 case DocumentTypeEnum.kUnknownDocumentObject:
+                case DocumentTypeEnum.kDesignElementDocumentObject:
+                case DocumentTypeEnum.kForeignModelDocumentObject:
+                case DocumentTypeEnum.kSATFileDocumentObject:
+                case DocumentTypeEnum.kNoDocument:
+                case DocumentTypeEnum.kNestingDocument:
                     break;
                 default:
-                    break;
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
