@@ -127,7 +127,9 @@ namespace IDB.Discover.Vault
                 INNER JOIN dbo.EntityClassBehavior EC ON BC.BehaviorClassId = EC.BehaviorClassID
                 INNER JOIN dbo.EntityClass E ON EC.EntityClassID = E.EntityClassID
                 INNER JOIN dbo.CategoryDef C ON EC.BehaviorID = C.CategoryDefId
-                WHERE BC.DisplayName = 'Category' 
+                WHERE BC.DisplayName = 'Category' OR 
+                    BC.DisplayName = 'Kategorie' OR
+                    BC.DisplayName = 'Categoria'
                 ORDER BY E.BaseId,C.DisplayName";
 
                 var table = "TargetVaultCategories";
