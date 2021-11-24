@@ -272,7 +272,7 @@ namespace IDB.Load.BCP
                     if (propDef != null && propDef.Type.Equals("Numeric"))
                         type = "sql_variant";
                     else if (propDef != null && propDef.Type.Equals("DateTime"))
-                        type = "datetime";
+                        type = "datetime2";
                     else if (propDef != null && propDef.Type.Equals("Bool"))
                         type = "bit";
                     else
