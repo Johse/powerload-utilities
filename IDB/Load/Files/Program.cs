@@ -365,7 +365,7 @@ namespace IDB.Load.Files
             if (new[] { ".docx", ".docm", ".dotx", ".dotm", ".xltx", ".xltm", ".xlsx", ".xlsm", ".xlsb", ".potx", ".pptx", ".pptm", ".potm" }.Contains(extension))
                 return "OfficeOpenXML";
 
-            if (new[] { ".pdf" }.Contains(extension))
+            if (new[] { ".pdf",".bmp",".dxf",".htm",".stp" }.Contains(extension))
                 return "IFilter";
 
             if (new[] { ".c3ddata" }.Contains(extension))
